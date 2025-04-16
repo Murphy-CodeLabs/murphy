@@ -23,5 +23,5 @@ export const baseOptions: BaseLayoutProps = {
       </>
     ),
   },
-  githubUrl: "https://github.com/murphis-dev/murphis-sdk",
+  githubUrl: "https://github.com/Murphis/docs",
 };
