@@ -29,59 +29,76 @@ const transitionVariants = {
 
 export default function HeroSection() {
   return (
-    <div className="container mx-auto px-4 py-10 md:py-16">
-      <div className="flex flex-col gap-8 md:flex-row md:gap-12">
-        {/* Left Column - Content */}
-        <div className="flex flex-1 flex-col gap-6 md:justify-center">
-          <AnimatedGroup variants={transitionVariants}>
-            <Link
-              href="#features"
-              className="hover:bg-background dark:hover:border-t-border bg-muted group mx-auto md:mx-0 flex w-fit items-center gap-4 rounded-full border p-1 pl-4 shadow-md shadow-zinc-950/5 transition-colors duration-300 dark:border-t-white/5 dark:shadow-zinc-950"
-            >
-              <span className="text-foreground text-sm">
-                Introduction to Murphis
-              </span>
-              <span className="dark:border-background block h-4 w-0.5 border-l bg-white dark:bg-zinc-700"></span>
+    <div className="relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50 z-0" />
 
-              <div className="bg-background group-hover:bg-muted size-6 overflow-hidden rounded-full duration-500">
-                <div className="flex w-12 -translate-x-1/2 duration-500 ease-in-out group-hover:translate-x-0">
-                  <span className="flex size-6">
-                    <ArrowRight className="m-auto size-3" />
-                  </span>
-                  <span className="flex size-6">
-                    <ArrowRight className="m-auto size-3" />
-                  </span>
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 opacity-[0.02] z-0" />
+
+      <div className="container relative mx-auto px-6 py-16 md:py-24 z-10">
+        <div className="flex flex-col gap-12 md:flex-row md:gap-16 items-center">
+          {/* Left Column - Content */}
+          <div className="flex flex-1 flex-col gap-8 md:justify-center">
+            <AnimatedGroup variants={transitionVariants}>
+              <Link
+                href="#features"
+                className="group mx-auto md:mx-0 flex w-fit items-center gap-4 rounded-full border border-primary/10 bg-primary/5 p-1.5 pl-5 shadow-lg transition-all duration-300 hover:border-primary/20 hover:bg-primary/10 dark:border-primary/20 dark:bg-primary/10 dark:hover:border-primary/30 dark:hover:bg-primary/15"
+              >
+                <span className="text-foreground/90 font-medium text-sm">
+                  Introduction to Murphis
+                </span>
+                <span className="block h-4 w-0.5 bg-primary/30 dark:bg-primary/40"></span>
+
+                <div className="bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30 size-7 overflow-hidden rounded-full transition-all duration-500">
+                  <div className="flex w-14 -translate-x-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-0">
+                    <span className="flex size-7">
+                      <ArrowRight className="m-auto size-3.5 text-primary/90" />
+                    </span>
+                    <span className="flex size-7">
+                      <ArrowRight className="m-auto size-3.5 text-primary/90" />
+                    </span>
+                  </div>
                 </div>
+              </Link>
+            </AnimatedGroup>
+
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                Onchainkit SDK
+              </h1>
+              <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto md:mx-0 mb-8 leading-relaxed">
+                The Onchainkit SDK is a powerful tool for building onchain
+                applications. It provides a set of functions for interacting
+                with the blockchain and a set of hooks for interacting with the
+                blockchain.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                <Button
+                  asChild
+                  size="lg"
+                  className="px-8 py-6 text-base rounded-xl hover:translate-y-[-2px] transition-all duration-300 font-medium shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30"
+                >
+                  <Link href="/docs">Get Started</Link>
+                </Button>
               </div>
-            </Link>
-          </AnimatedGroup>
-
-          <div className="text-center md:text-left">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
-              Onchainkit SDK
-            </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto md:mx-0 mb-6">
-              The Onchainkit SDK is a powerful tool for building onchain
-              applications. It provides a set of functions for interacting with
-              the blockchain and a set of hooks for interacting with the
-              blockchain.
-            </p>
-            <Button
-              asChild
-              className="px-6 py-2.5 text-base rounded-lg hover:translate-y-[-2px] transition-transform"
-            >
-              <Link href="/docs">Get Started</Link>
-            </Button>
+            </div>
           </div>
-        </div>
 
-        {/* Right Column - Terminal Demo */}
-        <div className="flex flex-1 items-center justify-center mt-8 md:mt-0">
-          <div className="w-full max-w-lg">
-            <TerminalDemo />
+          {/* Right Column - Terminal Demo */}
+          <div className="flex flex-1 items-center justify-center mt-8 md:mt-0">
+            <div className="w-full max-w-lg transform transition-all duration-500 hover:scale-[1.01]  relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-purple-500/30 rounded-2xl blur-xl opacity-50"></div>
+              <div className="relative">
+                <TerminalDemo />
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Decorative elements */}
+      <div className="absolute hidden md:block top-1/4 -left-28 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+      <div className="absolute hidden md:block bottom-1/4 -right-28 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
     </div>
   );
 }
