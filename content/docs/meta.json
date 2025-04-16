@@ -1,0 +1,10 @@
+{
+    "root": true,
+    "pages": [
+      "---Introduction---",
+      "index",
+      "---Setup---",
+      "getting-started"
+    ],
+    "defaultOpen": true
+  }
