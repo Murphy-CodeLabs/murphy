@@ -1,0 +1,12 @@
+{
+  "title": "Murphy",
+  "description": "Infinite Journey of a Builder",
+  "icon": "Terminal",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index",
+    "---Setup---",
+    "getting-started"
+  ]
+}

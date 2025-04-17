@@ -1,0 +1,10 @@
+{
+  "title": "Interstella",
+  "description": "Interstella is a tool for building onchain applications.",
+  "icon": "Globe",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index"
+  ]
+}
