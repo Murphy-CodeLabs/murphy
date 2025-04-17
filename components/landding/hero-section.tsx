@@ -1,9 +1,11 @@
 "use client";
 
+import { GridPattern } from "@/components/grid-pattern";
 import { TerminalDemo } from "@/components/terminal-demo";
 import AnimatedGroup from "@/components/ui/animated-group";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Code, Layers, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ArrowRight, Code, Dumbbell, Layers, Zap } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -31,13 +33,18 @@ export default function HeroSection() {
   return (
     <>
       {/* Main Hero Header */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background/50 z-0" />
-
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-[0.02] z-0" />
-
-        <div className="container relative mx-auto px-6 py-16 md:py-24 z-10">
+      <div className="relative overflow-hidden border w-full">
+        <GridPattern
+          width={30}
+          height={30}
+          x={-1}
+          y={-1}
+          strokeDasharray={"4 2"}
+          className={cn(
+            "-z-20 [mask-image:radial-gradient(650px_circle_at_center,white,transparent)]"
+          )}
+        />
+        <div className="container relative  py-16 md:py-24 z-10">
           <div className="flex flex-col gap-12 md:flex-row md:gap-16 items-center">
             {/* Left Column - Content */}
             <div className="flex flex-1 flex-col gap-8 md:justify-center">
@@ -47,7 +54,7 @@ export default function HeroSection() {
                   className="group mx-auto md:mx-0 flex w-fit items-center gap-4 rounded-full border border-primary/10 bg-primary/5 p-1.5 pl-5 shadow-lg transition-all duration-300 hover:border-primary/20 hover:bg-primary/10 dark:border-primary/20 dark:bg-primary/10 dark:hover:border-primary/30 dark:hover:bg-primary/15"
                 >
                   <span className="text-foreground/90 font-medium text-sm">
-                    Introduction to Murphis
+                    🌟 Introduction to Murphis SDK
                   </span>
                   <span className="block h-4 w-0.5 bg-primary/30 dark:bg-primary/40"></span>
 
@@ -69,10 +76,10 @@ export default function HeroSection() {
                   Murphis SDK
                 </h1>
                 <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto md:mx-0 mb-8 leading-relaxed">
-                  The Murphis SDK is a powerful tool for building onchain
-                  applications. It provides a set of functions for interacting
-                  with the blockchain and a set of hooks for interacting with
-                  the blockchain.
+                  A powerful and developer-friendly SDK for building
+                  decentralized applications on Solana. Simplify blockchain
+                  interactions, accelerate development, and unlock the full
+                  potential of the Solana ecosystem.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                   <Button
@@ -97,10 +104,6 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
-
-        {/* Decorative elements */}
-        <div className="absolute hidden md:block top-1/4 -left-28 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
-        <div className="absolute hidden md:block bottom-1/4 -right-28 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>
       </div>
     </>
   );
