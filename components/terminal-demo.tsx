@@ -7,7 +7,7 @@ import {
 export function TerminalDemo() {
   return (
     <Terminal className="text-left">
-      <TypingAnimation>&gt; onchainkit add swap</TypingAnimation>
+      <TypingAnimation>&gt; murphis add swap</TypingAnimation>
 
       <AnimatedSpan delay={1500} className="text-purple-500">
         <span>Installing swap components and dependencies ...</span>

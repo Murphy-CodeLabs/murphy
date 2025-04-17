@@ -23,5 +23,10 @@ export const baseOptions: BaseLayoutProps = {
       </>
     ),
   },
-  githubUrl: "https://github.com/Murphis/docs",
+  // links: [
+  //   {
+  //     text: "Documentation",
+  //     url: "/docs",
+  //   },
+  // ],
 };

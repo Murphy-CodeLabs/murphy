@@ -5,7 +5,11 @@ import { source } from "@/lib/source";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <DocsLayout tree={source.pageTree} {...baseOptions}>
+    <DocsLayout
+      tree={source.pageTree}
+      {...baseOptions}
+      links={[{ text: "Murphy SDK", url: "/docs", type: "main" }]}
+    >
       {children}
     </DocsLayout>
   );
