@@ -43,7 +43,7 @@ export default function HeroSection() {
             <div className="flex flex-1 flex-col gap-8 md:justify-center">
               <AnimatedGroup variants={transitionVariants}>
                 <Link
-                  href="#features"
+                  href="docs/murphis"
                   className="group mx-auto md:mx-0 flex w-fit items-center gap-4 rounded-full border border-primary/10 bg-primary/5 p-1.5 pl-5 shadow-lg transition-all duration-300 hover:border-primary/20 hover:bg-primary/10 dark:border-primary/20 dark:bg-primary/10 dark:hover:border-primary/30 dark:hover:bg-primary/15"
                 >
                   <span className="text-foreground/90 font-medium text-sm">
@@ -80,7 +80,7 @@ export default function HeroSection() {
                     size="lg"
                     className="px-8 py-6 text-base rounded-xl hover:translate-y-[-2px] transition-all duration-300 font-medium shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30"
                   >
-                    <Link href="/docs">Get Started</Link>
+                    <Link href="/docs/murphis">Get Started</Link>
                   </Button>
                 </div>
               </div>
