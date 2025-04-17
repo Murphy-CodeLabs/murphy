@@ -6,6 +6,7 @@ import {
   Code,
   ComponentIcon,
   CpuIcon,
+  Dumbbell,
   Globe,
   Heart,
   LayoutGrid,
@@ -53,15 +54,7 @@ export const baseOptions: BaseLayoutProps = {
   nav: {
     title: (
       <>
-        <svg
-          width="24"
-          height="24"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-label="Logo"
-        >
-          <circle cx={12} cy={12} r={12} fill="currentColor" />
-        </svg>
-        Murphis
+        <Dumbbell className="size-5 font-bold inline-flex" /> Murphis
       </>
     ),
     transparentMode: "top",
