@@ -1,8 +1,3 @@
 {
-    "title": "Murphy SDK",
-    "description": "The docs framework",
-    "icon": "Building2",
-    "root": true,
-    "pages": [
-    ]
-  }
+  "pages": ["murphis", "onchainkit", "programkit", "sandbox", "interstella"]
+}

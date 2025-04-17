@@ -1,0 +1,10 @@
+{
+  "title": "OnchainKit",
+  "description": "OnchainKit is a tool for building onchain applications.",
+  "icon": "Cpu",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index"
+  ]
+}

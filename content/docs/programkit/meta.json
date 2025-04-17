@@ -1,0 +1,10 @@
+{
+  "title": "ProgramKit",
+  "description": "ProgramKit is a tool for building onchain applications.",
+  "icon": "Code",
+  "root": true,
+  "pages": [
+    "---Introduction---",
+    "index"
+  ]
+}
