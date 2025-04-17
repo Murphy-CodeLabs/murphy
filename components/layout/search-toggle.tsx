@@ -1,18 +1,19 @@
-'use client';
-import { type ButtonHTMLAttributes } from 'react';
-import { SearchIcon } from 'lucide-react';
-import { useSearchContext } from 'fumadocs-ui/contexts/search';
-import { useI18n } from 'fumadocs-ui/contexts/i18n';
-import { cn } from '../../lib/cn';
-import { type ButtonProps, buttonVariants } from '../ui/button';
+"use client";
+import { type ButtonHTMLAttributes } from "react";
+import { SearchIcon } from "lucide-react";
+import { useSearchContext } from "fumadocs-ui/contexts/search";
+import { useI18n } from "fumadocs-ui/contexts/i18n";
+import { cn } from "../../lib/cn";
+import { buttonVariants } from "../ui/button";
+import { VariantProps } from "class-variance-authority";
 
 export function SearchToggle({
   hideIfDisabled,
-  size = 'icon',
-  color = 'ghost',
+  size = "icon",
+  variant = "ghost",
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> &
-  ButtonProps & {
+  VariantProps<typeof buttonVariants> & {
     hideIfDisabled?: boolean;
   }) {
   const { setOpenSearch, enabled } = useSearchContext();
@@ -24,9 +25,9 @@ export function SearchToggle({
       className={cn(
         buttonVariants({
           size,
-          color,
+          variant,
         }),
-        props.className,
+        props.className
       )}
       data-search=""
       aria-label="Open Search"
@@ -55,8 +56,8 @@ export function LargeSearchToggle({
       data-search-full=""
       {...props}
       className={cn(
-        'inline-flex items-center gap-2 rounded-full border bg-fd-secondary/50 p-1.5 text-sm text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground',
-        props.className,
+        "inline-flex items-center gap-2 rounded-full border bg-fd-secondary/50 p-1.5 text-sm text-fd-muted-foreground transition-colors hover:bg-fd-accent hover:text-fd-accent-foreground",
+        props.className
       )}
       onClick={() => {
         setOpenSearch(true);
