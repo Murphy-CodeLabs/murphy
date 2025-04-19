@@ -5,6 +5,8 @@
   "root": true,
   "pages": [
     "---Introduction---",
-    "index"
+    "index",
+    "---Components---",
+    "connect-wallet-button"
   ]
 }

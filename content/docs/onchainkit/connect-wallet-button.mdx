@@ -1,0 +1,284 @@
+---
+title: Connect Wallet Button
+description: A Solana wallet connection component with shadcn UI styling
+icon: Wallet
+---
+
+<div className="flex flex-col gap-4 border rounded-lg p-4 min-h-[450px] relative">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm text-muted-foreground sm:pl-3">
+
+            Connect Wallet Button
+          </h2>
+
+          <div className="flex items-center gap-2">
+            <OpenInV0Button name="connect-wallet-button" className="w-fit" />
+          </div>
+        </div>
+        <div className="flex items-center justify-center min-h-[400px] relative">
+            <ConnetWalletButton className="inline-flex max-w-fit">
+                <Dumbbell className="size-4 mr-2" />
+                 Connect Wallet
+            </ConnetWalletButton>
+        </div>
+      </div>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing `solana/wallet-adapter-base` and `wallet-adapter-wallets`
+
+    <DependenciesInstallCommands packageUrl={"@solana/wallet-adapter-base @solana/wallet-adapter-wallets"}/>
+
+  </Step>
+
+  <Step>
+  Create a wallet provider
+
+components/wallet-provider.tsx
+
+```tsx
+import React, { useState, useMemo, createContext, useCallback } from "react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import type { Adapter } from "@solana/wallet-adapter-base";
+import {
+  WalletProvider as SolanaWalletProvider,
+  ConnectionProvider as SolanaConnectionProvider,
+  ConnectionProviderProps,
+} from "@solana/wallet-adapter-react";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+
+// Create wrapper components
+// @ts-ignore - Ignore React 19 compatibility error
+const ConnectionProviderWrapper = (props: ConnectionProviderProps) => (
+  <SolanaConnectionProvider {...props} />
+);
+// @ts-ignore - Ignore React 19 compatibility error
+const WalletProviderWrapper = (props: any) => (
+  <SolanaWalletProvider {...props} />
+);
+
+interface WalletProviderProps {
+  children: React.ReactNode;
+  network?: WalletAdapterNetwork;
+  endpoint?: string;
+  wallets?: Adapter[];
+  autoConnect?: boolean;
+}
+
+interface ModalContextState {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  endpoint?: string;
+  switchToNextEndpoint: () => void;
+  availableEndpoints: string[];
+  currentEndpointIndex: number;
+  isMainnet: boolean;
+}
+
+export const ModalContext = createContext<ModalContextState>({
+  isOpen: false,
+  setIsOpen: () => null,
+  endpoint: undefined,
+  switchToNextEndpoint: () => null,
+  availableEndpoints: [],
+  currentEndpointIndex: 0,
+  isMainnet: true,
+});
+
+export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
+  // Add state to store endpoints and current endpoint
+  const [currentEndpointIndex, setCurrentEndpointIndex] = useState(0);
+
+  // Determine if we're using mainnet or devnet based on environment variable
+  const isMainnet = useMemo(() => {
+    const mainnetEnv = process.env.NEXT_PUBLIC_USE_MAINNET;
+    return mainnetEnv === undefined ? true : mainnetEnv === "true";
+  }, []);
+
+  // Network type based on the environment variable
+  const networkType = useMemo(
+    () =>
+      isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
+    [isMainnet]
+  );
+
+  // List of public RPC endpoints based on network type
+  const publicRPCs = useMemo(
+    () => [
+      isMainnet
+        ? (process.env.NEXT_PUBLIC_SOLANA_RPC_URL as string)
+        : (process.env.NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET as string),
+    ],
+    [isMainnet]
+  );
+
+  const defaultNetwork = useMemo(
+    () => props.network || networkType,
+    [props.network, networkType]
+  );
+
+  // Provided endpoint will be prioritized, otherwise use the current endpoint from the list
+  const endpoint = useMemo(() => {
+    if (props.endpoint) {
+      return props.endpoint;
+    }
+    return publicRPCs[currentEndpointIndex];
+  }, [props.endpoint, publicRPCs, currentEndpointIndex]);
+
+  // Function to switch to the next endpoint when an error occurs
+  const switchToNextEndpoint = useCallback(() => {
+    setCurrentEndpointIndex((prevIndex) => {
+      const nextIndex = (prevIndex + 1) % publicRPCs.length;
+      console.log(
+        `Switching RPC endpoint from ${publicRPCs[prevIndex]} to ${publicRPCs[nextIndex]}`
+      );
+      return nextIndex;
+    });
+  }, [publicRPCs]);
+
+  const wallets = useMemo(
+    () => props.wallets || [new PhantomWalletAdapter()],
+    [props.wallets]
+  );
+  const [isOpen, setIsOpen] = useState(false);
+
+  console.log(
+    `Using Solana ${isMainnet ? "mainnet" : "devnet"} endpoint: ${endpoint} (${
+      currentEndpointIndex + 1
+    }/${publicRPCs.length})`
+  );
+
+  return (
+    <ModalContext.Provider
+      value={{
+        isOpen,
+        setIsOpen,
+        endpoint,
+        switchToNextEndpoint,
+        availableEndpoints: publicRPCs,
+        currentEndpointIndex,
+        isMainnet,
+      }}
+    >
+      <ConnectionProviderWrapper endpoint={endpoint}>
+        <WalletProviderWrapper wallets={wallets} autoConnect>
+          {children}
+        </WalletProviderWrapper>
+      </ConnectionProviderWrapper>
+    </ModalContext.Provider>
+  );
+};
+```
+
+  </Step>
+  <Step>
+  Create .env file
+  
+  .env
+
+```bash
+# Use mainnet or testnet
+NEXT_PUBLIC_USE_MAINNET=false
+# Solana RPC URLs , alchemy.com
+NEXT_PUBLIC_SOLANA_RPC_URL="https://solana-mainnet.g.alchemy.com/v2/your-alchemy-api-key"
+NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET="https://solana-devnet.g.alchemy.com/v2/your-alchemy-api-key"
+```
+
+  </Step>
+
+  <Step>
+  Wrap your root layout
+
+Add the Wall to your root layout
+
+```tsx
+import { ThemeProvider } from "@/components/wallet-provider.tsx";
+
+export default function RootLayout({ children }: RootLayoutProps) {
+  return (
+    <>
+      <html lang="en" suppressHydrationWarning>
+        <head />
+        <body>
+          <WalletProvider autoConnect>
+            {children}
+            <Toaster />
+          </WalletProvider>
+        </body>
+      </html>
+    </>
+  );
+}
+```
+
+  </Step>
+
+  <Step>
+   Add Connect Wallet Button
+
+{" "}
+
+<InstallationCommands
+  packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/connect-wallet-connect.json`}
+/>
+
+  </Step>
+</Steps>
+
+### Basic Usage
+
+```tsx
+import { ConnetWalletButton } from "@/components/ui/murphis/connect-wallet-button";
+import { Wallet } from "lucide-react";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Connect Your Solana Wallet</h1>
+      <ConnetWalletButton>
+        <Wallet className="size-4 mr-2" />
+        Connect Wallet
+      </ConnetWalletButton>
+    </div>
+  );
+}
+```
+
+### Customization
+
+You can customize the button appearance by passing props:
+
+```tsx
+<ConnetWalletButton variant="outline" size="lg" className="my-custom-class" />
+```
+
+<TypeTable
+  type={{
+    variant: {
+      description: "The visual style of the button",
+      type: "string",
+      default: "default",
+    },
+    size: {
+      description: "The size of the button",
+      type: "string",
+      default: "default",
+    },
+    className: {
+      description: "Additional CSS classes to apply to the button",
+      type: "string",
+      default: "",
+    },
+    asChild: {
+      description: "Whether to merge props onto the immediate child",
+      type: "boolean",
+      default: "false",
+    },
+  }}
+/>
