@@ -1,8 +1,10 @@
 "use client";
 
+import { WalletProvider } from "@/components/providers/wallet-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { useParams } from "next/navigation";
-import { type ReactNode, useId } from "react";
+import { type ReactNode } from "react";
 
 export function Body({
   children,
@@ -13,7 +15,10 @@ export function Body({
 
   return (
     <body className={cn(mode, "relative flex min-h-screen flex-col")}>
-      {children}
+      <WalletProvider autoConnect>
+        {children}
+        <Toaster />
+      </WalletProvider>
     </body>
   );
 }
