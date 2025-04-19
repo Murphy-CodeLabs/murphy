@@ -26,8 +26,8 @@ import Image from "next/image";
 
 export const linkItems: LinkItemType[] = [
   {
-    text: "Examples",
-    url: "/examples",
+    text: "About Murphis",
+    url: "/about",
     icon: <LayoutTemplate />,
     active: "url",
   },
@@ -63,7 +63,7 @@ export const baseOptions: BaseLayoutProps = {
     {
       type: "menu",
       text: "Documentation",
-      url: "/docs/murphis",
+      url: "/docs/onchainkit",
       items: [
         {
           menu: {
@@ -87,7 +87,7 @@ export const baseOptions: BaseLayoutProps = {
           icon: <Book />,
           text: "Getting Started",
           description: "Learn to use Fumadocs on your docs site.",
-          url: "/docs/ui",
+          url: "/docs/onchainkit",
         },
         {
           icon: <CpuIcon />,

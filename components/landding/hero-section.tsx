@@ -87,7 +87,7 @@ export default function HeroSection() {
                     size="lg"
                     className="px-8 py-6 text-base rounded-xl hover:translate-y-[-2px] transition-all duration-300 font-medium shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30"
                   >
-                    <Link href="/docs/murphis">Get Started</Link>
+                    <Link href="/docs/onchainkit">Get Started</Link>
                   </Button>
                 </div>
               </div>

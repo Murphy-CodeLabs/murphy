@@ -27,6 +27,15 @@ function Footer(): React.ReactElement {
             >
               SaitamaCoder ↗
             </a>
+            <span className="text-muted-foreground mx-2">and</span>
+            <a
+              href="https://github.com/Lou1sVuong"
+              rel="noreferrer noopener"
+              target="_blank"
+              className="font-medium transition-colors hover:text-foreground"
+            >
+              Lou1s [intern] ↗
+            </a>
           </p>
         </div>
         <a
