@@ -1,0 +1,40 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "murphis-ui",
+  "homepage": "https://murphis-docs.vercel.app/",
+  "items": [
+    {
+      "name": "connect-wallet-button",
+      "type": "registry:block",
+      "title": "Connect Wallet Button",
+      "description": "A simple connect wallet button component.",
+      "registryDependencies": [
+        "button",
+        "dialog",
+        "collapsible",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/wallet-adapter-react",
+        "@solana/wallet-adapter-base"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/connect-wallet-button.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/connect-wallet-button.tsx"
+        },
+        {
+          "path": "hook/murphis/use-walletMultiButton.ts",
+          "type": "registry:hook",
+          "target": "hook/murphis/use-walletMultiButton.ts"
+        },
+        {
+          "path": "hook/murphis/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphis/use-walletModal.ts"
+        }
+      ]
+    }
+  ]
+}
