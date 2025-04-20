@@ -4,24 +4,15 @@ description: A Solana wallet connection component with shadcn UI styling
 icon: Wallet
 ---
 
-<div className="flex flex-col gap-4 border rounded-lg p-4 min-h-[450px] relative">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm text-muted-foreground sm:pl-3">
-
-            Connect Wallet Button
-          </h2>
-
-          <div className="flex items-center gap-2">
-            <OpenInV0Button name="connect-wallet-button" className="w-fit" />
-          </div>
-        </div>
-        <div className="flex items-center justify-center min-h-[400px] relative">
-            <ConnetWalletButton className="inline-flex max-w-fit">
-                <Dumbbell className="size-4 mr-2" />
-                 Connect Wallet
-            </ConnetWalletButton>
-        </div>
-      </div>
+<PreviewComponent
+  name={"Connect Wallet Button"}
+  v0JsonFileName={"connect-wallet-button"}
+>
+  <ConnetWalletButton className="inline-flex max-w-fit">
+    <Dumbbell className="size-4 mr-2" />
+    Connect Wallet
+  </ConnetWalletButton>
+</PreviewComponent>
 
 ## Installation
 
