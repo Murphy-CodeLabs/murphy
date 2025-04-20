@@ -1,0 +1,199 @@
+---
+title: Send Token Form
+description: A Solana token transfer component with shadcn UI styling
+icon: Send
+---
+
+<PreviewComponent name={"Send Token Form"} v0JsonFileName={"send-token-form"}>
+  <SendTokenForm className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/spl-token @solana/wallet-adapter-react"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Send Token Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/send-token-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+### Basic Usage
+
+```tsx
+import { SendTokenForm } from "@/components/ui/murphis/send-token-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Transfer Solana Tokens</h1>
+      <SendTokenForm className="max-w-md" />
+    </div>
+  );
+}
+```
+
+### Custom Token List
+
+You can provide your own token list:
+
+```tsx
+import {
+  SendTokenForm,
+  TokenInfo,
+} from "@/components/ui/murphis/send-token-form";
+
+export default function MyPage() {
+  const customTokens: TokenInfo[] = [
+    {
+      id: "sol",
+      symbol: "SOL",
+      name: "Solana",
+      balance: 5.25,
+      decimals: 9,
+      mintAddress: "So11111111111111111111111111111111111111112",
+      icon: "/crypto-logos/solana-logo.svg",
+    },
+    {
+      id: "usdc",
+      symbol: "USDC",
+      name: "USD Coin",
+      balance: 100.5,
+      decimals: 6,
+      mintAddress: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      icon: "/crypto-logos/usdc-logo.svg",
+    },
+  ];
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Transfer Tokens</h1>
+      <SendTokenForm tokens={customTokens} className="max-w-md" />
+    </div>
+  );
+}
+```
+
+### Custom Transaction Handling
+
+You can provide your own send token function:
+
+```tsx
+import { SendTokenForm } from "@/components/ui/murphis/send-token-form";
+import { toast } from "sonner";
+import type { FormValues } from "@/components/ui/murphis/send-token-form";
+
+export default function MyPage() {
+  const handleSendToken = async (values: FormValues) => {
+    // Your custom transaction logic
+    console.log(
+      "Sending",
+      values.amount,
+      "of token",
+      values.token,
+      "to",
+      values.destination
+    );
+
+    // Example of custom validation
+    if (values.amount > 10) {
+      throw new Error("Amount cannot exceed 10 tokens");
+    }
+
+    // Wait for transaction
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Show success notification
+    toast.success("Transaction completed");
+  };
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Custom Transfer</h1>
+      <SendTokenForm onSendToken={handleSendToken} className="max-w-md" />
+    </div>
+  );
+}
+```
+
+### Props
+
+<TypeTable
+  type={{
+    tokens: {
+      description: "Custom list of tokens to display",
+      type: "TokenInfo[]",
+      default: "undefined",
+    },
+    onSendToken: {
+      description: "Custom function to handle token sending",
+      type: "(values: FormValues) => Promise<void>",
+      default: "undefined",
+    },
+    isLoading: {
+      description: "Whether the form is in loading state",
+      type: "boolean",
+      default: "false",
+    },
+    showTokenBalance: {
+      description: "Whether to display token balances",
+      type: "boolean",
+      default: "true",
+    },
+    validateDestination: {
+      description: "Custom validation for destination addresses",
+      type: "(address: string) => Promise<boolean>",
+      default: "undefined",
+    },
+    className: {
+      description: "Additional CSS classes to apply to the component",
+      type: "string",
+      default: "undefined",
+    },
+  }}
+/>
+
+### Types
+
+The component uses the following types:
+
+```tsx
+// Form values type
+type FormValues = {
+  destination: string;
+  amount: number | undefined;
+  token: string;
+};
+
+// Token information type
+export type TokenInfo = {
+  id: string;
+  symbol: string;
+  name: string;
+  balance: number;
+  decimals: number;
+  mintAddress?: string;
+  icon?: string;
+};
+```
