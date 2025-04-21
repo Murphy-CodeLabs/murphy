@@ -7,6 +7,7 @@
     "---Introduction---",
     "index",
     "---Components---",
-    "connect-wallet-button"
+    "connect-wallet-button",
+    "send-token-form"
   ]
 }

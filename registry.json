@@ -35,6 +35,32 @@
           "target": "hook/murphis/use-walletModal.ts"
         }
       ]
+    },
+    {
+      "name": "send-token-form",
+      "type": "registry:block",
+      "title": "Send Token Form",
+      "description": "A simple send token form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/send-token-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/send-token-form.tsx"
+        }
+      ]
     }
   ]
 }

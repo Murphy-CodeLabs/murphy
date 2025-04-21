@@ -140,7 +140,7 @@ export const WalletModal: FC<{
           <div className="text-sm text-muted-foreground">
             Network:{" "}
             <span className={isMainnet ? "text-green-500" : "text-yellow-500"}>
-              {isMainnet ? "Mainnet" : "Testnet"}
+              {isMainnet ? "Mainnet" : "Devnet"}
             </span>
           </div>
         </DialogHeader>
