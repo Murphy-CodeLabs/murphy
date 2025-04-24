@@ -61,6 +61,55 @@
           "target": "components/ui/murphis/send-token-form.tsx"
         }
       ]
+    },
+    {
+      "name": "swap-token-form",
+      "type": "registry:block",
+      "title": "Swap Token Form",
+      "description": "A component form for swapping tokens on Solana using Jupiter API.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@coral-xyz/anchor"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/swap-token-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/swap-token-form.tsx"
+        },
+        {
+          "path": "hook/murphis/use-JupiterTrade.ts",
+          "type": "registry:hook",
+          "target": "hook/murphis/use-JupiterTrade.ts"
+        },
+        {
+          "path": "config/swap/index.ts",
+          "type": "registry:config",
+          "target": "config/swap/index.ts"
+        },
+        {
+          "path": "constants/swap/jupiter-constants.ts",
+          "type": "registry:constants",
+          "target": "constants/swap/jupiter-constants.ts"
+        },
+        {
+          "path": "types/swap/index.ts",
+          "type": "registry:types",
+          "target": "types/swap/index.ts"
+        }
+      ]
     }
   ]
 }

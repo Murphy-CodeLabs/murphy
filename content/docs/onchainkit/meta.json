@@ -9,6 +9,7 @@
     "---Components---",
     "connect-wallet-button",
     "send-token-form",
-    "swap-token-form"
+    "swap-token-form",
+    "stake-token-form"
   ]
 }

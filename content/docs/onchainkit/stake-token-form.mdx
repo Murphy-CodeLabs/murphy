@@ -1,0 +1,56 @@
+---
+title: Stake Token Form
+description: A Solana token staking component with shadcn UI styling
+icon: CoinsIcon
+---
+
+import { StakeForm } from "@/components/ui/murphis/stake-token-form";
+
+<PreviewComponent name={"Stake Token Form"} v0JsonFileName={"stake-token-form"}>
+  <StakeForm className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Stake Token Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/stake-token-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+### Basic Usage
+
+```tsx
+import { StakeForm } from "@/components/ui/murphis/stake-token-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Stake Solana Tokens</h1>
+      <StakeForm className="max-w-md" />
+    </div>
+  );
+}
