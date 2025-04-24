@@ -3,10 +3,13 @@
 import { useState, useEffect, useMemo, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2, RefreshCw, Settings, CoinsIcon } from "lucide-react";
+import { ArrowDown, Loader2, RefreshCw, Settings } from "lucide-react";
 import {
   PublicKey,
+  Transaction,
   LAMPORTS_PER_SOL,
+  VersionedTransaction,
+  clusterApiUrl
 } from "@solana/web3.js";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { Button } from "@/components/ui/button";
@@ -19,14 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectGroup,
-} from "@/components/ui/select";
 import { ConnetWalletButton } from "./connect-wallet-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -35,65 +30,27 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
-import { useJupiterTrade } from "@/hook/murphis/use-JupiterTrade";
 import { ModalContext } from "@/components/providers/wallet-provider";
-
-// Token info type
-export type TokenInfo = {
-  id: string;
-  symbol: string;
-  name: string;
-  balance: number;
-  decimals: number;
-  mintAddress?: string;
-  icon?: string;
-  apr?: number; // APR rate for staking
-};
-
-// Staking info interface
-interface StakingInfo {
-  apr: number;
-  lockupPeriod: number; // Token lockup time (in days)
-  rewardToken?: TokenInfo; // Token received after staking
-}
 
 // Type for stake form values
 type StakeFormValues = {
-  token: string;
-  amount: number | undefined;
-  lockupPeriod: number; // Unit in days
+  amountToStake: number | undefined;
 };
 
 // Create custom resolver for form
 const customResolver = (data: any) => {
   const errors: any = {};
 
-  // Validate token input
-  if (!data.token) {
-    errors.token = {
-      type: "required",
-      message: "Please select a token to stake",
-    };
-  }
-
   // Validate amount
-  if (data.amount === undefined || data.amount === null || data.amount === "") {
-    errors.amount = {
+  if (data.amountToStake === undefined || data.amountToStake === null || data.amountToStake === "") {
+    errors.amountToStake = {
       type: "required",
       message: "Amount is required",
     };
-  } else if (Number(data.amount) <= 0) {
-    errors.amount = {
+  } else if (Number(data.amountToStake) <= 0) {
+    errors.amountToStake = {
       type: "min",
       message: "Amount must be greater than 0",
-    };
-  }
-
-  // Validate lockup period
-  if (!data.lockupPeriod) {
-    errors.lockupPeriod = {
-      type: "required",
-      message: "Please select a lockup period",
     };
   }
 
@@ -103,234 +60,70 @@ const customResolver = (data: any) => {
   };
 };
 
-// Stake options
-const STAKE_OPTIONS = [
-  { value: "7", label: "7 days", apr: 5 },
-  { value: "30", label: "30 days", apr: 10 },
-  { value: "90", label: "90 days", apr: 15 },
-  { value: "180", label: "180 days", apr: 20 },
-  { value: "365", label: "365 days", apr: 25 },
-];
-
-// Props interface
-export interface StakeFormProps {
-  onStake?: (values: StakeFormValues) => Promise<void>;
-  tokens?: TokenInfo[];
-  isLoading?: boolean;
-  showTokenBalance?: boolean;
-  className?: string;
-}
-
-export function StakeForm({
-  onStake,
-  tokens,
-  isLoading = false,
-  showTokenBalance = true,
-  className,
-}: StakeFormProps) {
+export function StakeForm() {
   // State variables
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedToken, setSelectedToken] = useState<TokenInfo | null>(null);
-  const [isLoadingTokens, setIsLoadingTokens] = useState(false);
-  const [isUpdatingBalance, setIsUpdatingBalance] = useState(false);
-  const [amountValue, setAmountValue] = useState<string>("");
-  const [lockupPeriod, setLockupPeriod] = useState<number>(30); // Default 30 days
-  const [estimatedReward, setEstimatedReward] = useState<number>(0);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  const [solBalance, setSolBalance] = useState("--");
+  const [amountToStake, setAmountToStake] = useState<string>("");
+  const [transactionSignature, setTransactionSignature] = useState('');
+  const [currentStage, setCurrentStage] = useState('input'); // input, confirming, success, error
+  const [error, setError] = useState('');
   
-  const { publicKey, connected, wallet } = useWallet();
+  const { publicKey, connected, signTransaction } = useWallet();
   const { connection } = useConnection();
-  const { getBalance } = useJupiterTrade();
   const { endpoint } = useContext(ModalContext);
-
+  
   // Form setup with react-hook-form
   const form = useForm<StakeFormValues>({
     defaultValues: {
-      token: "",
-      amount: undefined,
-      lockupPeriod: 30,
+      amountToStake: undefined,
     },
     mode: "onSubmit",  // Only validate on submit
     resolver: customResolver,  // Use our custom resolver
   });
 
-  // Available tokens state
-  const [availableTokens, setAvailableTokens] = useState<TokenInfo[]>([]);
+  // Add state to store timeout
+  const [inputTimeout, setInputTimeout] = useState<NodeJS.Timeout | null>(null);
 
-  // Determine network from connection endpoint
-  const networkName = useMemo(() => {
-    if (!connection) return "Unknown";
+  // Clear timeout when component unmounts
+  useEffect(() => {
+    return () => {
+      if (inputTimeout) {
+        clearTimeout(inputTimeout);
+      }
+    };
+  }, [inputTimeout]);
 
-    const endpoint = connection.rpcEndpoint;
+  // Fetch SOL balance when wallet connects
+  useEffect(() => {
+    if (connected && publicKey) {
+      fetchBalance();
+    } else {
+      setSolBalance('--');
+    }
+  }, [connected, publicKey, connection]);
 
-    if (endpoint.includes("devnet")) return "Devnet";
-    if (endpoint.includes("testnet")) return "Testnet";
-    if (endpoint.includes("mainnet")) return "Mainnet";
-    if (endpoint.includes("localhost") || endpoint.includes("127.0.0.1"))
-      return "Localnet";
-
-    // Custom endpoint - show partial URL
-    const url = new URL(endpoint);
-    return url.hostname;
-  }, [connection]);
-
-  // Fetch token accounts from wallet
-  const fetchTokenAccounts = async (ownerPublicKey: PublicKey) => {
+  // Fetch SOL balance
+  const fetchBalance = async () => {
+    if (!connected || !publicKey || !connection) return;
+    
+    setIsLoadingBalance(true);
     try {
-      setIsLoadingTokens(true);
-
-      // Get SOL balance
-      let solBalance = 0;
-      try {
-        if(!connection){
-          throw new Error("No connection available");
-        }
-        solBalance = (await connection.getBalance(ownerPublicKey)) / LAMPORTS_PER_SOL;
-
-        let retryCount = 0;
-        const maxRetries = 3;
-
-        while (retryCount < maxRetries) {
-          try {
-            solBalance = (await
-              connection.getBalance(ownerPublicKey)) / LAMPORTS_PER_SOL;
-              break;
-            } catch (error: any) {
-              retryCount++;
-              if (retryCount === maxRetries) {
-                throw error;
-              }
-
-              await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for 1 second before retrying
-            }
-          }
-      } catch (error: any) {
-        console.error("Error fetching SOL balance:", error);
-        toast.error("Failed to fetch SOL balance", {
-          description: error?.message || "Please check your wallet connection",
-        })
-      }
-
-      // Predefined stakeable tokens
-      const defaultTokens: TokenInfo[] = [
-        {
-          id: "sol",
-          symbol: "SOL",
-          name: "Solana",
-          balance: solBalance,
-          decimals: 9,
-          mintAddress: "So11111111111111111111111111111111111111112",
-          icon: "/crypto-logos/solana-logo.svg",
-          apr: 5.5,
-        },
-        {
-          id: "msol",
-          symbol: "mSOL",
-          name: "Marinade Staked SOL",
-          balance: 0,
-          decimals: 9,
-          mintAddress: "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
-          icon: "/crypto-logos/msol-logo.svg",
-          apr: 6.2,
-        },
-        {
-          id: "bsol",
-          symbol: "bSOL",
-          name: "Blaze Staked SOL",
-          balance: 0,
-          decimals: 9,
-          mintAddress: "bSo13r4TkiE4KumL71LsHTPpL2euBYLFx6h9HP3piy1",
-          icon: "/crypto-logos/bsol-logo.svg",
-          apr: 6.5,
-        },
-        {
-          id: "jitosol",
-          symbol: "jitoSOL",
-          name: "Jito Staked SOL",
-          balance: 0,
-          decimals: 9,
-          mintAddress: "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
-          icon: "/crypto-logos/jito-logo.svg",
-          apr: 7.1,
-        }
-      ];
-
-      // Fetch SPL tokens using the provider connection
-      try {
-        const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
-          ownerPublicKey,
-          {
-            programId: new PublicKey(
-              "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-            ),
-          }
-        );
-
-        // Update token balances for pre-defined tokens
-        for (const account of tokenAccounts.value) {
-          const accountData = account.account.data.parsed.info;
-          const mintAddress = accountData.mint;
-          const tokenAmount = accountData.tokenAmount;
-
-          // Find if this is one of our pre-defined tokens
-          const tokenIndex = defaultTokens.findIndex(t => t.mintAddress === mintAddress);
-          if (tokenIndex >= 0 && tokenAmount.uiAmount > 0) {
-            defaultTokens[tokenIndex].balance = tokenAmount.uiAmount;
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching SPL token accounts:", error);
-      }
-
-      // Return tokens with balances
-      return defaultTokens;
+      const balance = await connection.getBalance(publicKey);
+      const solBalanceFormatted = (balance / LAMPORTS_PER_SOL).toFixed(6);
+      setSolBalance(solBalanceFormatted);
+      console.log(`fetchBalance: SOL balance = ${solBalanceFormatted}`);
     } catch (error) {
-      console.error("Error fetching token accounts:", error);
-      // Return basic SOL token on error
-      return [
-        {
-          id: "sol",
-          symbol: "SOL",
-          name: "Solana",
-          balance: 0,
-          decimals: 9,
-          icon: "/crypto-logos/solana-logo.svg",
-          apr: 5.5,
-        },
-      ];
+      console.error('Error fetching SOL balance:', error);
+      setSolBalance('0');
+      toast.error('Unable to fetch SOL balance', {
+        description: 'Please check your wallet connection',
+      });
     } finally {
-      setIsLoadingTokens(false);
+      setIsLoadingBalance(false);
     }
   };
-
-  // Load tokens effect
-  useEffect(() => {
-    // If tokens are provided as props, use those
-    if (tokens) {
-      setAvailableTokens(tokens);
-    }
-    // Otherwise, if wallet is connected, fetch tokens
-    else if (connected && publicKey) {
-      fetchTokenAccounts(publicKey)
-        .then((fetchedTokens) => {
-          setAvailableTokens(fetchedTokens);
-        })
-        .catch((error) => {
-          console.error("Error setting tokens:", error);
-          // Set default SOL token on error
-          setAvailableTokens([
-            {
-              id: "sol",
-              symbol: "SOL",
-              name: "Solana",
-              balance: 0,
-              decimals: 9,
-              icon: "/crypto-logos/solana-logo.svg",
-              apr: 5.5,
-            },
-          ]);
-        });
-    }
-  }, [tokens, connected, publicKey]);
 
   // Handle use max amount
   const handleUseMax = (e?: React.MouseEvent) => {
@@ -340,113 +133,30 @@ export function StakeForm({
       e.stopPropagation();
     }
     
-    if (selectedToken && selectedToken.balance > 0) {
-      // If SOL is selected, keep 0.01 SOL for transaction fees
-      let maxAmount: number;
-      
-      if (selectedToken.id === "sol" || 
-          selectedToken.mintAddress === "So11111111111111111111111111111111111111112") {
-        // Keep 0.05 SOL for transaction fees, enough for most transactions
-        maxAmount = Math.max(selectedToken.balance - 0.05, 0);
-      } else {
-        maxAmount = selectedToken.balance;
-      }
-      
-      setAmountValue(maxAmount.toString());
-      form.setValue("amount", maxAmount, {
+    if (solBalance !== '--' && parseFloat(solBalance) > 0) {
+      // Keep 0.05 SOL for transaction fees
+      const maxAmount = Math.max(parseFloat(solBalance) - 0.05, 0);
+      setAmountToStake(maxAmount.toString());
+      form.setValue("amountToStake", maxAmount, {
         shouldValidate: false,
         shouldDirty: true,
         shouldTouch: true,
       });
-      
-      // Calculate estimated reward
-      calculateEstimatedReward(maxAmount, lockupPeriod);
     }
   };
 
-  // Handle amount input change
+  // Handle amount input change with debounce
   const handleAmountChange = (value: string) => {
-    setAmountValue(value);
-    const parsedValue = value === "" ? undefined : parseFloat(value);
-    form.setValue("amount", parsedValue, {
-      shouldValidate: false  // Prevent validation
-    });
-    
-    if (parsedValue && parsedValue > 0) {
-      calculateEstimatedReward(parsedValue, lockupPeriod);
-    } else {
-      setEstimatedReward(0);
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      setAmountToStake(value);
+      const parsedValue = value === "" ? undefined : parseFloat(value);
+      form.setValue("amountToStake", parsedValue, {
+        shouldValidate: false  // Prevent validation
+      });
     }
   };
 
-  // Handle token selection change
-  const handleTokenChange = (tokenId: string) => {
-    const token = availableTokens.find((t) => t.id === tokenId);
-    
-    if (!token) return;
-    
-    setSelectedToken(token);
-    form.setValue("token", token.id, {
-      shouldValidate: false  // Prevent validation
-    });
-    
-    // Recalculate estimated reward if amount exists
-    if (amountValue && parseFloat(amountValue) > 0) {
-      calculateEstimatedReward(parseFloat(amountValue), lockupPeriod);
-    }
-  };
-
-  // Handle lockup period change
-  const handleLockupPeriodChange = (value: string) => {
-    const days = parseInt(value);
-    setLockupPeriod(days);
-    form.setValue("lockupPeriod", days, {
-      shouldValidate: false  // Prevent validation
-    });
-    
-    // Recalculate estimated reward if amount exists
-    if (amountValue && parseFloat(amountValue) > 0) {
-      calculateEstimatedReward(parseFloat(amountValue), days);
-    }
-  };
-
-  // Calculate estimated reward
-  const calculateEstimatedReward = (amount: number, days: number) => {
-    if (!selectedToken || !amount || amount <= 0 || !days) {
-      setEstimatedReward(0);
-      return;
-    }
-    
-    // Find the APR for the selected period
-    const option = STAKE_OPTIONS.find(opt => parseInt(opt.value) === days);
-    const apr = option?.apr || 0;
-    
-    // Calculate reward: amount * (apr/100) * (days/365)
-    const reward = amount * (apr / 100) * (days / 365);
-    setEstimatedReward(reward);
-  };
-
-  // Separate function to update balances
-  const updateBalances = async () => {
-    setIsUpdatingBalance(true);
-    try {
-      const updatedTokens = await fetchTokenAccounts(publicKey!);
-      setAvailableTokens(updatedTokens);
-      if (selectedToken) {
-        const updatedToken = updatedTokens.find(t => t.id === selectedToken.id);
-        if (updatedToken) {
-          setSelectedToken(updatedToken);
-        }
-      }
-      toast.success("Balances updated");
-    } catch (error) {
-      console.error("Error updating balances:", error);
-    } finally {
-      setIsUpdatingBalance(false);
-    }
-  };
-
-  // Handle form submission
+  // Handle form submission - Stake SOL with Solayer
   const onSubmit = async (values: StakeFormValues) => {
     if (!connected) {
       toast.error("Wallet not connected");
@@ -468,348 +178,365 @@ export function StakeForm({
       return;
     }
 
-    if (!selectedToken) {
-      toast.error("Select a token");
-      return;
-    }
-
-    if (!values.amount || values.amount <= 0) {
+    if (!values.amountToStake || values.amountToStake <= 0) {
       toast.error("Invalid amount");
       return;
     }
 
+    // Check SOL balance
+    const inputAmount = values.amountToStake;
+    if (solBalance !== '--' && parseFloat(solBalance) < inputAmount) {
+      // Allow very small discrepancy for SOL (to account for transaction fees)
+      if (inputAmount - parseFloat(solBalance) < 0.001) {
+        console.log(`Detected small discrepancy in SOL balance, proceeding`);
+      } else {
+        toast.error("Insufficient SOL balance");
+        return;
+      }
+    }
+
     try {
       setIsSubmitting(true);
+      setError('');
+      setCurrentStage('confirming');
       
-      // Check token address
-      if (!selectedToken.mintAddress) {
-        throw new Error("Token mintAddress not found");
-      }
-      
-      // Create PublicKey from address
-      const tokenMint = new PublicKey(selectedToken.mintAddress);
-      
-      // Log staking information for debugging
-      console.log("=== Staking Information ===");
+      // Log transaction information for debugging
+      console.log("=== Transaction Information ===");
       console.log("Endpoint:", endpoint);
-      console.log("Token:", selectedToken.symbol, tokenMint.toString());
-      console.log("Amount:", values.amount);
-      console.log("Lockup period:", values.lockupPeriod, "days");
-      console.log("Estimated reward:", estimatedReward.toFixed(4), selectedToken.symbol);
+      console.log("Amount:", values.amountToStake);
       console.log("Wallet connected:", connected ? "Yes" : "No");
       console.log("PublicKey:", publicKey.toString());
       console.log("========================");
       
-      // Check wallet
-      if (!wallet) {
-        throw new Error("Wallet not connected");
+      // Use internal API route to avoid CORS error
+      const response = await fetch(
+        `/api/murphis/solayer/stake?amount=${parseFloat(amountToStake)}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            account: publicKey.toBase58(),
+          }),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Stake request failed");
+      }
+
+      const data = await response.json();
+
+      // Decode transaction from base64
+      const txBuffer = Buffer.from(data.transaction, "base64");
+      
+      // Create VersionedTransaction from received data
+      const tx = VersionedTransaction.deserialize(txBuffer);
+      
+      // Update to latest blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
+      tx.message.recentBlockhash = blockhash;
+      
+      // Sign transaction with user's wallet
+      if (!signTransaction) {
+        throw new Error("Wallet does not support transaction signing");
       }
       
-      // Simulate staking (in a real app, you would call your staking contract here)
-      toast.success("Staking initiated", {
-        description: "This is a demo. In a real app, your tokens would be staked now."
-      });
+      console.log("Signing transaction...");
       
-      // Optional callback to parent component
-      if (onStake) {
-        await onStake(values);
+      try {
+        const signedTx = await signTransaction(tx);
+        
+        console.log("Sending transaction...");
+        const signature = await connection.sendRawTransaction(signedTx.serialize());
+        
+        console.log("Transaction sent, signature:", signature);
+        
+        // Wait for transaction confirmation
+        const latestBlockhash = await connection.getLatestBlockhash();
+        await connection.confirmTransaction({
+          signature,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        });
+        
+        setTransactionSignature(signature);
+        setCurrentStage('success');
+        
+        toast.success("Staking successful!", {
+          description: `Transaction: ${signature}`
+        });
+        
+        // Reset form
+        setAmountToStake("");
+        form.setValue("amountToStake", undefined, {
+          shouldValidate: false
+        });
+        
+        // Refresh balance after successful stake
+        fetchBalance();
+      } catch (signError: any) {
+        console.error('Error signing transaction:', signError);
+        
+        // Analyze user-canceled transaction error
+        if (signError.message && signError.message.includes("canceled")) {
+          toast.error("Transaction canceled", {
+            description: "You canceled the transaction"
+          });
+          setError("You canceled the transaction");
+        } else {
+          toast.error("Error signing transaction", {
+            description: signError.message || "Unable to sign transaction"
+          });
+          setError(`Error signing transaction: ${signError.message}`);
+        }
+        
+        setCurrentStage('error');
+        throw signError; // Re-throw to handle in finally
       }
-      
-      // Reset form
-      setAmountValue("");
-      setEstimatedReward(0);
-      form.setValue("amount", undefined, {
-        shouldValidate: false
-      });
-      
-      // Update balances after successful staking
-      setTimeout(() => {
-        updateBalances();
-      }, 2000);
       
     } catch (error: any) {
-      console.error("Staking error:", error);
-      toast.error("Staking failed", {
-        description: error.message || "Transaction failed"
-      });
+      console.error('Staking error:', error);
+      
+      // Signing error already handled above, no need to show toast again
+      if (!error.message?.includes("canceled")) {
+        setError(`Staking failed: ${error.message}`);
+        toast.error("Transaction failed", {
+          description: error.message || "Unable to complete transaction"
+        });
+      }
+      
+      setCurrentStage('error');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Render token item for the select dropdown
-  const renderTokenItem = (token: TokenInfo) => (
-    <SelectItem key={token.id} value={token.id}>
-      <div className="flex items-center justify-between w-full">
-        <div className="flex items-center">
-          {token.icon && (
-            <div className="w-5 h-5 mr-2 rounded-full overflow-hidden flex items-center justify-center">
-              <img
-                src={token.icon || "/placeholder.svg"}
-                alt={token.symbol}
-                className="w-4 h-4 object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-            </div>
-          )}
-          <span>{token.symbol}</span>
-        </div>
-        {showTokenBalance && (
-          <span className="text-muted-foreground ml-2 text-sm">
-            {token.balance.toLocaleString(undefined, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: token.decimals > 6 ? 6 : token.decimals,
-            })}
-          </span>
-        )}
+  // Render success view
+  const renderSuccess = () => (
+    <div className="space-y-4 p-4 text-center">
+      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+        <svg className="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        </svg>
       </div>
-    </SelectItem>
+      <h3 className="text-xl font-bold">Staking Successful!</h3>
+      <p className="text-muted-foreground">Your SOL has been successfully staked with Solayer.</p>
+      {transactionSignature && (
+        <a 
+          href={`https://explorer.solana.com/tx/${transactionSignature}`} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          View transaction
+        </a>
+      )}
+      <Button 
+        onClick={() => {
+          setCurrentStage('input');
+          setAmountToStake('');
+        }}
+        className="w-full"
+      >
+        Stake more SOL
+      </Button>
+    </div>
   );
 
+  // Render error view
+  const renderError = () => (
+    <div className="space-y-4 p-4 text-center">
+      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
+        <svg className="h-10 w-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <h3 className="text-xl font-bold">Staking Failed</h3>
+      <p className="text-muted-foreground">{error || 'An error occurred while staking your SOL.'}</p>
+      <Button 
+        onClick={() => {
+          setCurrentStage('input');
+        }}
+        className="w-full"
+      >
+        Try Again
+      </Button>
+    </div>
+  );
+
+  // Render confirmation view
+  const renderConfirming = () => (
+    <div className="space-y-4 p-4 text-center">
+      <div className="mx-auto flex h-20 w-20 items-center">
+        <Loader2 className="h-10 w-10 animate-spin" />
+      </div>
+      <h3 className="text-xl font-bold">Confirming Transaction</h3>
+      <p className="text-muted-foreground">Please wait while your staking transaction is being processed...</p>
+    </div>
+  );
+
+  // Render input form
+  const renderInputForm = () => (
+    <Form {...form}>
+      <form 
+        onSubmit={(e) => {
+          // Check if clicking MAX button then do not submit
+          const target = e.target as HTMLElement;
+          const maxButton = target.querySelector('.max-button');
+          if (maxButton && (maxButton === document.activeElement || maxButton.contains(document.activeElement as Node))) {
+            e.preventDefault();
+            return;
+          }
+          
+          e.preventDefault();
+          form.handleSubmit(onSubmit)(e);
+        }}
+        className="space-y-4"
+      >
+        <FormField
+          control={form.control}
+          name="amountToStake"
+          render={({ field }) => (
+            <FormItem className="bg-secondary/50 rounded-lg p-4">
+              <div className="flex justify-between items-center">
+                <FormLabel>Stake Amount</FormLabel>
+                <div className="flex items-center text-xs text-muted-foreground space-x-1">
+                  <span>
+                    Balance: {isLoadingBalance ? '...' : solBalance}
+                  </span>
+                  {connected && solBalance !== '--' && parseFloat(solBalance) > 0 && (
+                    <div className="max-button-container" onClick={(e) => e.stopPropagation()}>
+                      <span 
+                        className="cursor-pointer h-auto py-0 px-2 text-xs text-primary hover:underline max-button" 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleUseMax();
+                        }}
+                      >
+                        MAX
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-2">
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="0.0"
+                    value={amountToStake}
+                    onChange={(e) => handleAmountChange(e.target.value)}
+                    disabled={!connected || isSubmitting}
+                    className="bg-transparent border-none text-xl font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                  />
+                </FormControl>
+                <div className="min-w-[140px] h-auto bg-background flex items-center justify-center p-2 rounded-md">
+                  <div className="flex items-center">
+                    <img
+                      src="/crypto-logos/solana-logo.svg"
+                      alt="SOL"
+                      className="w-5 h-5 mr-2 rounded-full"
+                      onError={(e) => {
+                        console.log("Error loading SOL logo, using fallback");
+                        e.currentTarget.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZSI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4="; 
+                      }}
+                    />
+                    SOL
+                  </div>
+                </div>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="space-y-4">
+          <div className="bg-secondary/50 rounded-lg p-4 space-y-2">
+            <div className="flex justify-between items-center text-sm">
+              <span>Staking Platform</span>
+              <span className="font-medium">Solayer</span>
+            </div>
+            
+            <div className="flex justify-between items-center text-sm">
+              <span>Reward Token</span>
+              <span className="font-medium">sSOL</span>
+            </div>
+            
+            <div className="flex justify-between items-center text-sm">
+              <span>Estimated APY</span>
+              <span className="font-medium">9.26%</span>
+            </div>
+            
+            <div className="flex justify-between items-center text-sm">
+              <span>Fee</span>
+              <span className="font-medium">0%</span>
+            </div>
+          </div>
+          
+          <div className="pt-2">
+            {!connected ? (
+              <ConnetWalletButton className="w-full" />
+            ) : (
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={
+                  isSubmitting ||
+                  !amountToStake ||
+                  parseFloat(amountToStake) <= 0 || 
+                  (solBalance !== '--' && parseFloat(solBalance) < parseFloat(amountToStake) && 
+                   !(parseFloat(amountToStake) - parseFloat(solBalance) < 0.001))
+                }
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    Staking...
+                  </>
+                ) : (
+                  (solBalance !== '--' && parseFloat(solBalance) < parseFloat(amountToStake) && 
+                  !(parseFloat(amountToStake) - parseFloat(solBalance) < 0.001))
+                    ? 'Insufficient SOL balance'
+                    : 'Stake SOL'
+                )}
+              </Button>
+            )}
+          </div>
+        </div>
+      </form>
+    </Form>
+  );
+
+  // Render based on current stage
+  const renderStageContent = () => {
+    switch (currentStage) {
+      case 'success':
+        return renderSuccess();
+      case 'error':
+        return renderError();
+      case 'confirming':
+        return renderConfirming();
+      default:
+        return renderInputForm();
+    }
+  };
+
   return (
-    <Card className={className}>
+    <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Stake Tokens</span>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={updateBalances} 
-            disabled={isUpdatingBalance || !connected}
-          >
-            <RefreshCw className={`h-4 w-4 ${isUpdatingBalance ? 'animate-spin' : ''}`} />
-          </Button>
+          <span>Stake SOL</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form 
-            onSubmit={(e) => {
-              // Check if clicking MAX button then do not submit
-              const target = e.target as HTMLElement;
-              const maxButton = target.querySelector('.max-button');
-              if (maxButton && (maxButton === document.activeElement || maxButton.contains(document.activeElement as Node))) {
-                e.preventDefault();
-                return;
-              }
-              
-              e.preventDefault();
-              form.handleSubmit(onSubmit)(e);
-            }}
-            className="space-y-4"
-          >
-            {/* Token Select Field */}
-            <FormField
-              control={form.control}
-              name="token"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select Token</FormLabel>
-                  <Select
-                    onValueChange={(value) => handleTokenChange(value)}
-                    value={field.value}
-                    disabled={!connected || isLoadingTokens}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={
-                            isLoadingTokens || isUpdatingBalance
-                              ? "Loading..."
-                              : "Select a token"
-                          }
-                        >
-                          {selectedToken && (
-                            <div className="flex items-center">
-                              {selectedToken.icon && (
-                                <img
-                                  src={selectedToken.icon}
-                                  alt={selectedToken.symbol}
-                                  className="w-5 h-5 mr-2 rounded-full"
-                                />
-                              )}
-                              {selectedToken.symbol}
-                            </div>
-                          )}
-                        </SelectValue>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {isLoadingTokens || isUpdatingBalance ? (
-                        <div className="flex items-center justify-center p-2">
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                          <span>
-                            {isUpdatingBalance
-                              ? "Updating balances..."
-                              : "Loading tokens..."}
-                          </span>
-                        </div>
-                      ) : availableTokens.length > 0 ? (
-                        <SelectGroup>
-                          {availableTokens.map(renderTokenItem)}
-                        </SelectGroup>
-                      ) : (
-                        <div className="p-2 text-muted-foreground text-center">
-                          No tokens found
-                        </div>
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Token Amount Field */}
-            <FormField
-              control={form.control}
-              name="amount"
-              render={({ field }) => (
-                <FormItem className="bg-secondary/50 rounded-lg p-4">
-                  <div className="flex justify-between items-center">
-                    <FormLabel>Amount</FormLabel>
-                    {selectedToken && showTokenBalance && (
-                      <div className="flex items-center text-xs text-muted-foreground space-x-1">
-                        <span>
-                          Balance: {selectedToken.balance.toLocaleString(undefined, {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: selectedToken.decimals > 6 ? 6 : selectedToken.decimals,
-                          })}
-                        </span>
-                        <div className="max-button-container" onClick={(e) => e.stopPropagation()}>
-                          <span 
-                            className="cursor-pointer h-auto py-0 px-2 text-xs text-primary hover:underline max-button" 
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleUseMax();
-                            }}
-                          >
-                            MAX
-                          </span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-2 mt-2">
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="0.0"
-                        step="any"
-                        value={amountValue}
-                        onChange={(e) => handleAmountChange(e.target.value)}
-                        disabled={!connected || !selectedToken}
-                        className="bg-transparent border-none text-xl font-medium placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
-                      />
-                    </FormControl>
-                    {selectedToken && (
-                      <div className="flex items-center bg-background px-3 py-2 rounded-md">
-                        {selectedToken.icon && (
-                          <img
-                            src={selectedToken.icon}
-                            alt={selectedToken.symbol}
-                            className="w-5 h-5 mr-2 rounded-full"
-                          />
-                        )}
-                        <span>{selectedToken.symbol}</span>
-                      </div>
-                    )}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Lockup Period Field */}
-            <FormField
-              control={form.control}
-              name="lockupPeriod"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Lockup Period</FormLabel>
-                  <Select
-                    onValueChange={(value) => handleLockupPeriodChange(value)}
-                    value={field.value?.toString()}
-                    disabled={!connected}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select lockup period">
-                          {STAKE_OPTIONS.find(opt => parseInt(opt.value) === lockupPeriod)?.label}
-                        </SelectValue>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectGroup>
-                        {STAKE_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value}>
-                            <div className="flex items-center justify-between w-full">
-                              <span>{option.label}</span>
-                              <span className="text-green-500 text-sm">{option.apr}% APR</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Estimated Reward */}
-            {estimatedReward > 0 && selectedToken && (
-              <div className="border border-border rounded-lg p-4 bg-secondary/30">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Estimated Reward</span>
-                  <span className="font-medium text-green-500">
-                    +{estimatedReward.toFixed(4)} {selectedToken.symbol}
-                  </span>
-                </div>
-                <div className="text-xs text-muted-foreground mt-2">
-                  {STAKE_OPTIONS.find(opt => parseInt(opt.value) === lockupPeriod)?.apr}% APR for {lockupPeriod} days
-                </div>
-              </div>
-            )}
-
-            {/* Add stake button section */}
-            <div className="pt-2">
-              {!connected ? (
-                <ConnetWalletButton className="w-full" />
-              ) : (
-                <Button
-                  type="submit"
-                  className="w-full"
-                  disabled={
-                    isSubmitting ||
-                    isLoading ||
-                    !selectedToken ||
-                    !amountValue ||
-                    parseFloat(amountValue) <= 0
-                  }
-                >
-                  {isSubmitting || isLoading? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      Staking...
-                    </>
-                  ) : (
-                    "Stake"
-                  )}
-                </Button>
-              )}
-            </div>
-
-            {/* Network Info */}
-            <div className="text-xs text-center text-muted-foreground">
-              Network: {networkName}
-            </div>
-          </form>
-        </Form>
+        {renderStageContent()}
       </CardContent>
     </Card>
   );
 }
+
+export default StakeForm;
