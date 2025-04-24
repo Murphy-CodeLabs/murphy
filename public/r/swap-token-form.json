@@ -3,7 +3,7 @@
   "name": "swap-token-form",
   "type": "registry:block",
   "title": "Swap Token Form",
-  "description": "Một component form cho phép swap token trên Solana sử dụng Jupiter API.",
+  "description": "A simple swap token form component.",
   "dependencies": [
     "@solana/web3.js",
     "@solana/spl-token",
