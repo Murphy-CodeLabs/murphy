@@ -11,6 +11,7 @@
     "send-token-form",
     "swap-token-form",
     "stake-token-form",
-    "token-list"
+    "token-list",
+    "token-combobox"
   ]
 }

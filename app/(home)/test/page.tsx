@@ -13,7 +13,7 @@ export default function TestPage() {
         Connect Wallet
       </ConnetWalletButton>
 
-      <SendTokenForm className="max-w-md " />
+      <SendTokenForm className="max-w-md mt-5" />
     </div>
   );
 }

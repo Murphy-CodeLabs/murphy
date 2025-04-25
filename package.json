@@ -30,6 +30,7 @@
     "@solana/web3.js": "^1.98.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "fumadocs-core": "15.2.7",
     "fumadocs-mdx": "11.6.0",
     "fumadocs-ui": "15.2.7",
