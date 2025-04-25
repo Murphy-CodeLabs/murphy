@@ -11,6 +11,11 @@
     "send-token-form",
     "swap-token-form",
     "stake-token-form",
-    "token-list"
+    "token-list",
+    "create-collection-form",
+    "create-merkleTree-form",
+    "get-nft-form",
+    "mint-cnft-form",
+    "mint-nft-form"
   ]
 }

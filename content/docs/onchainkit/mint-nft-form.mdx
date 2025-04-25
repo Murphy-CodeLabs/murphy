@@ -1,0 +1,88 @@
+---
+title: Mint NFT Form
+description: A Solana NFT minting component with shadcn UI styling
+icon: "FileImage"
+---
+
+import { MintNFT } from "@/components/ui/murphis/mint-nft-form";
+
+<PreviewComponent name={"Mint NFT Form"} v0JsonFileName={"mint-nft-form"}>
+  <MintNFT className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana and Metaplex dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Mint NFT Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/mint-nft-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { MintNFT } from "@/components/ui/murphis/mint-nft-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create an NFT</h1>
+      <MintNFT className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- Connect with Solana wallet
+- Create standard Solana NFTs (SPL tokens)
+- Customizable NFT metadata (name, symbol, URI)
+- Optional collection support
+- Real-time network detection (devnet/mainnet)
+- Multi-stage UI (input, confirming, success, error)
+- Transaction signature display with explorer links
+- Error handling with retry capability
+
+## Advanced Usage
+
+You can specify a collection mint to add your NFT to an existing collection:
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create an NFT</h1>
+      <MintNFT 
+        className="max-w-md"
+        collectionMint="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ" 
+      />
+    </div>
+  );
+}
+```
+
+**Note:** For minting compressed NFTs with lower gas fees, consider using the [Mint CNFT Form](/docs/onchainkit/mint-cnft-form) component instead.
