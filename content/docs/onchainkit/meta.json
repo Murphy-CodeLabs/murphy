@@ -10,6 +10,7 @@
     "connect-wallet-button",
     "send-token-form",
     "swap-token-form",
-    "stake-token-form"
+    "stake-token-form",
+    "token-list"
   ]
 }
