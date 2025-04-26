@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { TokenInfo } from "./send-token-form";
-import { ChevronsUpDownIcon, Loader2 } from "lucide-react";
+import React from "react";
+import { ChevronsUpDownIcon } from "lucide-react";
 import { Button } from "../button";
 import {
   Popover,

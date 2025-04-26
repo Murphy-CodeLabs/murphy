@@ -134,6 +134,28 @@
           "target": "app/api/murphis/solayer/stake/route.ts"
         }
       ]
+    },
+    {
+      "name": "token-combobox",
+      "type": "registry:block",
+      "title": "Token Combobox",
+      "description": "A searchable combobox of tokens and prices with optional user balances.",
+      "registryDependencies": ["command", "popover"],
+      "dependencies": [
+        "@solana/web3.js",
+      ],
+      "files": [  
+        {
+          "path": "components/ui/murphis/token-icon",
+          "type": "registry:component",
+          "target": "components/ui/murphis/token-icon"
+        },
+        {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
+        }
+      ]
     }
   ]
 }
