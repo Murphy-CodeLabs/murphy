@@ -1,0 +1,90 @@
+---
+title: Create Merkle Tree Form
+description: A Solana Merkle Tree creation component with shadcn UI styling
+icon: "FolderTree"
+---
+
+import { CreateMerkleTree } from "@/components/ui/murphis/create-merkleTree-form";
+
+<PreviewComponent name={"Create Merkle Tree Form"} v0JsonFileName={"create-merkleTree-form"}>
+  <CreateMerkleTree className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana and Metaplex dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters @metaplex-foundation/mpl-token-metadata @metaplex-foundation/mpl-bubblegum"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Create Merkle Tree Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/create-merkleTree-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { CreateMerkleTree } from "@/components/ui/murphis/create-merkleTree-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Merkle Tree on Solana</h1>
+      <CreateMerkleTree className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- Connect with Solana wallet
+- Configurable Merkle Tree depth (1-30, recommended 14-20)
+- Configurable Merkle Tree buffer size (recommended 64-256)
+- Real-time network display (devnet/mainnet)
+- Multi-stage form with different views for creation process, success, and error states
+- Transaction signature display with explorer links
+- Error handling with retry capability
+
+## Advanced Usage
+
+You can pass a callback function to be called when a Merkle Tree is successfully created:
+
+```tsx
+export default function MyPage() {
+  const handleMerkleTreeCreated = (merkleTreeAddress: string) => {
+    console.log(`New Merkle Tree created: ${merkleTreeAddress}`);
+    // Do something with the new Merkle Tree address
+  };
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Merkle Tree on Solana</h1>
+      <CreateMerkleTree 
+        className="max-w-md" 
+        onMerkleTreeCreated={handleMerkleTreeCreated} 
+      />
+    </div>
+  );
+}
+```

@@ -11,6 +11,11 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
+    "@metaplex-foundation/mpl-bubblegum": "^4.4.0",
+    "@metaplex-foundation/mpl-token-metadata": "^3.4.0",
+    "@metaplex-foundation/umi": "^1.2.0",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.2.0",
+    "@metaplex-foundation/umi-signer-wallet-adapters": "^1.2.0",
     "@radix-ui/react-collapsible": "^1.1.7",
     "@radix-ui/react-dialog": "^1.1.10",
     "@radix-ui/react-dropdown-menu": "^2.1.10",

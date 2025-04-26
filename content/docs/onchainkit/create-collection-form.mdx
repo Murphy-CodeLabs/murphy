@@ -1,0 +1,56 @@
+---
+title: Create Collection Form
+description: A Solana NFT collection creation component with shadcn UI styling
+icon: "Image"
+---
+
+import CreateCollectionForm from "@/components/ui/murphis/create-collection-form";
+
+<PreviewComponent name={"Create Collection Form"} v0JsonFileName={"create-collection-form"}>
+  <CreateCollectionForm />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Create Collection Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/create-collection-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+### Basic Usage
+
+```tsx
+import { CreateCollectionForm } from "@/components/ui/murphis/create-collection-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create NFT Collection</h1>
+      <CreateCollectionForm />
+    </div>
+  );
+}

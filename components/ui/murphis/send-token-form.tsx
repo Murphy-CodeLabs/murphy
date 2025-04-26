@@ -34,7 +34,7 @@ import {
   SelectValue,
   SelectGroup,
 } from "@/components/ui/select";
-import { ConnetWalletButton } from "./connect-wallet-button";
+import { ConnectWalletButton } from "./connect-wallet-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Type for our form values
@@ -642,9 +642,9 @@ export function SendTokenForm({
                 )}
               </Button>
             ) : (
-              <ConnetWalletButton className="w-full">
+              <ConnectWalletButton className="w-full">
                 Connect Wallet
-              </ConnetWalletButton>
+              </ConnectWalletButton>
             )}
 
             {connected && (

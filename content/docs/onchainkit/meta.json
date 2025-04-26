@@ -13,5 +13,10 @@
     "stake-token-form",
     "token-list",
     "token-combobox"
+    "create-collection-form",
+    "create-merkleTree-form",
+    "get-nft-form",
+    "mint-cnft-form",
+    "mint-nft-form"
   ]
 }

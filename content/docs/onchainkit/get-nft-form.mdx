@@ -1,0 +1,68 @@
+---
+title: View NFT Form
+description: A Solana NFT lookup component with shadcn UI styling
+icon: "Images"
+---
+
+import { GetNFT } from "@/components/ui/murphis/get-nft-form";
+
+<PreviewComponent name={"View NFT Form"} v0JsonFileName={"get-nft-form"}>
+  <GetNFT className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add View NFT Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/get-nft-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { GetNFT } from "@/components/ui/murphis/get-nft-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">View NFT Information</h1>
+      <GetNFT className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- Connect with Solana wallet
+- Search for NFTs using their mint address
+- Display NFT image, name, and description
+- Show NFT metadata including owner, balance, and data size
+- View NFT on blockchain explorer
+- Network detection (devnet/mainnet)
+- Multi-stage UI (input, loading, success, error)
+- Error handling with retry capability

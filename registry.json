@@ -33,6 +33,21 @@
           "path": "hook/murphis/use-walletModal.ts",
           "type": "registry:hook",
           "target": "hook/murphis/use-walletModal.ts"
+        },
+        {
+          "path": "components/providers/wallet-provider.tsx",
+          "type": "registry:file",
+          "target": "components/providers/wallet-provider.tsx"
+        },
+        {
+          "path": "components/app/layout.tsx",
+          "type": "registry:file",
+          "target": "app/layout.tsx"
+        },
+        {
+          "path": "components/app/page.tsx",
+          "type": "registry:file",
+          "target": "app/page.tsx"
         }
       ]
     },
@@ -154,6 +169,129 @@
           "path": "types/swap/index.ts",
           "type": "registry:file",
           "target": "types/swap/index.ts"
+      "name": "token-list",
+      "type": "registry:block",
+      "title": "Token List",
+      "description": "A simple token list component.",
+      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/token-list.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/token-list.tsx"
+        }
+      ]
+    },
+    {
+      "name": "create-collection-form",
+      "type": "registry:block",
+      "title": "Create Collection Form",
+      "description": "A simple create collection form component.",
+      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/create-collection-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/create-collection-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "create-merkleTree-form",
+      "type": "registry:block",
+      "title": "Create Merkle Tree Form",
+      "description": "A simple create merkle tree form component.",
+      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/create-merkleTree-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/create-merkleTree-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "get-nft-form",
+      "type": "registry:block",
+      "title": "Get NFT Form",
+      "description": "A simple get NFT form component.",
+      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/get-nft-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/get-nft-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mint-cnft-form",
+      "type": "registry:block",
+      "title": "Mint CNFT Form",
+      "description": "A simple mint CNFT form component.",
+      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/mint-cnft-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/mint-cnft-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mint-nft-form",
+      "type": "registry:block",
+      "title": "Mint NFT Form",
+      "description": "A simple mint NFT form component.",
+      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/mint-nft-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/mint-nft-form.tsx"
+        },
+        {
+          "path": "hook/murphis/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphis/use-walletModal.ts"
         }
       ]
     }

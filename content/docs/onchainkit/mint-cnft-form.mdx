@@ -1,0 +1,90 @@
+---
+title: Mint CNFT Form
+description: A Solana compressed NFT minting component with shadcn UI styling
+icon: "SquarePlus"
+---
+
+import { MintCNFT } from "@/components/ui/murphis/mint-cnft-form";
+
+<PreviewComponent name={"Mint CNFT Form"} v0JsonFileName={"mint-cnft-form"}>
+  <MintCNFT className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana and Metaplex dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters @metaplex-foundation/mpl-token-metadata @metaplex-foundation/mpl-bubblegum @metaplex-foundation/umi"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Mint CNFT Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/mint-cnft-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { MintCNFT } from "@/components/ui/murphis/mint-cnft-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create a Compressed NFT</h1>
+      <MintCNFT className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- Connect with Solana wallet
+- Create compressed NFTs with minimal gas fees
+- Auto-create new collection NFT or use existing collection
+- Support for Merkle Trees (requires Merkle Tree address)
+- Customizable NFT metadata (name, symbol, URI)
+- Real-time network detection (devnet/mainnet)
+- Multi-stage UI (input, confirming, success, error)
+- Transaction signature display with explorer links
+- Error handling with automatic retry mechanism
+
+## Advanced Usage
+
+You can specify a Merkle Tree address and an optional collection mint to use:
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create a Compressed NFT</h1>
+      <MintCNFT 
+        className="max-w-md"
+        merkleTree="9zsqKmQHCFLG17LupALsZAtpppXx8aMihCCjKrG7HkGs" 
+        collectionMint="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ"
+      />
+    </div>
+  );
+}
+```
+
+**Note:** You need to have a valid Merkle Tree address to mint CNFTs. If you don't have one, use the [Create Merkle Tree Form](/docs/onchainkit/create-merkleTree-form) to create a new Merkle Tree.

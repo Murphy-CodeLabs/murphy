@@ -28,7 +28,7 @@ import {
   SelectValue,
   SelectGroup,
 } from "@/components/ui/select";
-import { ConnetWalletButton } from "./connect-wallet-button";
+import { ConnectWalletButton } from "./connect-wallet-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Popover,
@@ -1022,7 +1022,7 @@ export function SwapForm({
             {/* Add swap button section */}
             <div className="pt-2">
               {!connected ? (
-                <ConnetWalletButton className="w-full" />
+                <ConnectWalletButton className="w-full" />
               ) : (
                 <Button
                   type="submit"
