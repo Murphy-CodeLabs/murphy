@@ -142,7 +142,7 @@
       "description": "A searchable combobox of tokens and prices with optional user balances.",
       "registryDependencies": ["command", "popover"],
       "dependencies": [
-        "@solana/web3.js",
+        "@solana/web3.js"
       ],
       "files": [  
         {
