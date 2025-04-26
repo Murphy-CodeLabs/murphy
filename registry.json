@@ -131,13 +131,22 @@
       "type": "registry:block",
       "title": "Stake Token Form",
       "description": "A simple stake token form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
         "@solana/wallet-adapter-react"
       ],
-      "files": [  
+      "files": [
         {
           "path": "components/ui/murphis/stake-token-form.tsx",
           "type": "registry:component",
@@ -156,10 +165,8 @@
       "title": "Token Combobox",
       "description": "A searchable combobox of tokens and prices with optional user balances.",
       "registryDependencies": ["command", "popover"],
-      "dependencies": [
-        "@solana/web3.js"
-      ],
-      "files": [  
+      "dependencies": ["@solana/web3.js"],
+      "files": [
         {
           "path": "components/ui/murphis/token-icon",
           "type": "registry:component",
@@ -169,11 +176,24 @@
           "path": "types/swap/index.ts",
           "type": "registry:file",
           "target": "types/swap/index.ts"
+        }
+      ]
+    },
+    {
       "name": "token-list",
       "type": "registry:block",
       "title": "Token List",
       "description": "A simple token list component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
@@ -192,7 +212,16 @@
       "type": "registry:block",
       "title": "Create Collection Form",
       "description": "A simple create collection form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
@@ -215,7 +244,16 @@
       "type": "registry:block",
       "title": "Create Merkle Tree Form",
       "description": "A simple create merkle tree form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
@@ -238,7 +276,16 @@
       "type": "registry:block",
       "title": "Get NFT Form",
       "description": "A simple get NFT form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
@@ -257,7 +304,16 @@
       "type": "registry:block",
       "title": "Mint CNFT Form",
       "description": "A simple mint CNFT form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
@@ -276,7 +332,16 @@
       "type": "registry:block",
       "title": "Mint NFT Form",
       "description": "A simple mint NFT form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
