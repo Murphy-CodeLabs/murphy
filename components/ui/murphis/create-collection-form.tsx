@@ -11,7 +11,7 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { ConnetWalletButton } from "./connect-wallet-button";
+import { ConnectWalletButton } from "./connect-wallet-button";
 import {
   Card,
   CardContent,
@@ -28,7 +28,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// Icons và notifications
+// Icons and notifications
 import { toast } from "sonner";
 import { Loader2, ExternalLink, CheckCircle } from "lucide-react";
 
@@ -359,7 +359,7 @@ export default function CreateCollectionForm({ onCollectionCreated }: { onCollec
           
           <div className="pt-2">
             {!connected ? (
-              <ConnetWalletButton className="w-full" />
+              <ConnectWalletButton className="w-full" />
             ) : (
               <Button
                 type="submit"
@@ -398,4 +398,4 @@ export default function CreateCollectionForm({ onCollectionCreated }: { onCollec
       </CardContent>
     </Card>
   );
-} 
+}

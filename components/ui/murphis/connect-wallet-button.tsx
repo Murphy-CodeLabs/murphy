@@ -1,41 +1,15 @@
-"use client";
+"use client"
 
-import React, {
-  DetailedHTMLProps,
-  FC,
-  ImgHTMLAttributes,
-  MouseEvent,
-  MouseEventHandler,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-import { useWallet, Wallet } from "@solana/wallet-adapter-react";
-import { WalletName, WalletReadyState } from "@solana/wallet-adapter-base";
-import { useWalletMultiButton } from "@/hook/murphis/use-walletMultiButton";
-import { Button, type buttonVariants } from "../button";
-import type { VariantProps } from "class-variance-authority";
-import { ModalContext } from "@/components/providers/wallet-provider";
+import React, { type FC, useCallback, useEffect, useMemo, useState } from "react"
+import { useWallet } from "@solana/wallet-adapter-react"
+import { WalletName, WalletReadyState } from "@solana/wallet-adapter-base"
+import { useWalletMultiButton } from "@/hook/murphis/use-walletMultiButton"
+import { Button } from "../button"
+import { ModalContext } from "@/components/providers/wallet-provider"
 
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "../dialog";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../collapsible";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../dropdown-menu";
+import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle } from "../dialog"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../collapsible"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../dropdown-menu"
 
 // ----- Label Constants -----
 const LABELS = {
@@ -46,46 +20,36 @@ const LABELS = {
   disconnect: "Disconnect",
   "has-wallet": "Connect Wallet",
   "no-wallet": "Select Wallet",
-} as const;
+} as const
 
 // ----- Props -----
-type WalletButtonProps = React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    labels?: Partial<typeof LABELS>;
-    asChild?: boolean;
-  };
-
-type Props = WalletButtonProps;
-
-export interface WalletIconProps
-  extends DetailedHTMLProps<
-    ImgHTMLAttributes<HTMLImageElement>,
-    HTMLImageElement
-  > {
-  wallet: { adapter: Pick<Wallet["adapter"], "icon" | "name"> } | null;
+type WalletButtonProps = React.ComponentProps<"button"> & {
+  labels?: Partial<typeof LABELS>
+  asChild?: boolean
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
+  size?: "default" | "sm" | "lg" | "icon"
 }
 
+type Props = WalletButtonProps
+
 export interface WalletListItemProps {
-  handleClick: MouseEventHandler<HTMLButtonElement>;
-  tabIndex?: number;
-  wallet: Wallet;
+  handleClick: React.MouseEventHandler<HTMLButtonElement>
+  tabIndex?: number
+  wallet: {
+    adapter: {
+      name: string
+      icon?: string
+    }
+    readyState: WalletReadyState
+  }
 }
 
 // ----- Wallet List Item -----
-export const WalletListItem: FC<WalletListItemProps> = ({
-  handleClick,
-  tabIndex,
-  wallet,
-}) => (
-  <Button
-    onClick={handleClick}
-    tabIndex={tabIndex}
-    variant="outline"
-    className="justify-start w-full"
-  >
+export const WalletListItem: FC<WalletListItemProps> = ({ handleClick, tabIndex, wallet }) => (
+  <Button onClick={handleClick} tabIndex={tabIndex} variant="outline" className="justify-start w-full">
     {wallet.adapter.icon && (
       <img
-        src={wallet.adapter.icon}
+        src={wallet.adapter.icon || "/placeholder.svg"}
         alt={`${wallet.adapter.name} icon`}
         className="mr-2 h-5 w-5"
       />
@@ -95,38 +59,34 @@ export const WalletListItem: FC<WalletListItemProps> = ({
       <span className="ml-auto text-xs text-green-500">Detected</span>
     )}
   </Button>
-);
+)
 
 // ----- Wallet Modal Component -----
 export const WalletModal: FC<{
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }> = ({ open, onOpenChange }) => {
-  const { wallets, select } = useWallet();
-  const [expanded, setExpanded] = useState(false);
+  const { wallets, select } = useWallet()
+  const [expanded, setExpanded] = useState(false)
 
   // Access the modal context to get network information
-  const modalContext = React.useContext(ModalContext);
-  const isMainnet = modalContext?.isMainnet ?? true;
+  const modalContext = React.useContext(ModalContext)
+  const isMainnet = modalContext?.isMainnet ?? true
 
   const [listedWallets, collapsedWallets] = useMemo(() => {
-    const installed = wallets.filter(
-      (w) => w.readyState === WalletReadyState.Installed
-    );
-    const notInstalled = wallets.filter(
-      (w) => w.readyState !== WalletReadyState.Installed
-    );
-    return installed.length ? [installed, notInstalled] : [notInstalled, []];
-  }, [wallets]);
+    const installed = wallets.filter((w) => w.readyState === WalletReadyState.Installed)
+    const notInstalled = wallets.filter((w) => w.readyState !== WalletReadyState.Installed)
+    return installed.length ? [installed, notInstalled] : [notInstalled, []]
+  }, [wallets])
 
   const handleWalletClick = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, walletName: WalletName) => {
-      event.preventDefault();
-      select(walletName);
-      onOpenChange(false);
+    (event: React.MouseEvent<HTMLButtonElement>, walletName: string) => {
+      event.preventDefault()
+      select(walletName as WalletName)
+      onOpenChange(false)
     },
-    [select, onOpenChange]
-  );
+    [select, onOpenChange],
+  )
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -139,9 +99,7 @@ export const WalletModal: FC<{
           </DialogTitle>
           <div className="text-sm text-muted-foreground">
             Network:{" "}
-            <span className={isMainnet ? "text-green-500" : "text-yellow-500"}>
-              {isMainnet ? "Mainnet" : "Devnet"}
-            </span>
+            <span className={isMainnet ? "text-green-500" : "text-yellow-500"}>{isMainnet ? "Mainnet" : "Devnet"}</span>
           </div>
         </DialogHeader>
 
@@ -155,11 +113,7 @@ export const WalletModal: FC<{
           ))}
 
           {collapsedWallets.length > 0 && (
-            <Collapsible
-              open={expanded}
-              onOpenChange={setExpanded}
-              className="w-full"
-            >
+            <Collapsible open={expanded} onOpenChange={setExpanded} className="w-full">
               <CollapsibleTrigger asChild>
                 <Button variant="ghost" className="w-full justify-between">
                   {expanded ? "Less" : "More"} options
@@ -170,9 +124,7 @@ export const WalletModal: FC<{
                   <WalletListItem
                     key={wallet.adapter.name}
                     wallet={wallet}
-                    handleClick={(e) =>
-                      handleWalletClick(e, wallet.adapter.name)
-                    }
+                    handleClick={(e) => handleWalletClick(e, wallet.adapter.name)}
                   />
                 ))}
               </CollapsibleContent>
@@ -187,76 +139,48 @@ export const WalletModal: FC<{
         </DialogClose>
       </DialogContent>
     </Dialog>
-  );
-};
-
-// ----- Base Wallet Button -----
-export function BaseWalletConnectionButton({
-  walletIcon,
-  walletName,
-  className,
-  children,
-  ...props
-}: WalletButtonProps & {
-  walletIcon?: string | null;
-  walletName?: string | null;
-}) {
-  return (
-    <Button {...props} className={className}>
-      {children}
-    </Button>
-  );
+  )
 }
 
 // ----- Wallet Multi Button -----
-export function BaseWalletMultiButton({
-  children,
-  labels = LABELS,
-  ...props
-}: Props) {
-  const {
-    buttonState,
-    onConnect,
-    onDisconnect,
-    publicKey,
-    walletIcon,
-    walletName,
-  } = useWalletMultiButton({
+export function BaseWalletMultiButton({ children, labels = LABELS, ...props }: Props) {
+  const [walletModalOpen, setWalletModalOpen] = useState(false)
+  const [copied, setCopied] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  const { buttonState, onConnect, onDisconnect, publicKey, walletIcon, walletName } = useWalletMultiButton({
     onSelectWallet() {
-      setWalletModalOpen(true);
+      setWalletModalOpen(true)
     },
-  });
-  const [copied, setCopied] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [walletModalOpen, setWalletModalOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  })
 
   // This effect runs only on the client after hydration
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   const content = useMemo(() => {
     // Before component is mounted, always use "Select Wallet" to match SSR
     if (!mounted) {
-      return labels["no-wallet"];
+      return labels["no-wallet"]
     }
 
     // When connected, always show the wallet address
     if (publicKey) {
-      const base58 = publicKey.toBase58();
-      return base58.slice(0, 4) + ".." + base58.slice(-4);
+      const base58 = publicKey.toBase58()
+      return base58.slice(0, 4) + ".." + base58.slice(-4)
     }
 
     // When not connected, prioritize custom children text
     if (children) {
-      return children;
+      return children
     } else if (buttonState === "connecting") {
-      return labels["connecting"];
+      return labels["connecting"]
     } else {
-      return labels["has-wallet"]; // Use consistent label from LABELS
+      return labels["has-wallet"] // Use consistent label from LABELS
     }
-  }, [buttonState, children, labels, publicKey, mounted]);
+  }, [buttonState, children, labels, publicKey, mounted])
 
   // If not connected, show a simple button that opens the wallet modal
   if (!publicKey) {
@@ -267,16 +191,16 @@ export function BaseWalletMultiButton({
           {...props}
           onClick={() => {
             if (buttonState === "has-wallet" && onConnect) {
-              onConnect();
+              onConnect()
             } else {
-              setWalletModalOpen(true);
+              setWalletModalOpen(true)
             }
           }}
         >
           {content}
         </Button>
       </>
-    );
+    )
   }
 
   // If connected, show the dropdown menu
@@ -287,13 +211,7 @@ export function BaseWalletMultiButton({
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button {...props}>
-            {walletIcon && (
-              <img
-                src={walletIcon}
-                alt="Wallet icon"
-                className="mr-2 h-4 w-4"
-              />
-            )}
+            {walletIcon && <img src={walletIcon || "/placeholder.svg"} alt="Wallet icon" className="mr-2 h-4 w-4" />}
             {content}
           </Button>
         </DropdownMenuTrigger>
@@ -301,9 +219,9 @@ export function BaseWalletMultiButton({
           {publicKey && (
             <DropdownMenuItem
               onClick={async () => {
-                await navigator.clipboard.writeText(publicKey.toBase58());
-                setCopied(true);
-                setTimeout(() => setCopied(false), 400);
+                await navigator.clipboard.writeText(publicKey.toBase58())
+                setCopied(true)
+                setTimeout(() => setCopied(false), 400)
               }}
             >
               {copied ? labels["copied"] : labels["copy-address"]}
@@ -311,8 +229,8 @@ export function BaseWalletMultiButton({
           )}
           <DropdownMenuItem
             onClick={() => {
-              setWalletModalOpen(true);
-              setMenuOpen(false);
+              setWalletModalOpen(true)
+              setMenuOpen(false)
             }}
           >
             {labels["change-wallet"]}
@@ -320,8 +238,8 @@ export function BaseWalletMultiButton({
           {onDisconnect && (
             <DropdownMenuItem
               onClick={() => {
-                onDisconnect();
-                setMenuOpen(false);
+                onDisconnect()
+                setMenuOpen(false)
               }}
             >
               {labels["disconnect"]}
@@ -330,10 +248,10 @@ export function BaseWalletMultiButton({
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
+  )
 }
 
 // ----- Public Exported Button -----
-export function ConnetWalletButton(props: WalletButtonProps) {
-  return <BaseWalletMultiButton {...props} />;
+export function ConnectWalletButton(props: WalletButtonProps) {
+  return <BaseWalletMultiButton {...props} />
 }
