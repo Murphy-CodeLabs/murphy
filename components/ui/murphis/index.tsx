@@ -12,6 +12,7 @@ import { CreateMerkleTree } from "./create-merkleTree-form";
 import { TokenList } from "./token-list";
 import { StakeForm } from "./stake-token-form";
 import { CreateConfigForm } from "./createConfig-form";
+import BuildCurveAndCreateConfigByMarketCapForm from "./buildCurveAndCreateConfigByMarketCap-form";
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -27,4 +28,5 @@ export {
   TokenList,
   StakeForm,
   CreateConfigForm,
+  BuildCurveAndCreateConfigByMarketCapForm,
 };
