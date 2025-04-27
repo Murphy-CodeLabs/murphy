@@ -4,8 +4,6 @@ description: The TokenInput component is an input field with support for user ba
 icon: "HdmiPort"
 ---
 
-import { TokenInput } from "@/components/ui/murphis";
-
 <PreviewComponent name={"Token Input"} v0JsonFileName={"token-input"}>
   <TokenInput assets={[]} className="max-w-md" />
 </PreviewComponent>
@@ -121,6 +119,7 @@ return;
 }, [searchValue, initialAssets, onSearch, address]);
 
 return (
+
 <Popover open={open} onOpenChange={setOpen}>
 <PopoverTrigger asChild>
 {trigger || (

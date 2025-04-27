@@ -4,8 +4,6 @@ description: A Solana compressed NFT minting component with shadcn UI styling
 icon: "SquarePlus"
 ---
 
-import { MintCNFT } from "@/components/ui/murphis/mint-cnft-form";
-
 <PreviewComponent name={"Mint CNFT Form"} v0JsonFileName={"mint-cnft-form"}>
   <MintCNFT className="max-w-md" />
 </PreviewComponent>
@@ -77,9 +75,9 @@ export default function MyPage() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-2">Create a Compressed NFT</h1>
-      <MintCNFT 
+      <MintCNFT
         className="max-w-md"
-        merkleTree="9zsqKmQHCFLG17LupALsZAtpppXx8aMihCCjKrG7HkGs" 
+        merkleTree="9zsqKmQHCFLG17LupALsZAtpppXx8aMihCCjKrG7HkGs"
         collectionMint="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ"
       />
     </div>

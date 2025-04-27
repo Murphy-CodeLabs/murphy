@@ -4,8 +4,6 @@ description: A Solana NFT minting component with shadcn UI styling
 icon: "FileImage"
 ---
 
-import { MintNFT } from "@/components/ui/murphis/mint-nft-form";
-
 <PreviewComponent name={"Mint NFT Form"} v0JsonFileName={"mint-nft-form"}>
   <MintNFT className="max-w-md" />
 </PreviewComponent>
@@ -76,9 +74,9 @@ export default function MyPage() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-2">Create an NFT</h1>
-      <MintNFT 
+      <MintNFT
         className="max-w-md"
-        collectionMint="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ" 
+        collectionMint="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ"
       />
     </div>
   );
