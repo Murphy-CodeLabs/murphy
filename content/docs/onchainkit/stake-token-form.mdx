@@ -7,7 +7,7 @@ icon: "Coins"
 import { StakeForm } from "@/components/ui/murphis/stake-token-form";
 
 <PreviewComponent name={"Stake Token Form"} v0JsonFileName={"stake-token-form"}>
-  <StakeForm className="max-w-md" />
+  <StakeForm className="max-w-lg" />
 </PreviewComponent>
 
 ## Installation
@@ -40,3 +40,155 @@ import { StakeForm } from "@/components/ui/murphis/stake-token-form";
 </Steps>
 
 ### Basic Usage
+
+```tsx
+import { StakeForm } from "@/components/ui/murphis/stake-token-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Stake Solana Tokens</h1>
+      <StakeForm className="max-w-lg" />
+    </div>
+  );
+}
+```
+
+### Component Overview
+
+The Stake Token Form component provides a complete interface for staking SOL tokens with Solayer. It includes:
+
+- SOL balance display with auto-refresh
+- Amount input with MAX button for convenience
+- Transaction status tracking
+- Success and error states
+- Transaction explorer link
+
+### Implementation Details
+
+The component goes through several stages during the staking process:
+
+1. **Input Stage**: User enters the amount to stake
+2. **Confirming Stage**: Transaction is being processed
+3. **Success Stage**: Transaction completes successfully
+4. **Error Stage**: Transaction fails with details
+
+The staking process uses a server-side API route to avoid CORS issues and create the staking transaction.
+
+```tsx
+// Example API route implementation (pages/api/murphis/solayer/stake.ts)
+import type { NextApiRequest, NextApiResponse } from "next";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  const { account } = req.body;
+  const amount = parseFloat(req.query.amount as string);
+
+  if (!account || isNaN(amount) || amount <= 0) {
+    return res.status(400).json({ error: "Invalid parameters" });
+  }
+
+  try {
+    // Call your staking service here
+    const response = await fetch("https://your-staking-service.com/stake", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        account,
+        amount,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Staking service error");
+    }
+
+    const data = await response.json();
+
+    return res.status(200).json({
+      transaction: data.transaction, // Base64 encoded transaction
+    });
+  } catch (error) {
+    console.error("Staking error:", error);
+    return res
+      .status(500)
+      .json({ error: "Failed to create staking transaction" });
+  }
+}
+```
+
+### Advanced Customization
+
+You can customize the Stake Form by extending its functionality:
+
+```tsx
+import { StakeForm } from "@/components/ui/murphis/stake-token-form";
+import { useState } from "react";
+
+export default function CustomStakePage() {
+  const [totalStakedAmount, setTotalStakedAmount] = useState(0);
+
+  // Track successful stakes
+  const handleSuccess = (amount: number) => {
+    setTotalStakedAmount((prev) => prev + amount);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="p-4 bg-accent rounded-lg">
+        <h2 className="text-lg font-bold">Your Staking Dashboard</h2>
+        <p>Total Staked: {totalStakedAmount} SOL</p>
+      </div>
+
+      <StakeForm className="max-w-lg" onSuccess={handleSuccess} />
+    </div>
+  );
+}
+```
+
+### Props
+
+<TypeTable
+  type={{
+    onSuccess: {
+      description: "Callback fired when staking is successful",
+      type: "(amount: number, signature: string) => void",
+      default: "undefined",
+    },
+    onError: {
+      description: "Callback fired when staking fails",
+      type: "(error: Error) => void",
+      default: "undefined",
+    },
+    className: {
+      description: "Additional CSS classes to apply to the component",
+      type: "string",
+      default: "undefined",
+    },
+    apiEndpoint: {
+      description: "Custom API endpoint for staking",
+      type: "string",
+      default: "/api/murphis/solayer/stake",
+    },
+    stakingProvider: {
+      description: "Name of the staking provider to display",
+      type: "string",
+      default: "Solayer",
+    },
+    estimatedApy: {
+      description: "Estimated APY to display",
+      type: "string",
+      default: "9.26%",
+    },
+  }}
+/>
