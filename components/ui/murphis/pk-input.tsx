@@ -1,9 +1,10 @@
+"use client";
 import React, { useState } from "react";
 
 import { validatePublicKey, cn } from "@/lib/utils";
 import { Input } from "../input";
 
-const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) => {
+export const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) => {
   const [value, setValue] = React.useState("");
   const [isInvalid, setIsValid] = React.useState(false);
   const [hasBlurred, setHasBlurred] = React.useState(false);
