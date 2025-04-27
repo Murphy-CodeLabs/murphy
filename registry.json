@@ -168,9 +168,9 @@
       "dependencies": ["@solana/web3.js"],
       "files": [
         {
-          "path": "components/ui/murphis/token-icon",
+          "path": "components/ui/murphis/token-icon.tsx",
           "type": "registry:component",
-          "target": "components/ui/murphis/token-icon"
+          "target": "components/ui/murphis/token-icon.tsx"
         },
         {
           "path": "types/swap/index.ts",

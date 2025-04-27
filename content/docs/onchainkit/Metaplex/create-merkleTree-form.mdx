@@ -4,9 +4,10 @@ description: A Solana Merkle Tree creation component with shadcn UI styling
 icon: "FolderTree"
 ---
 
-import { CreateMerkleTree } from "@/components/ui/murphis/create-merkleTree-form";
-
-<PreviewComponent name={"Create Merkle Tree Form"} v0JsonFileName={"create-merkleTree-form"}>
+<PreviewComponent
+  name={"Create Merkle Tree Form"}
+  v0JsonFileName={"create-merkleTree-form"}
+>
   <CreateMerkleTree className="max-w-md" />
 </PreviewComponent>
 
@@ -80,9 +81,9 @@ export default function MyPage() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-2">Create Merkle Tree on Solana</h1>
-      <CreateMerkleTree 
-        className="max-w-md" 
-        onMerkleTreeCreated={handleMerkleTreeCreated} 
+      <CreateMerkleTree
+        className="max-w-md"
+        onMerkleTreeCreated={handleMerkleTreeCreated}
       />
     </div>
   );

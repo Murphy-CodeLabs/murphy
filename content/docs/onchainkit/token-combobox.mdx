@@ -4,8 +4,6 @@ description: A searchable combobox of tokens and prices with optional user balan
 icon: List
 ---
 
-import { PublicKey } from "@solana/web3.js";
-
 <PreviewComponent name={"Token Combobox"} v0JsonFileName={"token-combobox"}>
   <TokenCombobox assets={[]} className="max-w-md" />
 </PreviewComponent>
@@ -174,6 +172,7 @@ return;
 }, [searchValue, initialAssets, onSearch, address]);
 
 return (
+
 <Popover open={open} onOpenChange={setOpen}>
 <PopoverTrigger asChild>
 {trigger || (
@@ -265,12 +264,13 @@ export { TokenCombobox };
 
     ```tsx
     <TokenCombobox
-  assets={assets}
-  address={publicKey}
-  showBalances={!!publicKey}
-  onSearch={searchAssets}
+
+assets={assets}
+address={publicKey}
+showBalances={!!publicKey}
+onSearch={searchAssets}
 />
-    ```
-    </Step>
+```
+</Step>
 
 </Steps>

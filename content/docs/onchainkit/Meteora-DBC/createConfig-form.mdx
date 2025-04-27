@@ -4,9 +4,10 @@ description: A DBC-SDK configuration component with shadcn UI
 icon: Settings
 ---
 
-import { CreateConfigForm } from "@/components/ui/murphis/createConfig-form";
-
-<PreviewComponent name={"Create Config Form"} v0JsonFileName={"createConfig-form"}>
+<PreviewComponent
+  name={"Create Config Form"}
+  v0JsonFileName={"createConfig-form"}
+>
   <CreateConfigForm className="max-w-md" />
 </PreviewComponent>
 
@@ -69,7 +70,6 @@ export default function MyPage() {
 - Display transaction signatures with links to blockchain explorers
 - Error handling with automatic retry mechanism
 
-
 ## Advanced Usage
 
 ```tsx
@@ -81,9 +81,9 @@ export default function MyPage() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-2">Create Config DBC</h1>
-      <CreateConfigForm 
-        className="max-w-md" 
-        onConfigCreated={handleConfigCreated} 
+      <CreateConfigForm
+        className="max-w-md"
+        onConfigCreated={handleConfigCreated}
       />
     </div>
   );
@@ -95,16 +95,21 @@ export default function MyPage() {
 When creating a DBC configuration, you need to understand the following important parameters:
 
 ### Fee Claimer
+
 The address that will receive fees from the pool. This is usually your main wallet.
 
 ### Leftover Receiver
+
 The address that will receive leftover tokens after transactions are executed.
 
 ### Quote Mint
+
 The token used as the quote token in the pool.
 
 ### LP Distribution
+
 Distribute liquidity tokens among stakeholders:
+
 - **Partner LP**: Percentage for partners (non-locked)
 - **Creator LP**: Percentage for creators (non-locked)
 - **Partner Locked LP**: Percentage locked for partners
