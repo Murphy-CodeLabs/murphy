@@ -359,6 +359,21 @@
           "target": "hook/murphis/use-walletModal.ts"
         }
       ]
+    },
+    {
+      "name": "token-input",
+      "type": "registry:block",
+      "title": "token-input",
+      "description": "The TokenInput component is an input field with support for user balances, half / max buttons, and number formatting.",
+      "registryDependencies": ["input", "button"],
+      "dependencies": ["@solana/web3.js"],
+      "files": [
+        {
+          "path": "components/ui/murphis/token-combobox.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/token-combobox.tsx"
+        }
+      ]
     }
   ]
 }

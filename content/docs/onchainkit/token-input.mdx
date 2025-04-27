@@ -11,6 +11,7 @@ import { TokenInput } from "@/components/ui/murphis/token-input";
 </PreviewComponent>
 
 ## Installation
+
 <Steps>
 <Step>
 Install shadcn/ui input and button components
@@ -49,45 +50,45 @@ import {
 import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenComboboxProps = {
-  assets: SolAsset[];
-  trigger?: React.ReactNode;
-  address?: PublicKey | null;
-  showBalances?: boolean;
-  onSelect?: (token: SolAsset) => void;
-  onSearch?: ({
-    query,
-    owner,
-  }: {
-    query: string;
-    owner?: PublicKey;
-  }) => Promise<SolAsset[]>;
+assets: SolAsset[];
+trigger?: React.ReactNode;
+address?: PublicKey | null;
+showBalances?: boolean;
+onSelect?: (token: SolAsset) => void;
+onSearch?: ({
+query,
+owner,
+}: {
+query: string;
+owner?: PublicKey;
+}) => Promise<SolAsset[]>;
 };
 
 const TokenCombobox = ({
-  assets: initialAssets,
-  trigger,
-  address,
-  showBalances = true,
-  onSelect,
-  onSearch,
+assets: initialAssets,
+trigger,
+address,
+showBalances = true,
+onSelect,
+onSearch,
 }: TokenComboboxProps) => {
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
-  const [searchValue, setSearchValue] = React.useState("");
-  const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);
-  const searchTimeout = React.useRef<NodeJS.Timeout>();
+const [open, setOpen] = React.useState(false);
+const [value, setValue] = React.useState("");
+const [searchValue, setSearchValue] = React.useState("");
+const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);
+const searchTimeout = React.useRef<NodeJS.Timeout>();
 
-  const selectedAsset = React.useMemo(
-    () => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),
-    [assets, value],
-  );
+const selectedAsset = React.useMemo(
+() => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),
+[assets, value],
+);
 
-  React.useEffect(() => {
-    const handleSearch = async () => {
-      if (!searchValue) {
-        setAssets(initialAssets);
-        return;
-      }
+React.useEffect(() => {
+const handleSearch = async () => {
+if (!searchValue) {
+setAssets(initialAssets);
+return;
+}
 
       if (onSearch && searchValue.length) {
         if (searchTimeout.current) {
@@ -116,58 +117,58 @@ const TokenCombobox = ({
         clearTimeout(searchTimeout.current);
       }
     };
-  }, [searchValue, initialAssets, onSearch, address]);
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        {trigger || (
-          <Button
+}, [searchValue, initialAssets, onSearch, address]);
+
+return (
+<Popover open={open} onOpenChange={setOpen}>
+<PopoverTrigger asChild>
+{trigger || (
+<Button
             variant="outline"
             role="combobox"
             size="lg"
             aria-expanded={open}
             className="h-12 w-[300px] justify-start gap-2.5 px-3 font-medium"
           >
-            {selectedAsset ? (
-              <>
-                <TokenIcon asset={selectedAsset} />
-                {selectedAsset.symbol}
-              </>
-            ) : (
-              "Select token..."
-            )}
-            <ChevronsUpDownIcon size={16} className="ml-auto opacity-50" />
-          </Button>
-        )}
-      </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
-        <Command shouldFilter={false}>
-          <CommandInput
+{selectedAsset ? (
+<>
+<TokenIcon asset={selectedAsset} />
+{selectedAsset.symbol}
+</>
+) : (
+"Select token..."
+)}
+<ChevronsUpDownIcon size={16} className="ml-auto opacity-50" />
+</Button>
+)}
+</PopoverTrigger>
+<PopoverContent className="w-[300px] p-0">
+<Command shouldFilter={false}>
+<CommandInput
             placeholder="Search tokens..."
             value={searchValue}
             onValueChange={setSearchValue}
           />
-          <CommandList>
-            {assets.length === 0 && (
-              <CommandEmpty>
-                {searchValue ? "No tokens found." : "Loading..."}
-              </CommandEmpty>
-            )}
-            <CommandGroup>
-              {assets.map((asset) => (
-                <CommandItem
-                  key={asset.mint.toBase58()}
-                  value={asset.mint.toBase58().toLowerCase()}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                    if (onSelect) onSelect(asset);
-                  }}
-                  className="flex items-center gap-2"
-                >
-                  <TokenIcon asset={asset} />
-                  {asset.symbol}
+<CommandList>
+{assets.length === 0 && (
+<CommandEmpty>
+{searchValue ? "No tokens found." : "Loading..."}
+</CommandEmpty>
+)}
+<CommandGroup>
+{assets.map((asset) => (
+<CommandItem
+key={asset.mint.toBase58()}
+value={asset.mint.toBase58().toLowerCase()}
+onSelect={(currentValue) => {
+setValue(currentValue === value ? "" : currentValue);
+setOpen(false);
+if (onSelect) onSelect(asset);
+}}
+className="flex items-center gap-2" >
+<TokenIcon asset={asset} />
+{asset.symbol}
 
                   <span className="ml-auto flex flex-col text-right">
                     {!showBalances ? (
@@ -199,7 +200,8 @@ const TokenCombobox = ({
         </Command>
       </PopoverContent>
     </Popover>
-  );
+
+);
 };
 
 export { TokenCombobox };
@@ -223,20 +225,20 @@ import { Button } from "@/components/ui/button";
 import { TokenCombobox } from "@/components/sol/token-combobox";
 
 type TokenInputProps = {
-  assets: SolAsset[];
-  disabled?: boolean;
-  showWalletBalance?: boolean;
-  showQuickAmountButtons?: boolean;
-  amount?: number;
-  onTokenSelect?: (token: SolAsset) => void;
-  onAmountChange?: (amount: number) => void;
-  onSearch?: ({
-    query,
-    owner,
-  }: {
-    query: string;
-    owner?: PublicKey;
-  }) => Promise<SolAsset[]>;
+assets: SolAsset[];
+disabled?: boolean;
+showWalletBalance?: boolean;
+showQuickAmountButtons?: boolean;
+amount?: number;
+onTokenSelect?: (token: SolAsset) => void;
+onAmountChange?: (amount: number) => void;
+onSearch?: ({
+query,
+owner,
+}: {
+query: string;
+owner?: PublicKey;
+}) => Promise<SolAsset[]>;
 };
 
 export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
@@ -378,11 +380,13 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
         </div>
       </div>
     );
-  },
+
+},
 );
 
 TokenInput.displayName = "TokenInput";
-```
+
+````
 </Step>
 <Step>
 Use TokenInput
@@ -397,17 +401,18 @@ Use TokenInput
     console.log("Amount changed:", amount);
   }}
 />
-```
+````
+
 </Step>
 </Steps>
 
-## Props 
+## Props
 
-| Name           | Type                        | Default |
-| -------------- | --------------------------- | ------- |
-| `assets`       | `SolAsset[]`                | `[]`    |
-| `showWalletBalance` | `boolean`                   | `true`  |
-| `showQuickAmountButtons`      | `boolean` |         |`true`
-| `onTokenSelect`      | `(token: SolAsset) => void` |         |
-| `onAmountChange`      | `(amount: number) => void` |         |
-| `onSearch`      | `(query: string) => Promise<SolAsset[]>` |         |
+| Name                     | Type                                     | Default |
+| ------------------------ | ---------------------------------------- | ------- |
+| `assets`                 | `SolAsset[]`                             | `[]`    |
+| `showWalletBalance`      | `boolean`                                | `true`  |
+| `showQuickAmountButtons` | `boolean`                                | `true`  |
+| `onTokenSelect`          | `(token: SolAsset) => void`              |         |
+| `onAmountChange`         | `(amount: number) => void`               |         |
+| `onSearch`               | `(query: string) => Promise<SolAsset[]>` |         |

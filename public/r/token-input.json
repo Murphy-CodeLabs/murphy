@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-input",
+  "type": "registry:block",
+  "title": "token-input",
+  "description": "The TokenInput component is an input field with support for user balances, half / max buttons, and number formatting.",
+  "dependencies": [
+    "@solana/web3.js"
+  ],
+  "registryDependencies": [
+    "input",
+    "button"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphis/token-combobox.tsx",
+      "content": "\"use client\";\nimport React from \"react\";\nimport { ChevronsUpDownIcon } from \"lucide-react\";\nimport { Button } from \"../button\";\nimport {\n  Popover,\n  PopoverContent,\n  PopoverTrigger,\n} from \"@/components/ui/popover\";\nimport {\n  Command,\n  CommandEmpty,\n  CommandGroup,\n  CommandInput,\n  CommandItem,\n  CommandList,\n} from \"@/components/ui/command\";\nimport { SolAsset } from \"@/types/swap\";\nimport { PublicKey } from \"@solana/web3.js\";\nimport { TokenIcon } from \"./token-icon\";\n\ntype TokenComboboxProps = {\n  assets: SolAsset[];\n  trigger?: React.ReactNode;\n  address?: PublicKey | null;\n  showBalances?: boolean;\n  onSelect?: (token: SolAsset) => void;\n  onSearch?: ({\n    query,\n    owner,\n  }: {\n    query: string;\n    owner?: PublicKey;\n  }) => Promise<SolAsset[]>;\n};\n\nexport function TokenCombobox({\n  assets: initialAssets,\n  trigger,\n  address,\n  showBalances = true,\n  onSelect,\n  onSearch,\n}: TokenComboboxProps) {\n  const [open, setOpen] = React.useState(false);\n  const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);\n  const [value, setValue] = React.useState(\"\");\n  const [searchValue, setSearchValue] = React.useState(\"\");\n\n  const selectedAsset = React.useMemo(\n    () => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),\n    [assets, value],\n  );\n  return (\n    <Popover>\n      <PopoverTrigger asChild>\n        {trigger || (\n          <Button\n            variant=\"outline\"\n            role=\"combobox\"\n            size=\"lg\"\n            aria-expanded={open}\n            className=\"h-12 w-[300px] justify-start gap-2.5 px-3 font-medium\"\n          >\n            {selectedAsset ? (\n              <>\n                <TokenIcon asset={selectedAsset} />\n                {selectedAsset.symbol}\n              </>\n            ) : (\n              \"Select token...\"\n            )}\n            <ChevronsUpDownIcon size={16} className=\"ml-auto opacity-50\" />\n          </Button>\n        )}\n      </PopoverTrigger>\n      <PopoverContent className=\"w-[300px] p-0\">\n        <Command shouldFilter={false}>\n          <CommandInput\n            placeholder=\"Search tokens...\"\n            onValueChange={setSearchValue}\n          />\n          <CommandList>\n            {assets.length === 0 && (\n              <CommandEmpty>\n                {searchValue ? \"No tokens found.\" : \"Loading...\"}\n              </CommandEmpty>\n            )}\n            <CommandGroup>\n              {assets.map((asset) => (\n                <CommandItem\n                  key={asset.mint.toBase58()}\n                  value={asset.mint.toBase58().toLowerCase()}\n                  onSelect={(currentValue) => {\n                    setValue(currentValue === value ? \"\" : currentValue);\n                    setOpen(false);\n                    if (onSelect) onSelect(asset);\n                  }}\n                  className=\"flex items-center gap-2\"\n                >\n                  <TokenIcon asset={asset} />\n                  {asset.symbol}\n                </CommandItem>\n              ))}\n            </CommandGroup>\n          </CommandList>\n        </Command>\n      </PopoverContent>\n    </Popover>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "components/ui/murphis/token-combobox.tsx"
+    }
+  ]
+}
