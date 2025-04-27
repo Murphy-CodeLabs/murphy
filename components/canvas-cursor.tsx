@@ -7,7 +7,7 @@ const CanvasCursor = () => {
 
   return (
     <canvas
-      className="pointer-events-none fixed inset-0 hidden md:block"
+      className="pointer-events-none fixed inset-0 hidden md:block z-[50]"
       id="canvas"
     />
   );
