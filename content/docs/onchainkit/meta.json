@@ -17,7 +17,9 @@
     "create-merkleTree-form",
     "get-nft-form",
     "mint-cnft-form",
-    "mint-nft-form",
     "token-input"
+    "mint-nft-form"
+    "Metaplex",
+    "Meteora-DBC"
   ]
 }
