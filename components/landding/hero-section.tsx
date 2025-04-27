@@ -1,7 +1,7 @@
 "use client";
 
-import { GridPattern } from "@/components/grid-pattern";
-import { TerminalDemo } from "@/components/terminal-demo";
+import { GridPattern } from "@/components/background/grid-pattern";
+import { TerminalDemo } from "@/components/landding/terminal-demo";
 import AnimatedGroup from "@/components/ui/animated-group";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -50,11 +50,11 @@ export default function HeroSection() {
             <div className="flex flex-1 flex-col gap-8 md:justify-center">
               <AnimatedGroup variants={transitionVariants}>
                 <Link
-                  href="docs/murphis"
+                  href="/docs/onchainkit"
                   className="group mx-auto md:mx-0 flex w-fit items-center gap-4 rounded-full border border-primary/10 bg-primary/5 p-1.5 pl-5 shadow-lg transition-all duration-300 hover:border-primary/20 hover:bg-primary/10 dark:border-primary/20 dark:bg-primary/10 dark:hover:border-primary/30 dark:hover:bg-primary/15"
                 >
                   <span className="text-foreground/90 font-medium text-sm">
-                    🌟 Introduction to Murphis SDK
+                    Introduction to Murphis SDK
                   </span>
                   <span className="block h-4 w-0.5 bg-primary/30 dark:bg-primary/40"></span>
 
@@ -72,7 +72,7 @@ export default function HeroSection() {
               </AnimatedGroup>
 
               <div className="text-center md:text-left">
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]">
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6">
                   Murphis SDK
                 </h1>
                 <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto md:mx-0 mb-8 leading-relaxed">
@@ -95,8 +95,7 @@ export default function HeroSection() {
 
             {/* Right Column - Terminal Demo */}
             <div className="flex flex-1 items-center justify-center mt-8 md:mt-0">
-              <div className="w-full max-w-lg transform transition-all duration-500 hover:scale-[1.01] relative">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-primary/30 to-purple-500/30 rounded-2xl blur-xl opacity-50"></div>
+              <div className="w-full max-w-lg transform transition-all duration-500 relative">
                 <div className="relative">
                   <TerminalDemo />
                 </div>
