@@ -1,0 +1,418 @@
+---
+title: Token Input
+description: The TokenInput component is an input field with support for user balances, half / max buttons, and number formatting.
+icon: "HdmiPort"
+---
+
+import { TokenInput } from "@/components/ui/murphis";
+
+<PreviewComponent name={"Token Input"} v0JsonFileName={"token-input"}>
+  <TokenInput assets={[]} className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+<Step>
+Install shadcn/ui input and button components
+```bash
+npx shadcn@latest add input button
+```
+</Step>
+<Step>
+Install SolanaUI TokenCombobox
+```tsx
+"use client";
+
+import React from "react";
+
+import { PublicKey } from "@solana/web3.js";
+import { ChevronsUpDownIcon } from "lucide-react";
+
+import { formatUsd, formatNumber } from "@/lib/utils";
+import { SolAsset } from "@/lib/types";
+
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { TokenIcon } from "@/components/sol/token-icon";
+
+type TokenComboboxProps = {
+assets: SolAsset[];
+trigger?: React.ReactNode;
+address?: PublicKey | null;
+showBalances?: boolean;
+onSelect?: (token: SolAsset) => void;
+onSearch?: ({
+query,
+owner,
+}: {
+query: string;
+owner?: PublicKey;
+}) => Promise<SolAsset[]>;
+};
+
+const TokenCombobox = ({
+assets: initialAssets,
+trigger,
+address,
+showBalances = true,
+onSelect,
+onSearch,
+}: TokenComboboxProps) => {
+const [open, setOpen] = React.useState(false);
+const [value, setValue] = React.useState("");
+const [searchValue, setSearchValue] = React.useState("");
+const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);
+const searchTimeout = React.useRef<NodeJS.Timeout>();
+
+const selectedAsset = React.useMemo(
+() => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),
+[assets, value],
+);
+
+React.useEffect(() => {
+const handleSearch = async () => {
+if (!searchValue) {
+setAssets(initialAssets);
+return;
+}
+
+      if (onSearch && searchValue.length) {
+        if (searchTimeout.current) {
+          clearTimeout(searchTimeout.current);
+        }
+
+        searchTimeout.current = setTimeout(async () => {
+          const searchResults = await onSearch({
+            query: searchValue,
+            owner: address ?? undefined,
+          });
+          setAssets(searchResults);
+        }, 300);
+      } else {
+        const filtered = initialAssets.filter((asset) =>
+          asset.symbol.toLowerCase().includes(searchValue.toLowerCase()),
+        );
+        setAssets(filtered);
+      }
+    };
+
+    handleSearch();
+
+    return () => {
+      if (searchTimeout.current) {
+        clearTimeout(searchTimeout.current);
+      }
+    };
+
+}, [searchValue, initialAssets, onSearch, address]);
+
+return (
+<Popover open={open} onOpenChange={setOpen}>
+<PopoverTrigger asChild>
+{trigger || (
+<Button
+            variant="outline"
+            role="combobox"
+            size="lg"
+            aria-expanded={open}
+            className="h-12 w-[300px] justify-start gap-2.5 px-3 font-medium"
+          >
+{selectedAsset ? (
+<>
+<TokenIcon asset={selectedAsset} />
+{selectedAsset.symbol}
+</>
+) : (
+"Select token..."
+)}
+<ChevronsUpDownIcon size={16} className="ml-auto opacity-50" />
+</Button>
+)}
+</PopoverTrigger>
+<PopoverContent className="w-[300px] p-0">
+<Command shouldFilter={false}>
+<CommandInput
+            placeholder="Search tokens..."
+            value={searchValue}
+            onValueChange={setSearchValue}
+          />
+<CommandList>
+{assets.length === 0 && (
+<CommandEmpty>
+{searchValue ? "No tokens found." : "Loading..."}
+</CommandEmpty>
+)}
+<CommandGroup>
+{assets.map((asset) => (
+<CommandItem
+key={asset.mint.toBase58()}
+value={asset.mint.toBase58().toLowerCase()}
+onSelect={(currentValue) => {
+setValue(currentValue === value ? "" : currentValue);
+setOpen(false);
+if (onSelect) onSelect(asset);
+}}
+className="flex items-center gap-2" >
+<TokenIcon asset={asset} />
+{asset.symbol}
+
+                  <span className="ml-auto flex flex-col text-right">
+                    {!showBalances ? (
+                      formatUsd(asset.price ?? 0)
+                    ) : (
+                      <>
+                        {asset.userTokenAccount &&
+                        asset.userTokenAccount.amount &&
+                        asset.userTokenAccount.amount > 0
+                          ? formatNumber(asset.userTokenAccount.amount)
+                          : 0}
+
+                        {asset.price && (
+                          <span className="text-xs text-muted-foreground">
+                            {formatUsd(
+                              ((asset.userTokenAccount &&
+                                asset.userTokenAccount.amount) ||
+                                1) * asset.price,
+                            )}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+
+);
+};
+
+export { TokenCombobox };
+```
+</Step>
+<Step>
+Install SolanaUI TokenInput
+```tsx
+"use client";
+
+import React from "react";
+import { PublicKey } from "@solana/web3.js";
+import { WalletIcon } from "lucide-react";
+
+import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
+import { SolAsset } from "@/lib/types";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+import { TokenCombobox } from "@/components/sol/token-combobox";
+
+type TokenInputProps = {
+assets: SolAsset[];
+disabled?: boolean;
+showWalletBalance?: boolean;
+showQuickAmountButtons?: boolean;
+amount?: number;
+onTokenSelect?: (token: SolAsset) => void;
+onAmountChange?: (amount: number) => void;
+onSearch?: ({
+query,
+owner,
+}: {
+query: string;
+owner?: PublicKey;
+}) => Promise<SolAsset[]>;
+};
+
+export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
+  (
+    {
+      assets,
+      disabled = false,
+      showWalletBalance = true,
+      showQuickAmountButtons = true,
+      amount: initAmount = 0,
+      onTokenSelect,
+      onAmountChange,
+      onSearch,
+    },
+    amountInputRef: React.ForwardedRef<HTMLInputElement>,
+  ) => {
+    const [amount, setAmount] = React.useState<string>(initAmount.toString());
+    const [maxAmount, setMaxAmount] = React.useState<number>(0);
+    const [selectedToken, setSelectedToken] = React.useState<SolAsset>();
+
+    const handleInputChange = React.useCallback(
+      (newAmount: string) => {
+        let formattedAmount: string = "",
+          amount: number = 0;
+        const newAmountWithoutCommas = newAmount.replace(/,/g, "");
+        let decimalPart = newAmountWithoutCommas.split(".")[1];
+
+        if (
+          (newAmount.endsWith(",") || newAmount.endsWith(".")) &&
+          !newAmount.substring(0, newAmount.length - 1).includes(".")
+        ) {
+          amount = isNaN(Number.parseFloat(newAmountWithoutCommas))
+            ? 0
+            : Number.parseFloat(newAmountWithoutCommas);
+          formattedAmount = formatNumberGrouped(amount).concat(".");
+        } else if (selectedToken) {
+          const mintDecimals = selectedToken?.decimals;
+          const isDecimalPartInvalid = isNaN(Number.parseFloat(decimalPart));
+          if (!isDecimalPartInvalid)
+            decimalPart = decimalPart.substring(0, mintDecimals);
+          decimalPart = isDecimalPartInvalid
+            ? ""
+            : ".".concat(
+                Number.parseFloat("1".concat(decimalPart))
+                  .toString()
+                  .substring(1),
+              );
+          amount = isNaN(Number.parseFloat(newAmountWithoutCommas))
+            ? 0
+            : Number.parseFloat(newAmountWithoutCommas);
+          formattedAmount = formatNumberGrouped(amount)
+            .split(".")[0]
+            .concat(decimalPart);
+        }
+
+        if (amount > maxAmount) {
+          setAmount(formatNumberGrouped(maxAmount));
+          if (onAmountChange) onAmountChange(maxAmount);
+        } else {
+          setAmount(formattedAmount);
+          if (onAmountChange) onAmountChange(amount);
+        }
+      },
+      [maxAmount, setAmount, selectedToken, onAmountChange],
+    );
+
+    React.useEffect(() => {
+      setAmount(initAmount.toString());
+    }, [initAmount]);
+
+    return (
+      <div className="relative w-full space-y-4">
+        <div className="flex items-center justify-end gap-2">
+          {showWalletBalance && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setAmount(formatNumberGrouped(maxAmount));
+              }}
+            >
+              <WalletIcon size={16} />
+              {formatNumberShort(maxAmount)}
+            </Button>
+          )}
+          {showQuickAmountButtons && (
+            <>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setAmount(formatNumberGrouped(maxAmount / 2));
+                  onAmountChange && onAmountChange(maxAmount / 2);
+                }}
+              >
+                Half
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setAmount(formatNumberGrouped(maxAmount));
+                  onAmountChange && onAmountChange(maxAmount);
+                }}
+              >
+                Max
+              </Button>
+            </>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <TokenCombobox
+            assets={assets}
+            onSelect={(token) => {
+              setSelectedToken(token);
+              setMaxAmount(token?.userTokenAccount?.amount ?? 0);
+              setAmount("");
+              if (
+                amountInputRef &&
+                "current" in amountInputRef &&
+                amountInputRef.current instanceof HTMLInputElement
+              ) {
+                amountInputRef.current.focus();
+              }
+              if (onTokenSelect) onTokenSelect(token);
+            }}
+            onSearch={onSearch}
+          />
+          <Input
+            ref={amountInputRef}
+            type="text"
+            placeholder="0"
+            className="h-12 text-right"
+            inputMode="numeric"
+            value={amount ?? undefined}
+            disabled={disabled || !selectedToken}
+            onChange={(e) => handleInputChange(e.target.value)}
+          />
+        </div>
+      </div>
+    );
+
+},
+);
+
+TokenInput.displayName = "TokenInput";
+
+````
+</Step>
+<Step>
+Use TokenInput
+```tsx
+<TokenInput
+  assets={assets}
+  onSearch={searchAssets}
+  onTokenSelect={(token) => {
+    console.log("Selected token:", token);
+  }}
+  onAmountChange={(amount) => {
+    console.log("Amount changed:", amount);
+  }}
+/>
+````
+
+</Step>
+</Steps>
+
+## Props
+
+| Name                     | Type                                     | Default |
+| ------------------------ | ---------------------------------------- | ------- |
+| `assets`                 | `SolAsset[]`                             | `[]`    |
+| `showWalletBalance`      | `boolean`                                | `true`  |
+| `showQuickAmountButtons` | `boolean`                                | `true`  |
+| `onTokenSelect`          | `(token: SolAsset) => void`              |         |
+| `onAmountChange`         | `(amount: number) => void`               |         |
+| `onSearch`               | `(query: string) => Promise<SolAsset[]>` |         |

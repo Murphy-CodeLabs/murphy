@@ -361,11 +361,35 @@
       ]
     },
     {
+      "name": "token-input",
+      "type": "registry:block",
+      "title": "token-input",
+      "description": "The TokenInput component is an input field with support for user balances, half / max buttons, and number formatting.",
+      "registryDependencies": ["input", "button"],
+      "dependencies": ["@solana/web3.js"],
+      "files": [
+        {
+          "path": "components/ui/murphis/token-combobox.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/token-combobox.tsx"
+        }
+      ]
+    },
+    {
       "name": "createConfig-form",
       "type": "registry:block",
       "title": "Build Curve and Create Config Form",
       "description": "A simple build curve and create config form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
@@ -394,7 +418,16 @@
       "type": "registry:block",
       "title": "Build Curve and Create Config Form",
       "description": "A simple build curve and create config form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",

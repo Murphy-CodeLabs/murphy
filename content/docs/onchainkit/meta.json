@@ -12,11 +12,12 @@
     "swap-token-form",
     "stake-token-form",
     "token-list",
-    "token-combobox"
+    "token-combobox",
     "create-collection-form",
     "create-merkleTree-form",
     "get-nft-form",
     "mint-cnft-form",
+    "token-input"
     "mint-nft-form"
     "Metaplex",
     "Meteora-DBC"
