@@ -1,18 +1,14 @@
 import Layout from "@/app/layout";
+import MurphisLogo from "@/components/murphis-logo";
 import type { BaseLayoutProps, LinkItemType } from "fumadocs-ui/layouts/shared";
 import {
   Book,
   Box,
   Code,
-  ComponentIcon,
   CpuIcon,
-  Dumbbell,
   Globe,
   Heart,
-  LayoutGrid,
   LayoutTemplate,
-  Pencil,
-  Server,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -54,7 +50,7 @@ export const baseOptions: BaseLayoutProps = {
   nav: {
     title: (
       <>
-        <Dumbbell className="size-5 font-bold inline-flex" /> Murphis
+        <MurphisLogo /> Murphis
       </>
     ),
     transparentMode: "top",
