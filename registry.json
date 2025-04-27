@@ -451,6 +451,36 @@
           "target": "hook/murphis/use-walletModal.ts"
         }
       ]
+    },
+    {
+      "name": "buildCurveAndCreateConfigByMarketCap-form",
+      "type": "registry:block",
+      "title": "Build Curve and Create Config by Market Cap Form",
+      "description": "A simple build curve and create config by market cap form component.",
+      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "meteora-dbc"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphis/buildCurveAndCreateConfigByMarketCap-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphis/buildCurveAndCreateConfigByMarketCap-form.tsx"
+        },
+        {
+          "path": "hook/murphis/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphis/use-walletModal.ts"
+        },
+        {
+          "path": "hook/murphis/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphis/use-walletModal.ts"
+        }        
+      ]
     }
   ]
 }
