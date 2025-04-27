@@ -1,0 +1,117 @@
+---
+title: Build Curve And Create Config By Market Cap Form
+description: A DBC-SDK curve configuration component with market cap parameters và shadcn UI
+icon: Chart
+---
+
+import BuildCurveAndCreateConfigByMarketCapForm from "@/components/ui/murphis/buildCurveAndCreateConfigByMarketCap-form";
+
+<PreviewComponent name={"Build Curve And Create Config By Market Cap Form"} v0JsonFileName={"buildCurveAndCreateConfigByMarketCap-form"}>
+  <BuildCurveAndCreateConfigByMarketCapForm />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing the necessary Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @meteora-ag/dynamic-bonding-curve-sdk bn.js"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Ensure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Build Curve And Create Config By Market Cap Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/buildCurveAndCreateConfigByMarketCap-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Base Usage
+
+```tsx
+import BuildCurveAndCreateConfigByMarketCapForm from "@/components/ui/murphis/buildCurveAndCreateConfigByMarketCap-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Tạo cấu hình theo vốn hóa thị trường</h1>
+      <BuildCurveAndCreateConfigByMarketCapForm />
+    </div>
+  );
+}
+```
+
+## Features
+
+- Connect with Solana wallet
+- Create a new configuration based on market cap parameters
+- Set market parameters (total token supply, initial market cap, migration market cap)
+- Customize base fee and dynamic fee
+- Distribute LP with percentage for stakeholders
+- Customize fee receiver and leftover token receiver addresses
+- Choose quote token (SOL, USDC, USDT)
+- Automatically detect network (devnet/mainnet)
+- Multi-stage interface (input, confirmation, success, error)
+- Display transaction signature with link to blockchain explorer
+- Handle errors with automatic retry mechanism
+
+## Advanced Usage
+
+```tsx
+export default function MyPage() {
+  const handleConfigCreated = (configAddress: string) => {
+    console.log(`New configuration has been created: ${configAddress}`);
+    // Process logic config 
+  };
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Configuration by Market Cap</h1>
+      <BuildCurveAndCreateConfigByMarketCapForm 
+        onConfigCreated={handleConfigCreated} 
+      />
+    </div>
+  );
+}
+```
+## Configuration Parameters
+
+When creating a DBC configuration based on market cap, you need to understand the following important parameters:
+
+### Market Parameters
+- **Total Token Supply**: The total number of tokens to be issued
+- **Initial Market Cap**: The initial market cap when the token is issued
+- **Migration Market Cap**: The market cap when the token migrates
+- **Token Decimals**: The decimals for the base token and the quote token
+
+### Fee Parameters
+- **Base Fee (BPS)**: The base fee calculated in basis points
+- **Dynamic Fee**: Enable/disable the dynamic fee feature
+
+### LP Distribution
+- **Partner LP**: Percentage allocated to partners (unlocked)
+- **Creator LP**: Percentage allocated to creators (unlocked)
+- **Locked Partner LP**: Locked percentage for partners
+- **Locked Creator LP**: Locked percentage for creators
+
+**Note:** The total percentage of LP must equal 100%.
+
+### Addresses
+- **Fee Receiver Address**: The address that will receive fees from the pool
+- **Leftover Token Receiver Address**: The address that will receive leftover tokens after the transaction is completed
+- **Quote Token Address**: The token used as the quote token in the pool
