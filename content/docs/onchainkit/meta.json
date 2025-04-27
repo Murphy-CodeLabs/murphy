@@ -12,10 +12,7 @@
     "swap-token-form",
     "stake-token-form",
     "token-list",
-    "create-collection-form",
-    "create-merkleTree-form",
-    "get-nft-form",
-    "mint-cnft-form",
-    "mint-nft-form"
+    "Metaplex",
+    "Meteora-DBC"
   ]
 }
