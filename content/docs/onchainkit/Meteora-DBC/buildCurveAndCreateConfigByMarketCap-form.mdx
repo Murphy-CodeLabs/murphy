@@ -1,12 +1,13 @@
 ---
 title: Build Curve And Create Config By Market Cap Form
 description: A DBC-SDK curve configuration component with market cap parameters và shadcn UI
-icon: Chart
+icon: ChartArea
 ---
 
-import BuildCurveAndCreateConfigByMarketCapForm from "@/components/ui/murphis/buildCurveAndCreateConfigByMarketCap-form";
-
-<PreviewComponent name={"Build Curve And Create Config By Market Cap Form"} v0JsonFileName={"buildCurveAndCreateConfigByMarketCap-form"}>
+<PreviewComponent
+  name={"Build Curve And Create Config By Market Cap Form"}
+  v0JsonFileName={"buildCurveAndCreateConfigByMarketCap-form"}
+>
   <BuildCurveAndCreateConfigByMarketCapForm />
 </PreviewComponent>
 
@@ -49,7 +50,9 @@ import BuildCurveAndCreateConfigByMarketCapForm from "@/components/ui/murphis/bu
 export default function MyPage() {
   return (
     <div>
-      <h1 className="text-xl font-bold mb-2">Tạo cấu hình theo vốn hóa thị trường</h1>
+      <h1 className="text-xl font-bold mb-2">
+        Tạo cấu hình theo vốn hóa thị trường
+      </h1>
       <BuildCurveAndCreateConfigByMarketCapForm />
     </div>
   );
@@ -76,34 +79,40 @@ export default function MyPage() {
 export default function MyPage() {
   const handleConfigCreated = (configAddress: string) => {
     console.log(`New configuration has been created: ${configAddress}`);
-    // Process logic config 
+    // Process logic config
   };
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-2">Create Configuration by Market Cap</h1>
-      <BuildCurveAndCreateConfigByMarketCapForm 
-        onConfigCreated={handleConfigCreated} 
+      <h1 className="text-xl font-bold mb-2">
+        Create Configuration by Market Cap
+      </h1>
+      <BuildCurveAndCreateConfigByMarketCapForm
+        onConfigCreated={handleConfigCreated}
       />
     </div>
   );
 }
 ```
+
 ## Configuration Parameters
 
 When creating a DBC configuration based on market cap, you need to understand the following important parameters:
 
 ### Market Parameters
+
 - **Total Token Supply**: The total number of tokens to be issued
 - **Initial Market Cap**: The initial market cap when the token is issued
 - **Migration Market Cap**: The market cap when the token migrates
 - **Token Decimals**: The decimals for the base token and the quote token
 
 ### Fee Parameters
+
 - **Base Fee (BPS)**: The base fee calculated in basis points
 - **Dynamic Fee**: Enable/disable the dynamic fee feature
 
 ### LP Distribution
+
 - **Partner LP**: Percentage allocated to partners (unlocked)
 - **Creator LP**: Percentage allocated to creators (unlocked)
 - **Locked Partner LP**: Locked percentage for partners
@@ -112,6 +121,7 @@ When creating a DBC configuration based on market cap, you need to understand th
 **Note:** The total percentage of LP must equal 100%.
 
 ### Addresses
+
 - **Fee Receiver Address**: The address that will receive fees from the pool
 - **Leftover Token Receiver Address**: The address that will receive leftover tokens after the transaction is completed
 - **Quote Token Address**: The token used as the quote token in the pool
