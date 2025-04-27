@@ -70,6 +70,27 @@ We use shadcn UI for our component library. If you're adding or modifying compon
 3. Write clear documentation for any new components
 4. Test your changes thoroughly before submitting a PR
 
+### Component Auto-Import for Documentation
+
+All Murphis components must be exported from the `components/ui/murphis/index.tsx` file to make them automatically available in MDX documentation without requiring explicit imports.
+
+When you create a new component:
+
+1. Create your component file in the `components/ui/murphis` directory (e.g., `my-new-component.tsx`)
+2. Export your component from the index file:
+
+```tsx
+// In components/ui/murphis/index.tsx
+import { MyNewComponent } from "./my-new-component";
+
+export { 
+  // ... existing exports
+  MyNewComponent 
+};
+```
+
+This export pattern allows the component to be automatically available in MDX files through the `mdx-components.tsx` configuration, so documentation authors can use components directly without imports.
+
 ## Commit Convention
 
 We follow conventional commits in this repository. When creating a commit, please use the convention `category(scope): message` with one of the following categories:
