@@ -167,3 +167,5 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
     );
   },
 );
+
+TokenInput.displayName = "TokenInput";
