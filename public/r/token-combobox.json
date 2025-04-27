@@ -1,0 +1,28 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-combobox",
+  "type": "registry:block",
+  "title": "Token Combobox",
+  "description": "A searchable combobox of tokens and prices with optional user balances.",
+  "dependencies": [
+    "@solana/web3.js"
+  ],
+  "registryDependencies": [
+    "command",
+    "popover"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphis/token-icon.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\n\nimport { SolAsset } from \"@/types/swap\";\n\ntype IconProps = {\n  asset: SolAsset | null;\n  size?: number;\n};\n\nconst TokenIcon = ({ asset, size = 24 }: IconProps) => {\n  return (\n    <div\n      className=\"relative shrink-0 rounded-full border border-border bg-background p-0\"\n      style={{\n        width: size + 2,\n        height: size + 2,\n      }}\n    >\n      <img\n        src=\"/token-icons/placeholder.jpg\"\n        alt={asset?.symbol ?? asset?.mint.toBase58() ?? \"\"}\n        width={size}\n        height={size}\n        className=\"absolute inset-0 rounded-full\"\n      />\n      <img\n        src={asset?.image ?? \"\"}\n        alt={asset?.symbol ?? asset?.mint.toBase58() ?? \"\"}\n        width={size}\n        height={size}\n        className=\"absolute inset-0 rounded-full\"\n        style={{\n          width: size,\n          height: size,\n        }}\n      />\n    </div>\n  );\n};\n\nexport { TokenIcon };",
+      "type": "registry:component",
+      "target": "components/ui/murphis/token-icon.tsx"
+    },
+    {
+      "path": "types/swap/index.ts",
+      "content": "import { PublicKey, Connection } from \"@solana/web3.js\";\n\nexport interface Config {\n    JUPITER_REFERRAL_ACCOUNT?: string;\n    JUPITER_FEE_BPS?: number;\n}\n  \ndeclare const _default: {\n    Config: Config;\n};\n\nexport type SolAsset = {\n  mint: PublicKey;\n  name: string;\n  symbol: string;\n  image: string;\n  decimals: number;\n  price: number;\n  userTokenAccount?: {\n    address: PublicKey;\n    amount: number;\n  };\n};\n\nexport default _default; ",
+      "type": "registry:file",
+      "target": "types/swap/index.ts"
+    }
+  ]
+}
