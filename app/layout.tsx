@@ -11,8 +11,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Murphis SDK",
-  description: "Murphis SDK",
+  title: {
+    default: "Murphis SDK",
+    template: "%s | Murphis SDK",
+  },
+  description: "Murphis SDK is a set of tools for building on Solana.",
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
