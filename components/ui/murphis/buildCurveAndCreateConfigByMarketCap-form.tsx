@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Loader2, ExternalLink, CheckCircle, Settings } from "lucide-react";
-import { PublicKey, Transaction, Keypair } from "@solana/web3.js";
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { DynamicBondingCurveClient } from '@meteora-ag/dynamic-bonding-curve-sdk';
-import BN from 'bn.js';
+import { PublicKey, Keypair } from "@solana/web3.js";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { DynamicBondingCurveClient } from "@meteora-ag/dynamic-bonding-curve-sdk";
+import BN from "bn.js";
 
 // UI components
 import { Button } from "@/components/ui/button";
@@ -41,7 +41,7 @@ import {
 import { ModalContext } from "@/components/providers/wallet-provider";
 
 enum FeeSchedulerMode {
-  Linear = 0
+  Linear = 0,
 }
 
 interface BuildCurveResult {
@@ -57,13 +57,13 @@ type FormValues = {
   migrationOption: number;
   tokenBaseDecimal: number;
   tokenQuoteDecimal: number;
-  
+
   // Tham số của feeSchedulerParam
   numberOfPeriod: number;
   reductionFactor: number;
   periodFrequency: number;
   feeSchedulerMode: number;
-  
+
   // Các thông số khác
   baseFeeBps: number;
   dynamicFeeEnabled: boolean;
@@ -71,13 +71,13 @@ type FormValues = {
   collectFeeMode: number;
   migrationFeeOption: number;
   tokenType: number;
-  
+
   // Phân phối LP
   partnerLpPercentage: number;
   creatorLpPercentage: number;
   partnerLockedLpPercentage: number;
   creatorLockedLpPercentage: number;
-  
+
   // Địa chỉ
   feeClaimer: string;
   leftoverReceiver: string;
@@ -92,12 +92,12 @@ const customResolver = (data: any) => {
   if (!data.totalTokenSupply) {
     errors.totalTokenSupply = {
       type: "required",
-      message: "Tổng cung token là bắt buộc",
+      message: "Total token supply is required",
     };
   } else if (data.totalTokenSupply <= 0) {
     errors.totalTokenSupply = {
       type: "min",
-      message: "Tổng cung token phải lớn hơn 0",
+      message: "Total token supply must be greater than 0",
     };
   }
 
@@ -105,12 +105,12 @@ const customResolver = (data: any) => {
   if (!data.initialMarketCap) {
     errors.initialMarketCap = {
       type: "required",
-      message: "Vốn hóa thị trường ban đầu là bắt buộc",
+      message: "Initial market cap is required",
     };
   } else if (data.initialMarketCap <= 0) {
     errors.initialMarketCap = {
       type: "min",
-      message: "Vốn hóa thị trường ban đầu phải lớn hơn 0",
+      message: "Initial market cap must be greater than 0",
     };
   }
 
@@ -118,12 +118,12 @@ const customResolver = (data: any) => {
   if (!data.migrationMarketCap) {
     errors.migrationMarketCap = {
       type: "required",
-      message: "Vốn hóa thị trường di chuyển là bắt buộc",
+      message: "Migration market cap is required",
     };
   } else if (data.migrationMarketCap <= 0) {
     errors.migrationMarketCap = {
       type: "min",
-      message: "Vốn hóa thị trường di chuyển phải lớn hơn 0",
+      message: "Migration market cap must be greater than 0",
     };
   }
 
@@ -131,12 +131,12 @@ const customResolver = (data: any) => {
   if (data.tokenBaseDecimal === undefined || data.tokenBaseDecimal === null) {
     errors.tokenBaseDecimal = {
       type: "required",
-      message: "Số thập phân token gốc là bắt buộc",
+      message: "Token base decimal is required",
     };
   } else if (data.tokenBaseDecimal < 0 || data.tokenBaseDecimal > 18) {
     errors.tokenBaseDecimal = {
       type: "range",
-      message: "Số thập phân token gốc phải từ 0 đến 18",
+      message: "Token base decimal must be between 0 and 18",
     };
   }
 
@@ -144,12 +144,12 @@ const customResolver = (data: any) => {
   if (data.tokenQuoteDecimal === undefined || data.tokenQuoteDecimal === null) {
     errors.tokenQuoteDecimal = {
       type: "required",
-      message: "Số thập phân token báo giá là bắt buộc",
+      message: "Token quote decimal is required",
     };
   } else if (data.tokenQuoteDecimal < 0 || data.tokenQuoteDecimal > 18) {
     errors.tokenQuoteDecimal = {
       type: "range",
-      message: "Số thập phân token báo giá phải từ 0 đến 18",
+      message: "Token quote decimal must be between 0 and 18",
     };
   }
 
@@ -158,7 +158,7 @@ const customResolver = (data: any) => {
     if (!data[field]) {
       errors[field] = {
         type: "required",
-        message: `${name} là bắt buộc`,
+        message: `${name} is required`,
       };
     } else {
       try {
@@ -166,46 +166,57 @@ const customResolver = (data: any) => {
       } catch (e) {
         errors[field] = {
           type: "invalid",
-          message: "Địa chỉ Solana không hợp lệ",
+          message: "Invalid Solana address",
         };
       }
     }
   };
 
-  validateAddress("feeClaimer", "Địa chỉ nhận phí");
-  validateAddress("leftoverReceiver", "Địa chỉ nhận token còn lại");
-  validateAddress("quoteMint", "Địa chỉ mint token báo giá");
+  validateAddress("feeClaimer", "Fee claimer address");
+  validateAddress("leftoverReceiver", "Leftover receiver address");
+  validateAddress("quoteMint", "Quote mint address");
 
   // Validate LP percentages
   const validatePercentage = (field: string, name: string) => {
-    if (data[field] === undefined || data[field] === null || data[field] === "") {
+    if (
+      data[field] === undefined ||
+      data[field] === null ||
+      data[field] === ""
+    ) {
       errors[field] = {
         type: "required",
-        message: `${name} là bắt buộc`,
+        message: `${name} is required`,
       };
     } else if (Number(data[field]) < 0 || Number(data[field]) > 100) {
       errors[field] = {
         type: "range",
-        message: `${name} phải từ 0 đến 100%`,
+        message: `${name} must be between 0 and 100%`,
       };
     }
   };
 
-  validatePercentage("partnerLpPercentage", "Phần trăm LP của đối tác");
-  validatePercentage("creatorLpPercentage", "Phần trăm LP của người tạo");
-  validatePercentage("partnerLockedLpPercentage", "Phần trăm LP khóa của đối tác");
-  validatePercentage("creatorLockedLpPercentage", "Phần trăm LP khóa của người tạo");
+  validatePercentage("partnerLpPercentage", "Partner LP percentage");
+  validatePercentage("creatorLpPercentage", "Creator LP percentage");
+  validatePercentage(
+    "partnerLockedLpPercentage",
+    "Partner locked LP percentage"
+  );
+  validatePercentage(
+    "creatorLockedLpPercentage",
+    "Creator locked LP percentage"
+  );
 
   // Validate that percentages sum to 100
-  const totalPercentage = Number(data.partnerLpPercentage || 0) + 
-                         Number(data.creatorLpPercentage || 0) + 
-                         Number(data.partnerLockedLpPercentage || 0) + 
-                         Number(data.creatorLockedLpPercentage || 0);
-  
+  const totalPercentage =
+    Number(data.partnerLpPercentage || 0) +
+    Number(data.creatorLpPercentage || 0) +
+    Number(data.partnerLockedLpPercentage || 0) +
+    Number(data.creatorLockedLpPercentage || 0);
+
   if (totalPercentage !== 100) {
     errors.partnerLpPercentage = {
       type: "validate",
-      message: "Tổng phần trăm LP phải bằng 100%",
+      message: "Total LP percentage must be 100%",
     };
   }
 
@@ -215,17 +226,23 @@ const customResolver = (data: any) => {
   };
 };
 
-export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreated }: { onConfigCreated?: (configAddress: string) => void }) {
+export default function BuildCurveAndCreateConfigByMarketCapForm({
+  onConfigCreated,
+}: {
+  onConfigCreated?: (configAddress: string) => void;
+}) {
   const { connection } = useConnection();
   const { publicKey, connected, wallet } = useWallet();
   const { switchToNextEndpoint, endpoint } = useContext(ModalContext);
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [result, setResult] = useState<BuildCurveResult | null>(null);
-  const [currentStage, setCurrentStage] = useState<'input' | 'confirming' | 'success' | 'error'>('input');
-  const [error, setError] = useState('');
+  const [currentStage, setCurrentStage] = useState<
+    "input" | "confirming" | "success" | "error"
+  >("input");
+  const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
-  const [network, setNetwork] = useState('devnet');
+  const [network, setNetwork] = useState("devnet");
 
   // Form setup with react-hook-form
   const form = useForm<FormValues>({
@@ -236,24 +253,24 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
       migrationOption: 0,
       tokenBaseDecimal: 9,
       tokenQuoteDecimal: 9,
-      
+
       numberOfPeriod: 0,
       reductionFactor: 0,
       periodFrequency: 0,
       feeSchedulerMode: FeeSchedulerMode.Linear,
-      
+
       baseFeeBps: 2500000,
       dynamicFeeEnabled: false,
       activationType: 0,
       collectFeeMode: 0,
       migrationFeeOption: 0,
       tokenType: 0,
-      
+
       partnerLpPercentage: 25,
       creatorLpPercentage: 25,
       partnerLockedLpPercentage: 25,
       creatorLockedLpPercentage: 25,
-      
+
       feeClaimer: "",
       leftoverReceiver: "",
       quoteMint: "So11111111111111111111111111111111111111112", // SOL by default
@@ -270,7 +287,7 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
   // Cập nhật trạng thái network khi endpoint thay đổi
   useEffect(() => {
     if (endpoint) {
-      setNetwork(endpoint.includes('devnet') ? 'devnet' : 'mainnet');
+      setNetwork(endpoint.includes("devnet") ? "devnet" : "mainnet");
     }
   }, [endpoint]);
 
@@ -285,26 +302,26 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
   // Xử lý khi form được gửi đi
   const onSubmit = async (values: FormValues) => {
     if (!connected || !publicKey || !wallet) {
-      toast.error('Vui lòng kết nối ví của bạn');
+      toast.error("Please connect your wallet");
       return;
     }
 
     try {
       setIsSubmitting(true);
-      setCurrentStage('confirming');
-      setError('');
+      setCurrentStage("confirming");
+      setError("");
 
-      toast.loading("Đang tạo cấu hình...", {
-        id: "build-curve-market-cap"
+      toast.loading("Creating configuration...", {
+        id: "build-curve-market-cap",
       });
-      
+
       try {
         // Khởi tạo DBC client
         const client = new DynamicBondingCurveClient(connection);
-        
+
         // Tạo keypair mới cho config
         const configKeypair = Keypair.generate();
-        
+
         // Tạo các tham số cho hàm buildCurveAndCreateConfigByMarketCap
         const params = {
           buildCurveByMarketCapParam: {
@@ -327,11 +344,11 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
             migrationFeeOption: values.migrationFeeOption,
             tokenType: values.tokenType,
             lockedVesting: {
-              amountPerPeriod: new BN('0'),
-              cliffDurationFromMigrationTime: new BN('0'),
-              frequency: new BN('0'),
-              numberOfPeriod: new BN('0'),
-              cliffUnlockAmount: new BN('0'),
+              amountPerPeriod: new BN("0"),
+              cliffDurationFromMigrationTime: new BN("0"),
+              frequency: new BN("0"),
+              numberOfPeriod: new BN("0"),
+              cliffUnlockAmount: new BN("0"),
             },
             partnerLpPercentage: values.partnerLpPercentage,
             creatorLpPercentage: values.creatorLpPercentage,
@@ -344,79 +361,89 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
           quoteMint: new PublicKey(values.quoteMint),
           config: configKeypair.publicKey,
         };
-        
+
         // Tạo transaction
-        const transaction = await client.partners.buildCurveAndCreateConfigByMarketCap(
-            params
-        );
-        
+        const transaction =
+          await client.partners.buildCurveAndCreateConfigByMarketCap(params);
+
         // Lấy blockhash gần nhất
-        const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+        const { blockhash, lastValidBlockHeight } =
+          await connection.getLatestBlockhash();
         transaction.recentBlockhash = blockhash;
         transaction.lastValidBlockHeight = lastValidBlockHeight;
-        
+
         // Đặt feePayer cho transaction
         transaction.feePayer = publicKey;
-        
+
         // Ký giao dịch với configKeypair
         transaction.partialSign(configKeypair);
-        
+
         // Gửi và ký giao dịch
-        const signature = await wallet.adapter.sendTransaction(transaction, connection);
-        
+        const signature = await wallet.adapter.sendTransaction(
+          transaction,
+          connection
+        );
+
         // Đợi xác nhận
         await connection.confirmTransaction({
           blockhash,
           lastValidBlockHeight,
-          signature
+          signature,
         });
-        
+
         // Lưu kết quả
         const configAddress = configKeypair.publicKey.toString();
         setResult({
           config: configAddress,
-          signature: signature
+          signature: signature,
         });
-        
+
         // Gọi callback nếu được cung cấp
         if (onConfigCreated) {
           onConfigCreated(configAddress);
         }
-        
-        setCurrentStage('success');
-        
-        toast.success("Cấu hình đã được tạo thành công!", {
+
+        setCurrentStage("success");
+
+        toast.success("Configuration created successfully!", {
           id: "build-curve-market-cap",
-          description: `Config: ${configAddress.slice(0, 8)}...${configAddress.slice(-8)}`
+          description: `Config: ${configAddress.slice(
+            0,
+            8
+          )}...${configAddress.slice(-8)}`,
         });
       } catch (transactionError: any) {
-        console.error("Lỗi giao dịch:", transactionError);
+        console.error("Transaction error: ", transactionError);
         throw transactionError;
       }
-      
     } catch (err: any) {
-      console.error("Lỗi khi tạo cấu hình:", err);
-      
-      setCurrentStage('error');
-      setError(err.message || 'Đã xảy ra lỗi không xác định');
-      
+      console.error("Error creating configuration:", err);
+
+      setCurrentStage("error");
+      setError(err.message || "An unknown error occurred");
+
       // Kiểm tra nếu người dùng hủy/từ chối giao dịch
-      if (err.message && (err.message.includes("rejected") || err.message.includes("canceled"))) {
-        toast.error("Giao dịch đã bị hủy", {
+      if (
+        err.message &&
+        (err.message.includes("rejected") || err.message.includes("canceled"))
+      ) {
+        toast.error("Transaction rejected", {
           id: "build-curve-market-cap",
-          description: "Bạn đã hủy giao dịch"
+          description: "You have rejected the transaction",
         });
       } else {
-        toast.error("Không thể tạo cấu hình", {
+        toast.error("Cannot create configuration", {
           id: "build-curve-market-cap",
-          description: err.message
+          description: err.message,
         });
-        
+
         // Nếu giao dịch thất bại do lỗi kết nối, thử chuyển sang RPC endpoint khác
-        if (err.message?.includes('failed to fetch') || 
-            err.message?.includes('timeout') || 
-            err.message?.includes('429') ||
-            err.message?.includes('503')) {
+        if (
+          err.message?.includes("failed to fetch") ||
+          err.message?.includes("timeout") ||
+          err.message?.includes("429") ||
+          err.message?.includes("503")
+        ) {
           switchToNextEndpoint();
         }
       }
@@ -428,16 +455,32 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
   // Chức năng mở explorer để xem giao dịch
   const viewExplorer = () => {
     if (result?.signature) {
-      const baseUrl = network === 'devnet' ? 'https://explorer.solana.com/tx/' : 'https://solscan.io/tx/';
-      window.open(`${baseUrl}${result.signature}${network === 'devnet' ? '?cluster=devnet' : ''}`, '_blank');
+      const baseUrl =
+        network === "devnet"
+          ? "https://explorer.solana.com/tx/"
+          : "https://solscan.io/tx/";
+      window.open(
+        `${baseUrl}${result.signature}${
+          network === "devnet" ? "?cluster=devnet" : ""
+        }`,
+        "_blank"
+      );
     }
   };
 
   // Chức năng mở explorer để xem cấu hình
   const viewConfig = () => {
     if (result?.config) {
-      const baseUrl = network === 'devnet' ? 'https://explorer.solana.com/address/' : 'https://solscan.io/account/';
-      window.open(`${baseUrl}${result.config}${network === 'devnet' ? '?cluster=devnet' : ''}`, '_blank');
+      const baseUrl =
+        network === "devnet"
+          ? "https://explorer.solana.com/address/"
+          : "https://solscan.io/account/";
+      window.open(
+        `${baseUrl}${result.config}${
+          network === "devnet" ? "?cluster=devnet" : ""
+        }`,
+        "_blank"
+      );
     }
   };
 
@@ -445,8 +488,8 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
   const resetForm = () => {
     form.reset();
     setResult(null);
-    setCurrentStage('input');
-    setError('');
+    setCurrentStage("input");
+    setError("");
   };
 
   // Render form view
@@ -454,14 +497,14 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="bg-secondary/50 rounded-lg p-4">
-          <h3 className="font-medium mb-4">Thông số thị trường</h3>
+          <h3 className="font-medium mb-4">Market parameters</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="totalTokenSupply"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tổng cung token</FormLabel>
+                  <FormLabel>Total token supply</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -474,13 +517,13 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="initialMarketCap"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vốn hóa ban đầu</FormLabel>
+                  <FormLabel>Initial market cap</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -493,13 +536,13 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="migrationMarketCap"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vốn hóa di chuyển</FormLabel>
+                  <FormLabel>Migration market cap</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -512,13 +555,13 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="migrationOption"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Tùy chọn di chuyển</FormLabel>
+                  <FormLabel>Migration option</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -531,13 +574,13 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="tokenBaseDecimal"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Số thập phân token cơ sở</FormLabel>
+                  <FormLabel>Token base decimal</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -550,13 +593,13 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="tokenQuoteDecimal"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Số thập phân token báo giá</FormLabel>
+                  <FormLabel>Token quote decimal</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -571,16 +614,16 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
             />
           </div>
         </div>
-        
+
         <div className="bg-secondary/50 rounded-lg p-4">
-          <h3 className="font-medium mb-4">Tham số phí</h3>
+          <h3 className="font-medium mb-4">Fee parameters</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="baseFeeBps"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phí cơ bản (BPS)</FormLabel>
+                  <FormLabel>Base fee (BPS)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -593,7 +636,7 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="dynamicFeeEnabled"
@@ -609,19 +652,17 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                     />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      Bật phí động
-                    </FormLabel>
+                    <FormLabel>Enable dynamic fee</FormLabel>
                   </div>
                 </FormItem>
               )}
             />
           </div>
         </div>
-        
+
         <div className="bg-secondary/50 rounded-lg p-4 space-y-4">
-          <div className="font-medium">Phân phối LP</div>
-          
+          <div className="font-medium">LP distribution</div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
@@ -629,7 +670,7 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
               render={({ field }) => (
                 <FormItem>
                   <div className="flex justify-between items-center">
-                    <FormLabel>Đối tác LP %</FormLabel>
+                    <FormLabel>Partner LP %</FormLabel>
                   </div>
                   <FormControl>
                     <Input
@@ -646,14 +687,14 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="creatorLpPercentage"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex justify-between items-center">
-                    <FormLabel>Người tạo LP %</FormLabel>
+                    <FormLabel>Creator LP %</FormLabel>
                   </div>
                   <FormControl>
                     <Input
@@ -670,14 +711,14 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="partnerLockedLpPercentage"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex justify-between items-center">
-                    <FormLabel>Đối tác LP khóa %</FormLabel>
+                    <FormLabel>Partner locked LP %</FormLabel>
                   </div>
                   <FormControl>
                     <Input
@@ -694,14 +735,14 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="creatorLockedLpPercentage"
               render={({ field }) => (
                 <FormItem>
                   <div className="flex justify-between items-center">
-                    <FormLabel>Người tạo LP khóa %</FormLabel>
+                    <FormLabel>Creator locked LP %</FormLabel>
                   </div>
                   <FormControl>
                     <Input
@@ -719,24 +760,25 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
               )}
             />
           </div>
-          
+
           <p className="text-xs text-muted-foreground">
-            Tổng phần trăm LP phải bằng 100%. Các tỷ lệ này xác định cách phân phối token LP.
+            Total LP percentage must be 100%. These ratios determine how token
+            LP is distributed.
           </p>
         </div>
-        
+
         <div className="bg-secondary/50 rounded-lg p-4">
-          <h3 className="font-medium mb-4">Địa chỉ</h3>
+          <h3 className="font-medium mb-4">Address</h3>
           <div className="grid grid-cols-1 gap-4">
             <FormField
               control={form.control}
               name="feeClaimer"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Địa chỉ nhận phí</FormLabel>
+                  <FormLabel>Fee claimer address</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Nhập địa chỉ ví nhận phí"
+                      placeholder="Enter fee claimer address"
                       {...field}
                       disabled={isSubmitting}
                     />
@@ -745,16 +787,16 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="leftoverReceiver"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Địa chỉ nhận token còn lại</FormLabel>
+                  <FormLabel>Leftover receiver address</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Nhập địa chỉ ví nhận token còn lại"
+                      placeholder="Enter leftover receiver address"
                       {...field}
                       disabled={isSubmitting}
                     />
@@ -763,13 +805,13 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="quoteMint"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Địa chỉ token báo giá</FormLabel>
+                  <FormLabel>Quote mint address</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -777,14 +819,14 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                       disabled={isSubmitting}
                     >
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Chọn token báo giá" />
+                        <SelectValue placeholder="Select quote mint address" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="So11111111111111111111111111111111111111112">
                           <div className="flex items-center">
-                            <img 
-                              src="/crypto-logos/solana-logo.svg" 
-                              alt="SOL" 
+                            <img
+                              src="/crypto-logos/solana-logo.svg"
+                              alt="SOL"
                               className="w-5 h-5 mr-2 rounded-full"
                             />
                             SOL
@@ -792,9 +834,9 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                         </SelectItem>
                         <SelectItem value="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v">
                           <div className="flex items-center">
-                            <img 
-                              src="/crypto-logos/usd-coin-usdc-logo.svg" 
-                              alt="USDC" 
+                            <img
+                              src="/crypto-logos/usd-coin-usdc-logo.svg"
+                              alt="USDC"
                               className="w-5 h-5 mr-2 rounded-full"
                             />
                             USDC
@@ -802,9 +844,9 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
                         </SelectItem>
                         <SelectItem value="Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB">
                           <div className="flex items-center">
-                            <img 
-                              src="/crypto-logos/tether-usdt-logo.svg" 
-                              alt="USDT" 
+                            <img
+                              src="/crypto-logos/tether-usdt-logo.svg"
+                              alt="USDT"
                               className="w-5 h-5 mr-2 rounded-full"
                             />
                             USDT
@@ -819,32 +861,30 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
             />
           </div>
         </div>
-        
+
         <div className="space-y-4">
           <div className="bg-secondary/50 rounded-lg p-4 space-y-2">
             <div className="flex justify-between items-center text-sm">
-              <span>Mạng</span>
-              <Badge variant={network === 'mainnet' ? "default" : "secondary"}>
+              <span>Network</span>
+              <Badge variant={network === "mainnet" ? "default" : "secondary"}>
                 {network}
               </Badge>
             </div>
           </div>
-          
+
           <div className="pt-2">
             {!connected ? (
               <ConnectWalletButton className="w-full" />
             ) : (
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={isSubmitting}
-              >
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    Đang tạo...
+                    Creating...
                   </>
-                ) : "Tạo cấu hình theo vốn hóa"}
+                ) : (
+                  "Create configuration by market cap"
+                )}
               </Button>
             )}
           </div>
@@ -859,47 +899,40 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
       <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
         <CheckCircle className="h-10 w-10 text-green-600" />
       </div>
-      <h3 className="text-xl font-bold text-center">Đã tạo cấu hình!</h3>
-      
+      <h3 className="text-xl font-bold text-center">Configuration created!</h3>
+
       <div className="space-y-2">
-        <div className="text-sm text-muted-foreground">Địa chỉ cấu hình:</div>
+        <div className="text-sm text-muted-foreground">
+          Configuration address:
+        </div>
         <div className="bg-secondary/60 rounded p-2 text-sm font-mono break-all">
           {result?.config}
         </div>
       </div>
-      
+
       <div className="space-y-2">
-        <div className="text-sm text-muted-foreground">Chữ ký giao dịch:</div>
+        <div className="text-sm text-muted-foreground">
+          Transaction signature:
+        </div>
         <div className="bg-secondary/60 rounded p-2 text-sm font-mono break-all">
           {result?.signature}
         </div>
       </div>
-      
+
       <div className="flex gap-2 mt-4">
-        <Button 
-          variant="outline" 
-          onClick={viewConfig}
-          className="flex-1"
-        >
+        <Button variant="outline" onClick={viewConfig} className="flex-1">
           <ExternalLink className="h-4 w-4 mr-2" />
-          Xem cấu hình
+          View configuration
         </Button>
-        
-        <Button 
-          variant="outline" 
-          onClick={viewExplorer}
-          className="flex-1"
-        >
+
+        <Button variant="outline" onClick={viewExplorer} className="flex-1">
           <ExternalLink className="h-4 w-4 mr-2" />
-          Xem giao dịch
+          View transaction
         </Button>
       </div>
-      
-      <Button 
-        onClick={resetForm}
-        className="w-full"
-      >
-        Tạo cấu hình mới
+
+      <Button onClick={resetForm} className="w-full">
+        Create new configuration
       </Button>
     </div>
   );
@@ -908,19 +941,32 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
   const renderError = () => (
     <div className="space-y-4 p-4 text-center">
       <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-red-100">
-        <svg className="h-10 w-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+        <svg
+          className="h-10 w-10 text-red-600"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
         </svg>
       </div>
-      <h3 className="text-xl font-bold">Tạo cấu hình thất bại</h3>
-      <p className="text-muted-foreground">{error || 'Đã xảy ra lỗi trong quá trình tạo cấu hình.'}</p>
-      <Button 
+      <h3 className="text-xl font-bold">Failed to create configuration</h3>
+      <p className="text-muted-foreground">
+        {error || "An error occurred during configuration creation."}
+      </p>
+      <Button
         onClick={() => {
-          setCurrentStage('input');
+          setCurrentStage("input");
         }}
         className="w-full"
       >
-        Thử lại
+        Try again
       </Button>
     </div>
   );
@@ -931,19 +977,21 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
       <div className="mx-auto flex h-20 w-20 items-center justify-center">
         <Loader2 className="h-10 w-10 animate-spin" />
       </div>
-      <h3 className="text-xl font-bold">Đang xác nhận</h3>
-      <p className="text-muted-foreground">Vui lòng đợi trong khi giao dịch của bạn đang được xử lý...</p>
+      <h3 className="text-xl font-bold">Confirming</h3>
+      <p className="text-muted-foreground">
+        Please wait while your transaction is being processed...
+      </p>
     </div>
   );
 
   // Render dựa trên stage hiện tại
   const renderStageContent = () => {
     switch (currentStage) {
-      case 'success':
+      case "success":
         return renderSuccess();
-      case 'error':
+      case "error":
         return renderError();
-      case 'confirming':
+      case "confirming":
         return renderConfirming();
       default:
         return renderForm();
@@ -955,13 +1003,15 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Tạo cấu hình theo vốn hóa thị trường</CardTitle>
-          <CardDescription>Xây dựng cấu hình sản phẩm không đổi dựa trên vốn hóa thị trường</CardDescription>
+          <CardTitle>Create configuration by market cap</CardTitle>
+          <CardDescription>
+            Build a non-decreasing configuration based on market cap
+          </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center p-6">
           <div className="flex flex-col items-center gap-2">
             <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">Đang tải...</p>
+            <p className="text-sm text-muted-foreground">Loading...</p>
           </div>
         </CardContent>
       </Card>
@@ -972,18 +1022,19 @@ export default function BuildCurveAndCreateConfigByMarketCapForm({ onConfigCreat
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          <span>Tạo cấu hình theo vốn hóa thị trường</span>
+          <span>Create configuration by market cap</span>
           {connected && publicKey && (
             <Badge variant="outline" className="ml-2">
-              {publicKey.toString().slice(0, 4)}...{publicKey.toString().slice(-4)}
+              {publicKey.toString().slice(0, 4)}...
+              {publicKey.toString().slice(-4)}
             </Badge>
           )}
         </CardTitle>
-        <CardDescription>Xây dựng cấu hình sản phẩm không đổi dựa trên vốn hóa thị trường</CardDescription>
+        <CardDescription>
+          Build a non-decreasing configuration based on market cap
+        </CardDescription>
       </CardHeader>
-      <CardContent>
-        {renderStageContent()}
-      </CardContent>
+      <CardContent>{renderStageContent()}</CardContent>
     </Card>
   );
 }
