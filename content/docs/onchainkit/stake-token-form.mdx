@@ -40,7 +40,7 @@ icon: "Coins"
 ### Basic Usage
 
 ```tsx
-import { StakeForm } from "@/components/ui/murphis/stake-token-form";
+import { StakeForm } from "@/components/ui/murphy/stake-token-form";
 ```
 
 ```tsx
@@ -76,7 +76,7 @@ The component goes through several stages during the staking process:
 The staking process uses a server-side API route to avoid CORS issues and create the staking transaction.
 
 ```tsx
-// Example API route implementation (pages/api/murphis/solayer/stake.ts)
+// Example API route implementation (pages/api/murphy/solayer/stake.ts)
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -130,7 +130,7 @@ export default async function handler(
 You can customize the Stake Form by extending its functionality:
 
 ```tsx
-import { StakeForm } from "@/components/ui/murphis/stake-token-form";
+import { StakeForm } from "@/components/ui/murphy/stake-token-form";
 import { useState } from "react";
 
 export default function CustomStakePage() {
@@ -176,7 +176,7 @@ export default function CustomStakePage() {
     apiEndpoint: {
       description: "Custom API endpoint for staking",
       type: "string",
-      default: "/api/murphis/solayer/stake",
+      default: "/api/murphy/solayer/stake",
     },
     stakingProvider: {
       description: "Name of the staking provider to display",

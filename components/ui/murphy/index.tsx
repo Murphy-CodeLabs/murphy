@@ -13,7 +13,8 @@ import { TokenList } from "./token-list";
 import { StakeForm } from "./stake-token-form";
 import { CreateConfigForm } from "./createConfig-form";
 import BuildCurveAndCreateConfigByMarketCapForm from "./buildCurveAndCreateConfigByMarketCap-form";
-import { TxnSettings,TxnSettingsProvider } from "./txn-settings";
+import { TxnSettings, TxnSettingsProvider } from "./txn-settings";
+import { PKInput } from "./pk-input";
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -31,5 +32,6 @@ export {
   CreateConfigForm,
   BuildCurveAndCreateConfigByMarketCapForm,
   TxnSettings,
-  TxnSettingsProvider
+  TxnSettingsProvider,
+  PKInput
 };

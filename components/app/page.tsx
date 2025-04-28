@@ -1,6 +1,6 @@
 "use client"
 
-import { ConnectWalletButton } from "@/components/ui/murphis/connect-wallet-button"
+import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
 import { WalletProvider } from "@/components/providers/wallet-provider"
 import { Wallet } from "lucide-react"
 

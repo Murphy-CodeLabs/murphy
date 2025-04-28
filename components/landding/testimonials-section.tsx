@@ -9,7 +9,7 @@ const testimonials = [
     role: "Senior Developer at SolTech",
     avatarUrl: "https://i.pravatar.cc/150?img=1",
     quote:
-      "Murphis has completely transformed our development workflow. We're building dApps on Solana in half the time it used to take us.",
+      "Murphy has completely transformed our development workflow. We're building dApps on Solana in half the time it used to take us.",
   },
   {
     name: "Sarah Johnson",
@@ -23,7 +23,7 @@ const testimonials = [
     role: "CTO at DeFi Protocol",
     avatarUrl: "https://i.pravatar.cc/150?img=12",
     quote:
-      "We evaluated several frameworks before choosing Murphis. The performance optimizations and ease of use were unmatched.",
+      "We evaluated several frameworks before choosing Murphy. The performance optimizations and ease of use were unmatched.",
     rating: 4,
   },
   {
@@ -31,21 +31,21 @@ const testimonials = [
     role: "Lead Engineer at GameDAO",
     avatarUrl: "https://i.pravatar.cc/150?img=20",
     quote:
-      "Our Web3 game needed reliable blockchain integration without sacrificing UX. Murphis delivered exactly what we needed.",
+      "Our Web3 game needed reliable blockchain integration without sacrificing UX. Murphy delivered exactly what we needed.",
   },
   {
     name: "David Kim",
     role: "Developer at Payment Solutions",
     avatarUrl: "https://i.pravatar.cc/150?img=15",
     quote:
-      "Building our payment infrastructure on Solana with Murphis reduced transaction costs by 90% while improving processing speed.",
+      "Building our payment infrastructure on Solana with Murphy reduced transaction costs by 90% while improving processing speed.",
   },
   {
     name: "Lisa Patel",
     role: "Project Manager at Web3 Agency",
     avatarUrl: "https://i.pravatar.cc/150?img=33",
     quote:
-      "The documentation and community support around Murphis has been exceptional. It's made onboarding new team members so much easier.",
+      "The documentation and community support around Murphy has been exceptional. It's made onboarding new team members so much easier.",
   },
 ];
 
@@ -115,7 +115,7 @@ function TestimonialCard({
           <p className="text-muted-foreground text-xs">{role}</p>
         </div>
       </div>
-      <p className="text-sm flex-grow italic">{quote}</p>
+      <p className="text-sm flex-grow italic text-left">{quote}</p>
     </div>
   );
 }

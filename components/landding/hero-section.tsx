@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, Code, Dumbbell, Layers, Zap } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { LinkButton } from "../ui/link-button";
 
 const transitionVariants = {
   item: {
@@ -54,7 +55,7 @@ export default function HeroSection() {
                   className="group mx-auto md:mx-0 flex w-fit items-center gap-4 rounded-full border border-primary/10 bg-primary/5 p-1.5 pl-5 shadow-lg transition-all duration-300 hover:border-primary/20 hover:bg-primary/10 dark:border-primary/20 dark:bg-primary/10 dark:hover:border-primary/30 dark:hover:bg-primary/15"
                 >
                   <span className="text-foreground/90 font-medium text-sm">
-                    Introduction to Murphis SDK
+                    Introduction to Murphy SDK
                   </span>
                   <span className="block h-4 w-0.5 bg-primary/30 dark:bg-primary/40"></span>
 
@@ -73,7 +74,7 @@ export default function HeroSection() {
 
               <div className="text-center md:text-left">
                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6">
-                  Murphis SDK
+                  Murphy SDK
                 </h1>
                 <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto md:mx-0 mb-8 leading-relaxed">
                   A powerful and developer-friendly SDK for building
@@ -82,13 +83,7 @@ export default function HeroSection() {
                   potential of the Solana ecosystem.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <Button
-                    asChild
-                    size="lg"
-                    className="px-8 py-6 text-base rounded-xl hover:translate-y-[-2px] transition-all duration-300 font-medium shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30"
-                  >
-                    <Link href="/docs/onchainkit">Get Started</Link>
-                  </Button>
+                  <LinkButton href="/docs/onchainkit">Get Started</LinkButton>
                 </div>
               </div>
             </div>

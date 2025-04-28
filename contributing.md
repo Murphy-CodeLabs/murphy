@@ -1,6 +1,6 @@
-# Contributing to Murphis
+# Contributing to Murphy
 
-Thank you for your interest in contributing to Murphis! We're excited to have you join our community of developers building the future of Web3 on Solana.
+Thank you for your interest in contributing to Murphy! We're excited to have you join our community of developers building the future of Web3 on Solana.
 
 Please take a moment to review this document before submitting your first pull request. We also recommend checking for open issues and pull requests to see if someone else is already working on something similar.
 
@@ -32,13 +32,13 @@ You can fork this repo by clicking the fork button in the top right corner of th
 ### Clone on your local machine
 
 ```bash
-git clone https://github.com/murphis/murphis
+git clone https://github.com/murphy/murphy
 ```
 
 ### Navigate to the project directory
 
 ```bash
-cd murphis
+cd murphy
 ```
 
 ### Create a new branch
@@ -72,15 +72,15 @@ We use shadcn UI for our component library. If you're adding or modifying compon
 
 ### Component Auto-Import for Documentation
 
-All Murphis components must be exported from the `components/ui/murphis/index.tsx` file to make them automatically available in MDX documentation without requiring explicit imports.
+All Murphy components must be exported from the `components/ui/murphy/index.tsx` file to make them automatically available in MDX documentation without requiring explicit imports.
 
 When you create a new component:
 
-1. Create your component file in the `components/ui/murphis` directory (e.g., `my-new-component.tsx`)
+1. Create your component file in the `components/ui/murphy` directory (e.g., `my-new-component.tsx`)
 2. Export your component from the index file:
 
 ```tsx
-// In components/ui/murphis/index.tsx
+// In components/ui/murphy/index.tsx
 import { MyNewComponent } from "./my-new-component";
 
 export { 
@@ -124,4 +124,4 @@ Please be respectful and considerate of others when contributing to this project
 
 ## License
 
-By contributing to Murphis, you agree that your contributions will be licensed under the project's [MIT License](LICENSE).
+By contributing to Murphy, you agree that your contributions will be licensed under the project's [MIT License](LICENSE).

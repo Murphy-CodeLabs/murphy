@@ -10,7 +10,7 @@ import { SolAsset } from "@/types/swap";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { TokenCombobox } from "@/components/ui/murphis/token-combobox";
+import { TokenCombobox } from "@/components/ui/murphy/token-combobox";
 
 type TokenInputProps = {
   assets: SolAsset[];
