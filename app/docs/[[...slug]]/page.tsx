@@ -28,8 +28,8 @@ export default async function Page(props: {
       }}
       full={page.data.full}
       editOnGithub={{
-        owner: "murphy",
-        repo: "docs",
+        owner: "murphy-codelabs",
+        repo: "murphy",
         sha: "main",
         path: `content/docs/${page.file.path}`,
       }}
