@@ -23,7 +23,7 @@ export function ContributeSection() {
   return (
     <>
       <section>
-        <div className="overflow relative from-background to-muted/50 flex w-full flex-col items-center justify-center border-x bg-gradient-to-b px-2 py-5 lg:py-10 md:px-0 ">
+        <div className="overflow-hidden relative from-background to-muted/50 flex w-full flex-col items-center justify-center border-x bg-gradient-to-b px-2 py-5 lg:py-10 md:px-0 ">
           <FlickeringGrid
             className="absolute inset-0 z-0 size-full from-background to-muted/50 bg-gradient-to-b [mask-image:linear-gradient(to_bottom,#000_10%,transparent_80%)]"
             squareSize={4}
@@ -36,7 +36,7 @@ export function ContributeSection() {
             Community
           </h2>
         </div>
-        <div className="relative p-4 flex flex-col items-center justify-center border from-muted/40 bg-gradient-to-b to-transparent to-50% py-24">
+        <div className="overflow-hidden relative p-4 flex flex-col items-center justify-center border from-muted/40 bg-gradient-to-b to-transparent to-50% py-24">
           <h2 className="text-pretty  text-center text-md  dark:opacity-90 dark:drop-shadow-lg max-w-xl mx-auto">
             We're grateful for the amazing open-source community that helps make
             our project better every day.
