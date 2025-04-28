@@ -45,7 +45,7 @@ export function ContributeSection() {
           <LinkButton
             className="mt-4"
             variant={"outline"}
-            href="https://github.com/murphy/murphy"
+            href="https://github.com/murphy-codelabs/murphy"
             blankTarget
           >
             <Image

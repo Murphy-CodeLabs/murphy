@@ -39,7 +39,7 @@ function Footer(): React.ReactElement {
           </p>
         </div>
         <a
-          href="https://github.com/murphy/docs/blob/main/LICENSE.md"
+          href="https://github.com/Murphy-CodeLabs/murphy/blob/main/LICENSE"
           className="text-muted-foreground transition-colors hover:text-foreground"
           rel="noopener noreferrer"
           target="_blank"
