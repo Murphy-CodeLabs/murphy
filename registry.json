@@ -457,7 +457,16 @@
       "type": "registry:block",
       "title": "Build Curve and Create Config by Market Cap Form",
       "description": "A simple build curve and create config by market cap form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
@@ -479,8 +488,17 @@
           "path": "hook/murphis/use-walletModal.ts",
           "type": "registry:hook",
           "target": "hook/murphis/use-walletModal.ts"
-        }        
+        }
       ]
+    },
+    {
+      "name": "txn-settings",
+      "type": "registry:block",
+      "title": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
+      "description": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
+      "registryDependencies": ["popover", "toggle-group", "input", "button"],
+      "dependencies": [],
+      "files": []
     }
   ]
 }

@@ -1,3 +1,4 @@
+"use client";
 import React, { ReactNode } from "react";
 
 import { SettingsIcon } from "lucide-react";
@@ -105,8 +106,8 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
     <Dialog>
       <DialogTrigger asChild>
         {trigger || (
-          <Button variant="outline" size="icon">
-            <SettingsIcon size={16} />
+          <Button variant="outline"className="cursor-pointer" size="icon">
+            <SettingsIcon  size={16} />
           </Button>
         )}
       </DialogTrigger>
@@ -286,11 +287,11 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline" onClick={handleCancel}>
+              <Button className="cursor-pointer" variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit">Save</Button>
+            <Button className="cursor-pointer" type="submit">Save</Button>
           </DialogFooter>
         </form>
       </DialogContent>
