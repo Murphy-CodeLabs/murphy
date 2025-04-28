@@ -115,7 +115,7 @@ function TestimonialCard({
           <p className="text-muted-foreground text-xs">{role}</p>
         </div>
       </div>
-      <p className="text-sm flex-grow italic">{quote}</p>
+      <p className="text-sm flex-grow italic text-left">{quote}</p>
     </div>
   );
 }

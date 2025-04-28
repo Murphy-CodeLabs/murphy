@@ -1,3 +1,4 @@
+@import "../styles/tailwind.css";
 @import "tailwindcss";
 @import "fumadocs-ui/css/catppuccin.css";
 @import "fumadocs-ui/css/preset.css";
@@ -242,5 +243,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+
+  .custom-selection {
+    @apply selection:bg-black selection:text-highlight dark:selection:bg-white;
   }
 }

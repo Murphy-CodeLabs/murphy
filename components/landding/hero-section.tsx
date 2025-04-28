@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { ArrowRight, Code, Dumbbell, Layers, Zap } from "lucide-react";
 import Link from "next/link";
 import React from "react";
+import { LinkButton } from "../ui/link-button";
 
 const transitionVariants = {
   item: {
@@ -82,13 +83,7 @@ export default function HeroSection() {
                   potential of the Solana ecosystem.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <Button
-                    asChild
-                    size="lg"
-                    className="px-8 py-6 text-base rounded-xl hover:translate-y-[-2px] transition-all duration-300 font-medium shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30"
-                  >
-                    <Link href="/docs/onchainkit">Get Started</Link>
-                  </Button>
+                  <LinkButton href="/docs/onchainkit">Get Started</LinkButton>
                 </div>
               </div>
             </div>

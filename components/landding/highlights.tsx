@@ -10,6 +10,7 @@ import {
   FolderTreeIcon,
   ShieldIcon,
 } from "lucide-react";
+import { Cover } from "./cover";
 
 export function HighlightsSection() {
   return (
@@ -18,7 +19,7 @@ export function HighlightsSection() {
         <h2 className="text-pretty text-center text-2xl font-bold dark:opacity-90 dark:drop-shadow-lg sm:text-4xl md:text-5xl lg:text-6xl">
           Build on Solana at
           <br />
-          the speed of light.
+          <Cover>the speed of light.</Cover>
         </h2>
       </section>
       <div className="from-muted/40 grid w-full grid-cols-1 border-b border-r bg-gradient-to-b to-transparent to-50% sm:grid-cols-2 md:grid-cols-3">
@@ -75,7 +76,7 @@ export function Highlight({ icon: IconComp, title, children }: HighlightPros) {
           {title}
         </h2>
       </div>
-      <p className="text-pretty text-sm md:text-base">{children}</p>
+      <p className="text-pretty text-sm text-left">{children}</p>
     </div>
   );
 }
