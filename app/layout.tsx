@@ -1,13 +1,14 @@
 import { Body } from "@/app/layout.client";
-import "./global.css";
+import "@/styles/global.css";
 import { RootProvider } from "fumadocs-ui/provider";
-import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { Metadata } from "next";
-import { Toaster } from "sonner";
+import { IBM_Plex_Mono } from "next/font/google";
 
-const inter = Inter({
+const ibmPlexMonoFont = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-ibm-plex-mono",
 });
 
 export const metadata: Metadata = {
@@ -20,7 +21,11 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${ibmPlexMonoFont.className} ${ibmPlexMonoFont.variable} custom-selection antialiased`}
+      suppressHydrationWarning
+    >
       <Body>
         <RootProvider>{children}</RootProvider>
       </Body>
