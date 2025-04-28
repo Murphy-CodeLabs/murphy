@@ -40,7 +40,7 @@ icon: Send
 ### Basic Usage
 
 ```tsx
-import { SendTokenForm } from "@/components/ui/murphis/send-token-form";
+import { SendTokenForm } from "@/components/ui/murphy/send-token-form";
 ```
 
 ```tsx
@@ -62,7 +62,7 @@ You can provide your own token list:
 import {
   SendTokenForm,
   TokenInfo,
-} from "@/components/ui/murphis/send-token-form";
+} from "@/components/ui/murphy/send-token-form";
 
 export default function MyPage() {
   const customTokens: TokenInfo[] = [
@@ -100,9 +100,9 @@ export default function MyPage() {
 You can provide your own send token function:
 
 ```tsx
-import { SendTokenForm } from "@/components/ui/murphis/send-token-form";
+import { SendTokenForm } from "@/components/ui/murphy/send-token-form";
 import { toast } from "sonner";
-import type { FormValues } from "@/components/ui/murphis/send-token-form";
+import type { FormValues } from "@/components/ui/murphy/send-token-form";
 
 export default function MyPage() {
   const handleSendToken = async (values: FormValues) => {

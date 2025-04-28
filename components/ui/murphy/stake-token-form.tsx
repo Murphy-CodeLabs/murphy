@@ -210,7 +210,7 @@ export function StakeForm() {
       
       // Use internal API route to avoid CORS error
       const response = await fetch(
-        `/api/murphis/solayer/stake?amount=${parseFloat(amountToStake)}`,
+        `/api/murphy/solayer/stake?amount=${parseFloat(amountToStake)}`,
         {
           method: "POST",
           headers: {

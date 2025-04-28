@@ -1,7 +1,7 @@
 "use client";
 
-import { ConnectWalletButton } from "@/components/ui/murphis";
-import { SendTokenForm } from "@/components/ui/murphis/send-token-form";
+import { ConnectWalletButton } from "@/components/ui/murphy";
+import { SendTokenForm } from "@/components/ui/murphy/send-token-form";
 import { Wallet } from "lucide-react";
 
 export default function TestPage() {

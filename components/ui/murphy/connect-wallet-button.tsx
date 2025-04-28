@@ -3,7 +3,7 @@
 import React, { type FC, useCallback, useEffect, useMemo, useState } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { WalletName, WalletReadyState } from "@solana/wallet-adapter-base"
-import { useWalletMultiButton } from "@/hook/murphis/use-walletMultiButton"
+import { useWalletMultiButton } from "@/hook/murphy/use-walletMultiButton"
 import { Button } from "../button"
 import { ModalContext } from "@/components/providers/wallet-provider"
 

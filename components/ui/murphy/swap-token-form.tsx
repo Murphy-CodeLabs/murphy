@@ -36,7 +36,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
-import { useJupiterTrade } from "@/hook/murphis/use-JupiterTrade";
+import { useJupiterTrade } from "@/hook/murphy/use-JupiterTrade";
 import { ModalContext } from "@/components/providers/wallet-provider";
 
 declare global {

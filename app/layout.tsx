@@ -13,10 +13,10 @@ const ibmPlexMonoFont = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Murphis SDK",
-    template: "%s | Murphis SDK",
+    default: "Murphy SDK",
+    template: "%s | Murphy SDK",
   },
-  description: "Murphis SDK is a set of tools for building on Solana.",
+  description: "Murphy SDK is a set of tools for building on Solana.",
 };
 
 export default function Layout({ children }: { children: ReactNode }) {

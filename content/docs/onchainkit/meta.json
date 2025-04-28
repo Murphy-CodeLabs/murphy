@@ -19,8 +19,8 @@
     "mint-cnft-form",
     "token-input",
     "mint-nft-form",
+    "pk-input",
     "Metaplex",
-    "Meteora-DBC",
-    "pk-input"
+    "Meteora-DBC"
   ]
 }

@@ -24,15 +24,15 @@ export function TerminalDemo() {
       </AnimatedSpan>
 
       <AnimatedSpan delay={7000} className="text-muted-foreground">
-        <span>- components/ui/murphis/connect-wallet-button.tsx</span>
+        <span>- components/ui/murphy/connect-wallet-button.tsx</span>
       </AnimatedSpan>
 
       <AnimatedSpan delay={7000} className="text-muted-foreground">
-        <span>- hook/murphis/use-walletMultiButton.ts</span>
+        <span>- hook/murphy/use-walletMultiButton.ts</span>
       </AnimatedSpan>
 
       <AnimatedSpan delay={7000} className="text-muted-foreground">
-        <span>- hook/murphis/use-walletModal.ts</span>
+        <span>- hook/murphy/use-walletModal.ts</span>
       </AnimatedSpan>
 
       <AnimatedSpan delay={7000} className="text-muted-foreground">

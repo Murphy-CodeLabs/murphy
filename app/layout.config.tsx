@@ -1,5 +1,5 @@
 import Layout from "@/app/layout";
-import MurphisLogo from "@/components/murphis-logo";
+import MurphyLogo from "@/components/murphy-logo";
 import type { BaseLayoutProps, LinkItemType } from "fumadocs-ui/layouts/shared";
 import {
   Book,
@@ -22,7 +22,7 @@ import Image from "next/image";
 
 export const linkItems: LinkItemType[] = [
   {
-    text: "About Murphis",
+    text: "About Murphy",
     url: "/about",
     icon: <LayoutTemplate />,
     active: "url",
@@ -35,7 +35,7 @@ export const linkItems: LinkItemType[] = [
   },
   {
     type: "icon",
-    url: "https://github.com/murphis/docs",
+    url: "https://github.com/murphy/docs",
     text: "Github",
     icon: (
       <svg role="img" viewBox="0 0 24 24" fill="currentColor">
@@ -50,7 +50,7 @@ export const baseOptions: BaseLayoutProps = {
   nav: {
     title: (
       <>
-        <MurphisLogo /> Murphis
+        <MurphyLogo /> Murphy
       </>
     ),
     transparentMode: "top",
