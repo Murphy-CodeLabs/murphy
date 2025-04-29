@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode } from "react";
+import React from "react";
 
 import { SettingsIcon } from "lucide-react";
 import {

@@ -164,9 +164,14 @@
       "type": "registry:block",
       "title": "Token Combobox",
       "description": "A searchable combobox of tokens and prices with optional user balances.",
-      "registryDependencies": ["command", "popover"],
+      "registryDependencies": ["command", "popover","button"],
       "dependencies": ["@solana/web3.js"],
       "files": [
+        {
+          "path": "components/ui/murphy/token-combobox.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/token-combobox.tsx"
+        },
         {
           "path": "components/ui/murphy/token-icon.tsx",
           "type": "registry:component",
@@ -496,9 +501,15 @@
       "type": "registry:block",
       "title": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
       "description": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
-      "registryDependencies": ["popover", "toggle-group", "input", "button"],
+      "registryDependencies": ["popover", "toggle-group", "input", "button","dialog"],
       "dependencies": [],
-      "files": []
+      "files": [
+        {
+          "path": "components/ui/murphy/txn-settings.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/txn-settings.tsx"
+        }
+      ]
     },
     {
       "name": "pk-input",
@@ -507,6 +518,11 @@
       "registryDependencies": ["input"],
       "dependencies": ["@solana/web3.js"],
       "files": [
+        {
+          "path": "components/ui/murphy/pk-input.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/pk-input.tsx"
+        },
         {
           "path": "lib/utils.ts",
           "type": "registry:file",
