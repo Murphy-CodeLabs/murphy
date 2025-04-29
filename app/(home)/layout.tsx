@@ -1,10 +1,20 @@
 import type { ReactNode } from "react";
 import { baseOptions } from "@/app/layout.config";
 import { HomeLayout } from "@/components/layouts/home";
+import { IBM_Plex_Mono } from "next/font/google";
+
+const ibmPlexMonoFont = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-ibm-plex-mono",
+});
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <HomeLayout className="container relative" {...baseOptions}>
+    <HomeLayout
+      className={`${ibmPlexMonoFont.className} ${ibmPlexMonoFont.variable} container relative `}
+      {...baseOptions}
+    >
       {children}
       <Footer />
     </HomeLayout>
