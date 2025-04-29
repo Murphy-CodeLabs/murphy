@@ -369,6 +369,11 @@
       "dependencies": ["@solana/web3.js"],
       "files": [
         {
+          "path": "components/ui/murphy/token-input.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/token-input.tsx"
+        },
+        {
           "path": "components/ui/murphy/token-combobox.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/token-combobox.tsx"
