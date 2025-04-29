@@ -21,6 +21,7 @@
     "mint-nft-form",
     "pk-input",
     "Metaplex",
-    "Meteora-DBC"
+    "Meteora-DBC",
+    "txn-settings"
   ]
 }
