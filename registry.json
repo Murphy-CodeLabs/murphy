@@ -377,6 +377,16 @@
           "path": "components/ui/murphy/token-combobox.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/token-combobox.tsx"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "target": "lib/utils.tsx"
+        },
+        {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
         }
       ]
     },
