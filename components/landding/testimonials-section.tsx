@@ -41,18 +41,11 @@ const testimonials = [
       "Building our payment infrastructure on Solana with Murphy reduced transaction costs by 90% while improving processing speed.",
   },
   {
-    name: "Lisa Patel",
-    role: "Project Manager at Web3 Agency",
-    avatarUrl: "https://i.pravatar.cc/150?img=33",
-    quote:
-      "The documentation and community support around Murphy has been exceptional. It's made onboarding new team members so much easier.",
-  },
-  {
-    name: "solomon",
+    name: "Solomon",
     role: "Superteam lead dev rel",
-    avatarUrl: "https://pbs.twimg.com/profile_images/1900239823253782528/cVjoQ-Rx_400x400.jpg",
-    quote:
-      "This looks great, how can I help",
+    avatarUrl:
+      "https://pbs.twimg.com/profile_images/1900239823253782528/cVjoQ-Rx_400x400.jpg",
+    quote: "This looks great, how can I help",
   },
 ];
 

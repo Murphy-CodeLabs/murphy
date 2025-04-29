@@ -13,9 +13,9 @@ export default function HomePage() {
       <HeroSection />
       <HighlightsSection />
       <UseCaseSection />
+      <Partner />
       <ContributeSection />
       <TestimonialsSection />
-      <Partner/>
       <CallActionSection />
     </main>
   );
