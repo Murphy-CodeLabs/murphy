@@ -3,6 +3,9 @@
   "name": "pk-input",
   "type": "registry:block",
   "title": "The PKInput component is an input field with support for inline public key validation.",
+  "dependencies": [
+    "@solana/web3.js"
+  ],
   "registryDependencies": [
     "input"
   ],

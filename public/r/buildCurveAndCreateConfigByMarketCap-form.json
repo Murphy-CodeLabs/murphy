@@ -37,7 +37,7 @@
       "path": "hook/murphy/use-walletModal.ts",
       "content": "import { createContext, useContext } from 'react';\n\nexport interface WalletModalContextState {\n    visible: boolean;\n    setVisible: (open: boolean) => void;\n}\n\nconst DEFAULT_CONTEXT = {\n    setVisible(_open: boolean) {\n        console.error(constructMissingProviderErrorMessage('call', 'setVisible'));\n    },\n    visible: false,\n};\nObject.defineProperty(DEFAULT_CONTEXT, 'visible', {\n    get() {\n        console.error(constructMissingProviderErrorMessage('read', 'visible'));\n        return false;\n    },\n});\n\nfunction constructMissingProviderErrorMessage(action: string, valueName: string) {\n    return (\n        'You have tried to ' +\n        ` ${action} \"${valueName}\"` +\n        ' on a WalletModalContext without providing one.' +\n        ' Make sure to render a WalletModalProvider' +\n        ' as an ancestor of the component that uses ' +\n        'WalletModalContext'\n    );\n}\n\nexport const WalletModalContext = createContext<WalletModalContextState>(DEFAULT_CONTEXT as WalletModalContextState);\n\nexport function useWalletModal(): WalletModalContextState {\n    return useContext(WalletModalContext);\n}\n",
       "type": "registry:hook",
-      "target": "hook/murphy/use-walletModal.ts"
+      "target": "hook/murphis/use-walletModal.ts"
     }
   ]
 }
