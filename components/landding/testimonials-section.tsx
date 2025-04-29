@@ -47,6 +47,13 @@ const testimonials = [
     quote:
       "The documentation and community support around Murphy has been exceptional. It's made onboarding new team members so much easier.",
   },
+  {
+    name: "solomon",
+    role: "Superteam lead dev rel",
+    avatarUrl: "https://pbs.twimg.com/profile_images/1900239823253782528/cVjoQ-Rx_400x400.jpg",
+    quote:
+      "This looks great, how can I help",
+  },
 ];
 
 export function TestimonialsSection() {
