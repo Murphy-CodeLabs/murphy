@@ -7,7 +7,7 @@ import {
   ConnectionProviderProps,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { TxnSettingsProvider } from "../ui/murphis/txn-settings";
+import { TxnSettingsProvider } from "../ui/murphy";
 // Create wrapper components
 // @ts-ignore - Ignore React 19 compatibility error
 const ConnectionProviderWrapper = (props: ConnectionProviderProps) => (
@@ -60,7 +60,7 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
   const networkType = useMemo(
     () =>
       isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
-    [isMainnet],
+    [isMainnet]
   );
 
   // List of public RPC endpoints based on network type
@@ -70,12 +70,12 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
         ? (process.env.NEXT_PUBLIC_SOLANA_RPC_URL as string)
         : (process.env.NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET as string),
     ],
-    [isMainnet],
+    [isMainnet]
   );
 
   const defaultNetwork = useMemo(
     () => props.network || networkType,
-    [props.network, networkType],
+    [props.network, networkType]
   );
 
   // Provided endpoint will be prioritized, otherwise use the current endpoint from the list
@@ -91,7 +91,7 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
     setCurrentEndpointIndex((prevIndex) => {
       const nextIndex = (prevIndex + 1) % publicRPCs.length;
       console.log(
-        `Switching RPC endpoint from ${publicRPCs[prevIndex]} to ${publicRPCs[nextIndex]}`,
+        `Switching RPC endpoint from ${publicRPCs[prevIndex]} to ${publicRPCs[nextIndex]}`
       );
       return nextIndex;
     });
@@ -99,14 +99,14 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
 
   const wallets = useMemo(
     () => props.wallets || [new PhantomWalletAdapter()],
-    [props.wallets],
+    [props.wallets]
   );
   const [isOpen, setIsOpen] = useState(false);
 
   console.log(
     `Using Solana ${isMainnet ? "mainnet" : "devnet"} endpoint: ${endpoint} (${
       currentEndpointIndex + 1
-    }/${publicRPCs.length})`,
+    }/${publicRPCs.length})`
   );
 
   return (
