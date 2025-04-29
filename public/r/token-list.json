@@ -19,7 +19,8 @@
     "select",
     "dialog",
     "dropdown-menu",
-    "skeleton"
+    "skeleton",
+    "table"
   ],
   "files": [
     {

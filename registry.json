@@ -193,7 +193,8 @@
         "select",
         "dialog",
         "dropdown-menu",
-        "skeleton"
+        "skeleton",
+        "table"
       ],
       "dependencies": [
         "@solana/web3.js",
