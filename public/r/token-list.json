@@ -7,7 +7,8 @@
   "dependencies": [
     "@solana/web3.js",
     "@solana/spl-token",
-    "@solana/wallet-adapter-react"
+    "@solana/wallet-adapter-react",
+    "millify"
   ],
   "registryDependencies": [
     "input",
@@ -17,7 +18,8 @@
     "sonner",
     "select",
     "dialog",
-    "dropdown-menu"
+    "dropdown-menu",
+    "skeleton"
   ],
   "files": [
     {
@@ -25,6 +27,24 @@
       "content": "\"use client\";\n\nimport React from \"react\";\nimport Link from \"next/link\";\nimport { ExternalLinkIcon } from \"lucide-react\";\n\nimport { shortAddress, formatUsd, formatNumberShort, cn } from \"@/lib/utils\";\nimport { SolAsset } from \"@/types/swap\";\n\nimport {\n  Table,\n  TableBody,\n  TableCell,\n  TableHead,\n  TableHeader,\n  TableRow,\n} from \"@/components/ui/table\";\nimport { Skeleton } from \"@/components/ui/skeleton\";\n\nimport { TokenIcon } from \"./token-icon\";\n\ntype TokenListProps = {\n  assets: SolAsset[];\n  showBalances?: boolean;\n  onClick?: (token: SolAsset) => void;\n};\n\nconst TokenList = ({\n  assets,\n  showBalances = true,\n  onClick,\n}: TokenListProps) => {\n  return (\n    <Table>\n      <TableHeader>\n        <TableRow className=\"hover:bg-transparent\">\n          <TableHead>Token</TableHead>\n          <TableHead>Mint</TableHead>\n          <TableHead>Price</TableHead>\n          {showBalances && <TableHead>Balance</TableHead>}\n          {showBalances && <TableHead>Value</TableHead>}\n        </TableRow>\n      </TableHeader>\n      <TableBody>\n        {assets.length === 0 ? (\n          <>\n            {[...Array(3)].map((_, index) => (\n              <TableRow key={index} className=\"hover:bg-transparent\">\n                {[...Array(showBalances ? 5 : 3)].map((_, index) => (\n                  <TableCell key={index}>\n                    {index === 0 ? (\n                      <div className=\"flex items-center gap-3\">\n                        <Skeleton className=\"h-[32px] w-[32px] shrink-0 rounded-full\" />\n                        <Skeleton className=\"h-[22px] w-full\" />\n                      </div>\n                    ) : (\n                      <Skeleton className=\"h-[22px] w-full\" />\n                    )}\n                  </TableCell>\n                ))}\n              </TableRow>\n            ))}\n          </>\n        ) : (\n          assets.map((asset) => (\n            <TableRow\n              key={asset.mint.toBase58()}\n              className={cn(\n                \"group odd:bg-muted/25 hover:bg-transparent hover:text-primary hover:odd:bg-muted/25\",\n                onClick && \"cursor-pointer\",\n              )}\n              onClick={() => onClick && onClick(asset)}\n            >\n              <TableCell>\n                <div className=\"flex items-center gap-2 font-medium\">\n                  <TokenIcon asset={asset} />\n                  {asset.symbol}\n                </div>\n              </TableCell>\n              <TableCell>\n                <Link\n                  href={`https://solscan.io/token/${asset.mint.toBase58()}`}\n                  target=\"_blank\"\n                  rel=\"noopener noreferrer\"\n                  className=\"group inline-flex items-center gap-1\"\n                  onClick={(e) => e.stopPropagation()}\n                >\n                  <span className=\"border-b border-transparent group-hover:border-border\">\n                    {shortAddress(asset.mint.toBase58())}\n                  </span>\n                  <ExternalLinkIcon size={16} />\n                </Link>\n              </TableCell>\n              <TableCell>{formatUsd(asset.price || 0)}</TableCell>\n              {showBalances && (\n                <>\n                  <TableCell>\n                    {asset.userTokenAccount?.amount &&\n                      formatNumberShort(asset.userTokenAccount.amount)}\n                  </TableCell>\n                  <TableCell>\n                    {asset.userTokenAccount?.amount &&\n                      formatUsd(\n                        asset.userTokenAccount.amount * (asset.price || 0),\n                      )}\n                  </TableCell>\n                </>\n              )}\n            </TableRow>\n          ))\n        )}\n      </TableBody>\n    </Table>\n  );\n};\n\nexport { TokenList };",
       "type": "registry:component",
       "target": "components/ui/murphy/token-list.tsx"
+    },
+    {
+      "path": "types/swap/index.ts",
+      "content": "import { PublicKey, Connection } from \"@solana/web3.js\";\n\nexport interface Config {\n    JUPITER_REFERRAL_ACCOUNT?: string;\n    JUPITER_FEE_BPS?: number;\n}\n  \ndeclare const _default: {\n    Config: Config;\n};\n\nexport type SolAsset = {\n  mint: PublicKey;\n  name: string;\n  symbol: string;\n  image: string;\n  decimals: number;\n  price: number;\n  userTokenAccount?: {\n    address: PublicKey;\n    amount: number;\n  };\n};\n\nexport default _default; ",
+      "type": "registry:file",
+      "target": "types/swap/index.ts"
+    },
+    {
+      "path": "lib/utils.ts",
+      "content": "import { PublicKey } from \"@solana/web3.js\";\nimport { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\nimport millify from \"millify\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nexport const shortAddress = (address: PublicKey | string) => {\n  const key = typeof address === \"string\" ? address : address.toBase58();\n  return `${key.slice(0, 4)}...${key.slice(-4)}`;\n};\n\nexport const formatUsd = (num: number): string => {\n  return formatNumber(num, { style: \"currency\", currency: \"USD\" });\n};\n\nexport const formatNumber = (\n  num: number,\n  options: Intl.NumberFormatOptions = {},\n): string => {\n  if (num === null || num === undefined) return \"0\";\n\n  const absNum = Math.abs(num);\n  let decimals = 2;\n\n  if (absNum < 1) {\n    decimals = Math.max(2, Math.min(20, Math.ceil(-Math.log10(absNum)) + 2));\n  }\n\n  return new Intl.NumberFormat(\"en-US\", {\n    minimumFractionDigits: 2,\n    maximumFractionDigits: decimals,\n    ...options,\n  }).format(num);\n};\n\nexport const formatNumberShort = (num: number): string => {\n  if (num < 1000) return formatNumber(num);\n  return millify(num, {\n    precision: 2,\n  });\n};\n\nexport const formatNumberGrouped = (\n  value: number,\n  expThreshold: number = 0.0001,\n  expPrecision: number = 1,\n) => {\n  if (value === 0) return \"0\";\n\n  if (Math.abs(value) < expThreshold) {\n    return value.toExponential(expPrecision);\n  }\n\n  if (Number.isInteger(value)) {\n    return new Intl.NumberFormat(\"en-US\", { useGrouping: true }).format(value);\n  }\n\n  const valueParts = value.toString().split(\".\");\n  const decimalPart = valueParts[1] ?? \"\";\n  const leadingZeros = decimalPart.match(/^0*/)?.[0].length ?? 0;\n  const minimumFractionDigits = leadingZeros > 0 ? leadingZeros + 1 : 2;\n\n  return new Intl.NumberFormat(\"en-US\", {\n    useGrouping: true,\n    minimumFractionDigits: minimumFractionDigits,\n    maximumFractionDigits: Math.max(2, minimumFractionDigits),\n  }).format(value);\n};\n\nexport const validatePublicKey = (address: PublicKey | string) => {\n  try {\n    if (typeof address == \"string\") {\n      new PublicKey(address);\n    } else {\n      address.toBase58();\n    }\n    return true;\n  } catch (error) {\n        return false;\n\n  }\n};\n",
+      "type": "registry:file",
+      "target": "lib/utils.tsx"
+    },
+    {
+      "path": "components/ui/murphy/token-icon.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\n\nimport { SolAsset } from \"@/types/swap\";\n\ntype IconProps = {\n  asset: SolAsset | null;\n  size?: number;\n};\n\nconst TokenIcon = ({ asset, size = 24 }: IconProps) => {\n  return (\n    <div\n      className=\"relative shrink-0 rounded-full border border-border bg-background p-0\"\n      style={{\n        width: size + 2,\n        height: size + 2,\n      }}\n    >\n      <img\n        src=\"/token-icons/placeholder.jpg\"\n        alt={asset?.symbol ?? asset?.mint.toBase58() ?? \"\"}\n        width={size}\n        height={size}\n        className=\"absolute inset-0 rounded-full\"\n      />\n      <img\n        src={asset?.image ?? \"\"}\n        alt={asset?.symbol ?? asset?.mint.toBase58() ?? \"\"}\n        width={size}\n        height={size}\n        className=\"absolute inset-0 rounded-full\"\n        style={{\n          width: size,\n          height: size,\n        }}\n      />\n    </div>\n  );\n};\n\nexport { TokenIcon };",
+      "type": "registry:file",
+      "target": "components/ui/murphy/token-icon.tsx"
     }
   ]
 }

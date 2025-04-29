@@ -192,18 +192,35 @@
         "sonner",
         "select",
         "dialog",
-        "dropdown-menu"
+        "dropdown-menu",
+        "skeleton"
       ],
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
-        "@solana/wallet-adapter-react"
+        "@solana/wallet-adapter-react",
+        "millify"
       ],
       "files": [
         {
           "path": "components/ui/murphy/token-list.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/token-list.tsx"
+        },
+          {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "target": "lib/utils.tsx"
+        },
+        {
+          "path": "components/ui/murphy/token-icon.tsx",
+          "type": "registry:file",
+          "target":"components/ui/murphy/token-icon.tsx"
         }
       ]
     },
