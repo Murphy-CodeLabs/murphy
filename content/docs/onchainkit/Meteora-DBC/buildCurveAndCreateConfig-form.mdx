@@ -1,0 +1,43 @@
+---
+title: Build Curve And Create Config Form
+description: A DBC-SDK curve configuration component with shadcn UI
+icon: Check
+---
+
+<PreviewComponent
+  name={"Build Curve And Create Config Form"}
+  v0JsonFileName={"buildCurveAndCreateConfig-form"}
+>
+  <BuildCurveAndCreateConfigForm className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing the necessary Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @project-serum/anchor bn.js"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Ensure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Build Curve And Create Config Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/buildCurveAndCreateConfig-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Base Usage

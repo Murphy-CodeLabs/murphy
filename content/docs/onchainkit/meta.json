@@ -11,6 +11,17 @@
     "send-token-form",
     "swap-token-form",
     "stake-token-form",
-    "token-list"
+    "token-list",
+    "token-combobox",
+    "create-collection-form",
+    "create-merkleTree-form",
+    "get-nft-form",
+    "mint-cnft-form",
+    "token-input",
+    "mint-nft-form",
+    "pk-input",
+    "Metaplex",
+    "Meteora-DBC",
+    "txn-settings"
   ]
 }

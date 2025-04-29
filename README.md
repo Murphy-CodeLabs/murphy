@@ -1,6 +1,6 @@
-# Murphis
+# Murphy
 
-Murphis is an SDK designed to simplify Web3 and Solana development, allowing developers to build decentralized applications in their own way.
+Murphy is an SDK designed to simplify Web3 and Solana development, allowing developers to build decentralized applications in their own way.
 
 ## Overview
 

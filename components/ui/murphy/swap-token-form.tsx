@@ -28,7 +28,7 @@ import {
   SelectValue,
   SelectGroup,
 } from "@/components/ui/select";
-import { ConnetWalletButton } from "./connect-wallet-button";
+import { ConnectWalletButton } from "./connect-wallet-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Popover,
@@ -36,7 +36,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
-import { useJupiterTrade } from "@/hook/murphis/use-JupiterTrade";
+import { useJupiterTrade } from "@/hook/murphy/use-JupiterTrade";
 import { ModalContext } from "@/components/providers/wallet-provider";
 
 declare global {
@@ -1022,7 +1022,7 @@ export function SwapForm({
             {/* Add swap button section */}
             <div className="pt-2">
               {!connected ? (
-                <ConnetWalletButton className="w-full" />
+                <ConnectWalletButton className="w-full" />
               ) : (
                 <Button
                   type="submit"

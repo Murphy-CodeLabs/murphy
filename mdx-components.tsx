@@ -8,7 +8,7 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
 import * as icons from "lucide-react";
 import * as docsComponents from "@/components/docs";
-import * as murphisComponents from "@/components/ui/murphis";
+import * as murphyComponents from "@/components/ui/murphy";
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
@@ -32,6 +32,6 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ),
     ...components,
     ...docsComponents,
-    ...murphisComponents,
+    ...murphyComponents,
   };
 }

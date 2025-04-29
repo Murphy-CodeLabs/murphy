@@ -1,0 +1,118 @@
+---
+title: Create Config Form
+description: A DBC-SDK configuration component with shadcn UI
+icon: Settings
+---
+
+<PreviewComponent
+  name={"Create Config Form"}
+  v0JsonFileName={"createConfig-form"}
+>
+  <CreateConfigForm className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing the necessary Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react bn.js"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Ensure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Create Config Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/createConfig-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Base Usage
+
+```tsx
+import { CreateConfigForm } from "@/components/ui/murphy/createConfig-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create config DBC</h1>
+      <CreateConfigForm className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- Connect with Solana wallet
+- Create a new configuration for DBC-SDK
+- Customize fee receiver and leftover token receiver addresses
+- Choose quote token (SOL, USDC, USDT)
+- Configure cliff fee and important parameters
+- Distribute LP with percentage allocation for stakeholders
+- Real-time network detection (devnet/mainnet)
+- Multi-stage interface (input, confirmation, success, error)
+- Display transaction signatures with links to blockchain explorers
+- Error handling with automatic retry mechanism
+
+## Advanced Usage
+
+```tsx
+export default function MyPage() {
+  const handleConfigCreated = (configAddress: string) => {
+    console.log(`New configuration created: ${configAddress}`);
+  };
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Config DBC</h1>
+      <CreateConfigForm
+        className="max-w-md"
+        onConfigCreated={handleConfigCreated}
+      />
+    </div>
+  );
+}
+```
+
+## Configuration Parameters
+
+When creating a DBC configuration, you need to understand the following important parameters:
+
+### Fee Claimer
+
+The address that will receive fees from the pool. This is usually your main wallet.
+
+### Leftover Receiver
+
+The address that will receive leftover tokens after transactions are executed.
+
+### Quote Mint
+
+The token used as the quote token in the pool.
+
+### LP Distribution
+
+Distribute liquidity tokens among stakeholders:
+
+- **Partner LP**: Percentage for partners (non-locked)
+- **Creator LP**: Percentage for creators (non-locked)
+- **Partner Locked LP**: Percentage locked for partners
+- **Creator Locked LP**: Percentage locked for creators
+
+**Note:** The total of the LP percentages must equal 100%.

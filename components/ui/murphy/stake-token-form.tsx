@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ConnetWalletButton } from "./connect-wallet-button";
+import { ConnectWalletButton } from "./connect-wallet-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Popover,
@@ -210,7 +210,7 @@ export function StakeForm() {
       
       // Use internal API route to avoid CORS error
       const response = await fetch(
-        `/api/murphis/solayer/stake?amount=${parseFloat(amountToStake)}`,
+        `/api/murphy/solayer/stake?amount=${parseFloat(amountToStake)}`,
         {
           method: "POST",
           headers: {
@@ -479,7 +479,7 @@ export function StakeForm() {
           
           <div className="pt-2">
             {!connected ? (
-              <ConnetWalletButton className="w-full" />
+              <ConnectWalletButton className="w-full" />
             ) : (
               <Button
                 type="submit"

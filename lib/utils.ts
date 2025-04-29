@@ -1,10 +1,10 @@
 import { PublicKey } from "@solana/web3.js";
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import millify from "millify";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const shortAddress = (address: PublicKey | string) => {
@@ -41,4 +41,45 @@ export const formatNumberShort = (num: number): string => {
   return millify(num, {
     precision: 2,
   });
+};
+
+export const formatNumberGrouped = (
+  value: number,
+  expThreshold: number = 0.0001,
+  expPrecision: number = 1,
+) => {
+  if (value === 0) return "0";
+
+  if (Math.abs(value) < expThreshold) {
+    return value.toExponential(expPrecision);
+  }
+
+  if (Number.isInteger(value)) {
+    return new Intl.NumberFormat("en-US", { useGrouping: true }).format(value);
+  }
+
+  const valueParts = value.toString().split(".");
+  const decimalPart = valueParts[1] ?? "";
+  const leadingZeros = decimalPart.match(/^0*/)?.[0].length ?? 0;
+  const minimumFractionDigits = leadingZeros > 0 ? leadingZeros + 1 : 2;
+
+  return new Intl.NumberFormat("en-US", {
+    useGrouping: true,
+    minimumFractionDigits: minimumFractionDigits,
+    maximumFractionDigits: Math.max(2, minimumFractionDigits),
+  }).format(value);
+};
+
+export const validatePublicKey = (address: PublicKey | string) => {
+  try {
+    if (typeof address == "string") {
+      new PublicKey(address);
+    } else {
+      address.toBase58();
+    }
+    return true;
+  } catch (error) {
+        return false;
+
+  }
 };
