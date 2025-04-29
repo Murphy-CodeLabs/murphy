@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 
 import { validatePublicKey, cn } from "@/lib/utils";
 import { Input } from "../input";
