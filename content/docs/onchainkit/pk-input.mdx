@@ -4,82 +4,27 @@ description: The PKInput component is an input field with support for inline pub
 icon: Key
 ---
 <PreviewComponent placeholder="Enter a public key" v0JsonFileName="pk-input">
-<PKInput/>
+<PKInput placeholder="Enter your public key"/>
 </PreviewComponent>
 ## Installation
 
 <Steps>
     <Step>
-    Install shadcn/ui input component
-            ```bash
-            npx shadcn@latest add input
-            ```
-    </Step>
-    <Step>
-    Install Murphy PKInput
-        ```tsx
-        import React from "react";
-
-        import { validatePublicKey, cn } from "@/lib/utils";
-        import { Input } from "@/components/ui/input";
-
-        const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) => {
-        const [value, setValue] = React.useState("");
-        const [isInvalid, setIsInvalid] = React.useState(false);
-        const [hasBlurred, setHasBlurred] = React.useState(false);
-        const inputRef = React.useRef<HTMLInputElement>(null);
-
-        const validateField = React.useCallback(() => {
-        const isValid = validatePublicKey(value);
-
-           if (inputRef.current) {
-                if (!isValid) {
-                    inputRef.current.setCustomValidity("Invalid public key");
-                } else {
-                    inputRef.current.setCustomValidity("");
-                }
-
-                setIsInvalid(!inputRef.current.validity.valid);
-                }
-            }, [value]);
-
-            const handleBlur = React.useCallback(() => {
-                setHasBlurred(true);
-                validateField();
-            }, [validateField]);
-
-            React.useEffect(() => {
-                if (hasBlurred) {
-                validateField();
-                }
-            }, [value, validateField, hasBlurred]);
-
-            return (
-                <Input
-                ref={inputRef}
-                type="text"
-                {...props}
-                className={cn(
-                    "outline-none",
-                    props.className,
-                    isInvalid && "border-destructive focus-visible:ring-destructive",
-                )}
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                onBlur={handleBlur}
-                aria-invalid={isInvalid}
-                />
-            );
-            };
-
-            export { PKInput };
+        Install shadcn/ui input component
+        ```bash
+        npx shadcn@latest add input
         ```
     </Step>
     <Step>
-Use PKInput
-```tsx
-<PKInput />
-```  
+        Install Murphy PKInput
+        <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/pk-input.json`}/>
     </Step>
-
 </Steps>
+
+## Basic Usage
+```tsx
+import {PKInput} from "@/components/ui/murphy/pk-input.tsx"
+```
+```tsx
+<PKInput placeholder="Enter your public key"/>
+```
