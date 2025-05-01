@@ -1,0 +1,66 @@
+---
+title: Txn List
+description: The Txn List component is a table of transactions with metadata.
+icon: ListTree
+---
+
+<PreviewComponent name={"Txn List"} v0JsonFileName={"txn-list"}>
+  <TxnList transactions={[      {   "blockTime": 1729299887,
+        "meta": {
+            "fee": 5600,
+        },
+        "slot": 296409116,
+        "transaction": {
+            "message": {
+                "staticAccountKeys":["fLiPgg2yTvmgfhiPkKriAHkDmmXGP6CdeFX9UF5o7Zc"],
+                "recentBlockhash": "3KknVXGNtRNJAd4pwNs1vTjbvi4jTLKBrkoMYygLRbwa",
+                "indexToProgramIds": {}
+            },
+            "signatures": [
+                "2EaBnbW5nranKYGguV7roVYRfHBQtKDDFutsDJCpVdggE2aMRgnv8R29KLAWWu9SMmhnGB4q6jbrA5AM4VLznVYT"
+            ]
+        },
+        "version": "legacy"
+    }]}  className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+    <Step>
+        Install Dependencies
+        ```bash
+        npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets date-fns
+        ```
+    </Step>
+    <Step>
+        Install shadcn/ui table component
+        ```bash
+        npx shadcn@latest add table
+        ```
+    </Step>
+    <Step>
+        Install Murphy TxnList
+        <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/txn-list.json`}/>
+    </Step>
+</Steps>
+
+## Basic Usage
+Import the TxnList component and use it in your app.
+```tsx
+<TxnList
+    transactions={transactions}
+    onClick={(txn) => {
+        console.log("Clicked:", txn.transaction.signatures[0]);
+        }
+    }
+/>
+```
+
+## Props
+
+| Name              | Type                              | Default |
+| ----------------- | --------------------------------- | ------- |
+| `transactions`    | `VersionedTransactionResponse[]`  | `[]`    |
+| `onClick`         | `(txn: VersionedTransactionResponse) => void`| `undefined`  |
+
