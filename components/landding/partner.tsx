@@ -59,7 +59,7 @@ const Partner = () => {
               alt="SendAI"
               width={100}
               height={100}
-              className="size-8 md:size-10 lg:size-44"
+              className="size-8 md:size-10 lg:size-44 invert dark:invert-0"
             />
             {/* <p className="text-xl md:text-3xl lg:text-4xl font-extrabold">
               SendAI
