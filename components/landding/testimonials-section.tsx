@@ -5,47 +5,35 @@ import { StarIcon } from "lucide-react";
 // Testimonial data array
 const testimonials = [
   {
-    name: "Alex Chen",
-    role: "Senior Developer at SolTech",
-    avatarUrl: "https://i.pravatar.cc/150?img=1",
-    quote:
-      "Murphy has completely transformed our development workflow. We're building dApps on Solana in half the time it used to take us.",
-  },
-  {
-    name: "Sarah Johnson",
-    role: "Founder at NFT Marketplace",
-    avatarUrl: "https://i.pravatar.cc/150?img=5",
-    quote:
-      "The simplicity of integrating wallet connections and handling transactions made our NFT platform development incredibly smooth.",
-  },
-  {
-    name: "Michael Rodriguez",
-    role: "CTO at DeFi Protocol",
-    avatarUrl: "https://i.pravatar.cc/150?img=12",
-    quote:
-      "We evaluated several frameworks before choosing Murphy. The performance optimizations and ease of use were unmatched.",
-    rating: 4,
-  },
-  {
-    name: "Emily Zhang",
-    role: "Lead Engineer at GameDAO",
-    avatarUrl: "https://i.pravatar.cc/150?img=20",
-    quote:
-      "Our Web3 game needed reliable blockchain integration without sacrificing UX. Murphy delivered exactly what we needed.",
-  },
-  {
-    name: "David Kim",
-    role: "Developer at Payment Solutions",
-    avatarUrl: "https://i.pravatar.cc/150?img=15",
-    quote:
-      "Building our payment infrastructure on Solana with Murphy reduced transaction costs by 90% while improving processing speed.",
-  },
-  {
     name: "Solomon",
     role: "Superteam lead dev rel",
     avatarUrl:
       "https://pbs.twimg.com/profile_images/1900239823253782528/cVjoQ-Rx_400x400.jpg",
     quote: "This looks great, how can I help",
+  },
+  {
+    name: "Zhe | Poll",
+    role: "Developer at SolToolkit",
+    avatarUrl: "https://pbs.twimg.com/profile_images/1633646870340722694/apYQ1Wku_400x400.jpg",
+    quote: `Generating UI with AI is hit and miss. \n
+            I would love a v0-style app that generates multiple design variations at once 
+            and presents them to choose from. 
+            Better yet, multiple designs from different models.`,
+  },
+  {
+    name: "k2 | superteam 🇻🇳 🇬🇧",
+    role: "Lead at SuperteamVN",
+    avatarUrl: "https://pbs.twimg.com/profile_images/1782916325544767488/nuWf-EUh_400x400.jpg",
+    quote: `<span style="color: blue;">@murphyaidev</span>
+            is Solana’s on-chain dev toolkit — born from 
+            <span style="color: blue;">@pkxro</span>
+            ’s call, built with 
+            <span style="color: blue;">@sendaifun</span>
+            , and now aiming to become the AI-aid tool for solana manlets. 
+            <span style="color: blue;">@SaitamaCoder_VN</span>
+            bets devs will love it like 
+            <span style="color: blue;">@cursor_ai</span>
+            . He’s got few weeks to prove it.`,
   },
 ];
 
@@ -73,7 +61,7 @@ export function TestimonialsSection() {
                 key={index}
                 name={testimonial.name}
                 role={testimonial.role}
-                avatarUrl={testimonial.avatarUrl}
+                avatarUrl={testimonial.avatarUrl || "https://via.placeholder.com/150"}
                 quote={testimonial.quote}
               />
             ))}
@@ -115,7 +103,7 @@ function TestimonialCard({
           <p className="text-muted-foreground text-xs">{role}</p>
         </div>
       </div>
-      <p className="text-sm flex-grow italic text-left">{quote}</p>
+      <p className="text-sm flex-grow italic text-left" dangerouslySetInnerHTML={{ __html: quote }}></p>
     </div>
   );
 }
