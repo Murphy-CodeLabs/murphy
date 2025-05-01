@@ -4,6 +4,8 @@ import { RootProvider } from "fumadocs-ui/provider";
 import type { ReactNode } from "react";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AISearchTrigger } from "@/components/ai-search";
+import { MessageCircle } from "lucide-react";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -27,7 +29,13 @@ export default function Layout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <Body>
-        <RootProvider>{children}</RootProvider>
+        <RootProvider>
+          {children}
+          <AISearchTrigger>
+            <MessageCircle className="size-4" />
+            Ask AI
+          </AISearchTrigger>
+        </RootProvider>
       </Body>
     </html>
   );
