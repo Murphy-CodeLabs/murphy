@@ -20,8 +20,10 @@
     "token-input",
     "mint-nft-form",
     "pk-input",
+    "txn-settings",
+    "txn-list",
     "Metaplex",
-    "Meteora-DBC",
-    "txn-settings"
+    "Meteora-DBC"
+
   ]
 }
