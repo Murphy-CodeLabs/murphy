@@ -5,6 +5,8 @@ import type { ReactNode } from "react";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { metadataMurphy } from "@/lib/metadata";
+import { env } from "process";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -14,10 +16,26 @@ const interFont = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Murphy SDK",
-    template: "%s | Murphy SDK",
+    default: "Murphy",
+    template: "%s | Murphy",
   },
-  description: "Murphy SDK is a set of tools for building on Solana.",
+  description: metadataMurphy.description,
+  metadataBase: new URL(
+    (env.NEXT_PUBLIC_BASE_URL as string) || "https://www.murphyai.dev"
+  ),
+  keywords: [...metadataMurphy.keywords],
+  referrer: "origin-when-cross-origin",
+  authors: [
+    {
+      name: "murphy open source",
+      url: "https://github.com/murphy-codelabs/murphy",
+    },
+  ],
+  publisher: "murphy open source",
+  alternates: {
+    canonical: "./",
+  },
+  openGraph: metadataMurphy.openGraph,
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
