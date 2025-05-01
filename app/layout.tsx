@@ -4,6 +4,7 @@ import { RootProvider } from "fumadocs-ui/provider";
 import type { ReactNode } from "react";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const interFont = Inter({
   subsets: ["latin"],
@@ -29,6 +30,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Body>
         <RootProvider>{children}</RootProvider>
       </Body>
+      <GoogleAnalytics gaId="G-CWD3ZWRVBT" />
     </html>
   );
 }
