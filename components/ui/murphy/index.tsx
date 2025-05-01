@@ -15,6 +15,7 @@ import { CreateConfigForm } from "./createConfig-form";
 import BuildCurveAndCreateConfigByMarketCapForm from "./buildCurveAndCreateConfigByMarketCap-form";
 import { TxnSettings, TxnSettingsProvider } from "./txn-settings";
 import { PKInput } from "./pk-input";
+import TxnList from "./txn-list";
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -33,5 +34,6 @@ export {
   BuildCurveAndCreateConfigByMarketCapForm,
   TxnSettings,
   TxnSettingsProvider,
+  TxnList,
   PKInput
 };
