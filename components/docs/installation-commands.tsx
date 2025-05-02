@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Check, Clipboard } from "lucide-react";
 import { toast } from "sonner";
 
@@ -19,10 +19,45 @@ export default function InstallationCommands({
   );
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
+  const debounce = (func: Function, delay: number) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: any[]) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const trackCopy = useCallback(
+    debounce(async (componentName: string) => {
+      try {
+        await fetch("/api/stats/copy-command-track", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ componentName }),
+        });
+      } catch (error) {
+        console.error("Failed to track copy:", error);
+      }
+    }, 1000),
+    []
+  );
+
+  const handleCopy = async () => {
     navigator.clipboard.writeText(command);
     setCopied(true);
     toast.success("Command copied to clipboard");
+
+    const componentName = packageUrl
+      .split("/")
+      .pop()
+      ?.replace(".json", "")
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
+    trackCopy(componentName);
 
     setTimeout(() => {
       setCopied(false);

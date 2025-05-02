@@ -6,6 +6,7 @@ import { HighlightsSection } from "@/components/landding/highlights";
 import { TestimonialsSection } from "@/components/landding/testimonials-section";
 import { UseCaseSection } from "@/components/landding/usecase";
 import Partner from "@/components/landding/partner";
+import { StatsSection } from "@/components/landding/stats";
 export default function HomePage() {
   return (
     <main className="flex flex-col justify-center text-center">
@@ -14,6 +15,7 @@ export default function HomePage() {
       <HighlightsSection />
       <UseCaseSection />
       <Partner />
+      <StatsSection />
       <ContributeSection />
       <TestimonialsSection />
       <CallActionSection />

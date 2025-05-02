@@ -22,11 +22,11 @@ export function UseCaseSection() {
         </div>
         <div className="from-muted/40 grid w-full grid-cols-1 border-b border-r bg-gradient-to-b to-transparent to-50% sm:grid-cols-2 md:grid-cols-3">
           <div className="border-x border-t">
-            <div className="flex flex-col items-center justify-center h-[350px] overflow-hidden border-b -mb-[1px]">
+            <div className="flex-col items-center justify-center h-[350px] overflow-hidden border-b -mb-[1px] hidden xl:flex">
               <GamingGridUseCase />
             </div>
             <div className="flex flex-col justify-center text-left px-4 py-6 -mr-[1px] -mt-[1px] -ml-[1px]">
-              <p className="text-md font-bold">Web3 Gaming</p>
+              <p className="text-md font-semibold">Web3 Gaming</p>
               <p className="text-sm">
                 Develop blockchain games with NFT assets, token rewards, and
                 on-chain game mechanics.
@@ -34,13 +34,13 @@ export function UseCaseSection() {
             </div>
           </div>
           <div className="border-x border-t -mr-[1px] -ml-[1px]">
-            <div className="flex flex-col items-center justify-center h-[350px] overflow-hidden border-b -mb-[1px]">
-              <div className="flex items-center justify-center h-full w-full">
+            <div className="flex-col items-center justify-center h-[350px] overflow-hidden border-b -mb-[1px] hidden xl:flex">
+              <div className="flex items-center justify-center h-full w-full ">
                 <OrbitingCirclesUseCase />
               </div>
             </div>
             <div className="flex flex-col justify-center text-left px-4 py-6 -mr-[1px] -mt-[1px] -ml-[1px]">
-              <p className="text-md font-bold">DeFi Applications</p>
+              <p className="text-md font-semibold">DeFi Applications</p>
               <p className="text-sm">
                 Build decentralized exchanges, lending platforms, and yield
                 farming solutions on Solana.
@@ -48,13 +48,13 @@ export function UseCaseSection() {
             </div>
           </div>
           <div className="border-x border-t -mr-[1px] ">
-            <div className="flex flex-col items-center justify-center h-[350px] overflow-hidden border-b -mb-[1px]">
+            <div className="flex-col items-center justify-center h-[350px] overflow-hidden border-b -mb-[1px] hidden xl:flex">
               <div className="flex items-center justify-center h-full w-full">
                 <PaymentFlowUseCase />
               </div>
             </div>
             <div className="flex flex-col justify-center text-left px-4 py-6 -mr-[1px] -mt-[1px] -ml-[1px]">
-              <p className="text-md font-bold">Payment Infrastructure</p>
+              <p className="text-md font-semibold">Payment Infrastructure</p>
               <p className="text-sm">
                 Create fast, secure payment systems with low fees for e-commerce
                 and cross-border transfers.
