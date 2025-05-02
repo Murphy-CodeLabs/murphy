@@ -598,6 +598,25 @@
           "target": "lib/utils.ts"
         }
      ]
+    },
+    {
+      "name": "sparkline",
+      "type": "registry:block",
+      "title": "The Sparkline component is a line chart that displays the price of a token over time.",
+      "registryDependencies": ["chart"],
+      "dependencies": ["recharts"],
+      "files": [
+        {
+          "path": "components/ui/murphy/price-change.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/price-change.tsx"
+        },
+        {
+          "path": "components/ui/murphy/sparkline.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/sparkline.tsx"
+        }
+     ]
     }
   ]
 }

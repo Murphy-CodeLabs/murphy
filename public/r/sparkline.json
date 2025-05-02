@@ -1,0 +1,26 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sparkline",
+  "type": "registry:block",
+  "title": "The Sparkline component is a line chart that displays the price of a token over time.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/price-change.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\n\nimport { cn, formatUsd } from \"@/lib/utils\";\n\ntype PriceChangeProps = {\n  data: {\n    timestamp: number;\n    price: number;\n  }[];\n  type?: \"%\" | \"$\";\n};\n\nconst PriceChange = ({ data, type = \"%\" }: PriceChangeProps) => {\n  const [selectedType, setSelectedType] = React.useState(type);\n  const startPrice = data[0]?.price || 0;\n  const endPrice = data[data.length - 1]?.price || 0;\n  const priceDifference = endPrice - startPrice;\n  const percentageChange = (priceDifference / startPrice) * 100;\n  const isPositive = priceDifference > 0;\n\n  if (!data[0]?.price) return null;\n\n  return (\n    <div\n      className={cn(\n        \"cursor-pointer text-xs\",\n        isPositive ? \"text-[#75ba80]\" : \"text-[#e07d6f]\",\n      )}\n      onClick={() => setSelectedType(selectedType === \"%\" ? \"$\" : \"%\")}\n    >\n      {isPositive && \"+\"}\n      {selectedType === \"%\"\n        ? `${percentageChange.toFixed(2)}%`\n        : `${formatUsd(priceDifference)}`}\n    </div>\n  );\n};\n\nexport { PriceChange };",
+      "type": "registry:file",
+      "target": "components/ui/murphy/price-change.tsx"
+    },
+    {
+      "path": "components/ui/murphy/sparkline.tsx",
+      "content": "\"use client\";\nimport React from \"react\";\n\nimport { LineChart, CartesianGrid, XAxis, YAxis, Line } from \"recharts\";\n\nimport { ChartConfig, ChartContainer } from \"@/components/ui/chart\";\n\nimport { PriceChange } from \"@/components/ui/murphy/price-change\";\n\ntype SparklineProps = {\n  data: {\n    timestamp: number;\n    price: number;\n  }[];\n};\n\nconst chartConfig = {\n  desktop: {\n    label: \"Price\",\n    color: \"hsl(var(--chart-1))\",\n  },\n} satisfies ChartConfig;\n\nconst Sparkline = ({ data }: SparklineProps) => {\n  if (!data.length) return null;\n\n  const minPrice = Math.min(...data.map((d) => d.price));\n  const maxPrice = Math.max(...data.map((d) => d.price));\n\n  return (\n    <div className=\"relative w-full\">\n      <ChartContainer\n        config={chartConfig}\n        className=\"h-[80px] w-full shrink-0 pr-16\"\n      >\n        <LineChart accessibilityLayer data={data}>\n          <CartesianGrid horizontal={false} vertical={false} />\n          <XAxis\n            dataKey=\"time\"\n            tickLine={false}\n            axisLine={false}\n            minTickGap={32}\n            tickMargin={8}\n            className=\"text-xs\"\n          />\n          <YAxis domain={[minPrice, maxPrice]} hide={true} />\n          <defs>\n            <linearGradient id=\"fill\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\">\n              <stop\n                offset=\"5%\"\n                stopColor={\n                  data[data.length - 1].price >= data[0].price\n                    ? \"#75ba80\"\n                    : \"#e07d6f\"\n                }\n                stopOpacity={0.8}\n              />\n              <stop\n                offset=\"95%\"\n                stopColor={\n                  data[data.length - 1].price >= data[0].price\n                    ? \"#75ba80\"\n                    : \"#e07d6f\"\n                }\n                stopOpacity={0.1}\n              />\n            </linearGradient>\n          </defs>\n          <Line\n            dataKey=\"price\"\n            type=\"natural\"\n            dot={false}\n            stroke={\n              data[data.length - 1].price >= data[0].price\n                ? \"#75ba80\"\n                : \"#e07d6f\"\n            }\n          />\n        </LineChart>\n      </ChartContainer>\n      <div className=\"absolute right-0 top-0 z-10\">\n        <PriceChange data={data} type=\"$\" />\n      </div>\n    </div>\n  );\n};\n\nexport { Sparkline };\n",
+      "type": "registry:file",
+      "target": "components/ui/murphy/sparkline.tsx"
+    }
+  ]
+}
