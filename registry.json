@@ -221,7 +221,7 @@
         {
           "path": "lib/utils.ts",
           "type": "registry:file",
-          "target": "lib/utils.tsx"
+          "target": "lib/utils.ts"
         },
         {
           "path": "components/ui/murphy/token-icon.tsx",
@@ -404,7 +404,7 @@
         {
           "path": "lib/utils.ts",
           "type": "registry:file",
-          "target": "lib/utils.tsx"
+          "target": "lib/utils.ts"
         },
         {
           "path": "types/swap/index.ts",
@@ -559,7 +559,7 @@
         {
           "path": "lib/utils.ts",
           "type": "registry:file",
-          "target": "lib/utils.tsx"
+          "target": "lib/utils.ts"
         }
      ]
     },
@@ -578,7 +578,7 @@
         {
           "path": "lib/utils.ts",
           "type": "registry:file",
-          "target": "lib/utils.tsx"
+          "target": "lib/utils.ts"
         }
      ]
     }
