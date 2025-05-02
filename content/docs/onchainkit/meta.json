@@ -22,8 +22,8 @@
     "pk-input",
     "txn-settings",
     "txn-list",
+    "price-change",
     "Metaplex",
     "Meteora-DBC"
-
   ]
 }
