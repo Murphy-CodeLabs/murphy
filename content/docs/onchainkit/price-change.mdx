@@ -1,0 +1,71 @@
+---
+title: Price Change
+description: The PriceChange component displays the change of a price over time.
+icon: ArrowUpDown
+---
+          <p className="text-sm text-muted-foreground">
+            Click to toggle between % and $ 
+          </p>
+
+<PreviewComponent name={"Price Change"} v0JsonFileName={"price-change"}>
+    <PriceChange data={[
+    {
+        "timestamp": 1729497600,
+        "price": 0.0859761699383211
+    },
+    {
+        "timestamp": 1729501200,
+        "price": 0.08605958846019263
+    },
+    {
+        "timestamp": 1729504800,
+        "price": 0.08700024496006961
+    },
+    {
+        "timestamp": 1729508400,
+        "price": 0.08606881239339946
+    }
+]} type={"%"} />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+    <Step>
+        Install Murphy PriceChange
+            <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/price-change.json`}
+    />
+    </Step>
+</Steps>
+
+## Basic Usage
+    ```tsx
+    import { PriceChange } from "@/components/ui/murphy/price-change";
+    ```
+    ```tsx
+    <PriceChange data={[
+    {
+        "timestamp": 1729497600,
+        "price": 0.0859761699383211
+    },
+    {
+        "timestamp": 1729501200,
+        "price": 0.08605958846019263
+    },
+    {
+        "timestamp": 1729504800,
+        "price": 0.08700024496006961
+    },
+    {
+        "timestamp": 1729508400,
+        "price": 0.08606881239339946
+    }
+]} />
+    ```
+## Props
+
+| Name              | Type                                      | Default |
+| ----------------- | ------------------------------------------| ------- |
+| `data`            | `{ timestamp: number; price: number }[]`  | `[]`    |
+| `type`            | ` "%"  \| "$" `                           | `%`     |

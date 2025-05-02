@@ -16,6 +16,7 @@ import BuildCurveAndCreateConfigByMarketCapForm from "./buildCurveAndCreateConfi
 import { TxnSettings, TxnSettingsProvider } from "./txn-settings";
 import { PKInput } from "./pk-input";
 import TxnList from "./txn-list";
+import { PriceChange } from "@/components/ui/murphy/price-change";
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -35,5 +36,6 @@ export {
   TxnSettings,
   TxnSettingsProvider,
   TxnList,
-  PKInput
+  PKInput,
+  PriceChange
 };
