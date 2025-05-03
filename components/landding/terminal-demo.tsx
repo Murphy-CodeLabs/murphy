@@ -4,7 +4,7 @@ import {
   TypingAnimation,
 } from "@/components/ui/terminal";
 
-const packageUrl = `pnpm dlx shadcn@canary add ${process.env.NEXT_PUBLIC_BASE_URL}/r/connect-wallet-button.json`;
+const packageUrl = `pnpm dlx shadcn@canary add connect-wallet-button`;
 
 export function TerminalDemo() {
   return (
