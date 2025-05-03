@@ -51,16 +51,16 @@ export default function HeroSection() {
               </Link>
 
               <div className="text-center md:text-left">
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6">
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6 text-left">
                   Murphy
                 </h1>
-                <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto md:mx-0 mb-8 leading-relaxed">
+                <p className="text-muted-foreground text-lg md:text-xl max-w-2xl text-left mx-0 mb-8 leading-relaxed">
                   A powerful and developer-friendly Kit for building
                   decentralized applications on Solana. Simplify blockchain
                   interactions, accelerate development, and unlock the full
                   potential of the Solana ecosystem.
                 </p>
-                <div className="flex  sm:flex-row gap-4 justify-center items-center md:justify-start">
+                <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center justify-start">
                   <LinkButton
                     href="/docs/onchainkit"
                     className="rounded-none h-10"

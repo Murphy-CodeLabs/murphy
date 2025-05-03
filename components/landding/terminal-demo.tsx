@@ -20,7 +20,7 @@ export function TerminalDemo() {
       </AnimatedSpan>
 
       <AnimatedSpan delay={7000} className="text-green-500">
-        <span>✔ Created 7 files:</span>
+        <span>✔ Created 3 files:</span>
       </AnimatedSpan>
 
       <AnimatedSpan delay={7000} className="text-muted-foreground">
