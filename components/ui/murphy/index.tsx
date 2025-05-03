@@ -17,6 +17,7 @@ import { TxnSettings, TxnSettingsProvider } from "./txn-settings";
 import { PKInput } from "./pk-input";
 import TxnList from "./txn-list";
 import { PriceChange } from "@/components/ui/murphy/price-change";
+import { Sparkline } from "@/components/ui/murphy/sparkline";
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -37,5 +38,6 @@ export {
   TxnSettingsProvider,
   TxnList,
   PKInput,
-  PriceChange
+  PriceChange,
+  Sparkline
 };

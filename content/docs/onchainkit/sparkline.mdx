@@ -1,0 +1,76 @@
+---
+title: Sparkline
+description: The Sparkline component is a line chart that displays the price of a token over time.
+icon: ChartLine
+---
+
+<PreviewComponent name={"Sparkline"} v0JsonFileName={"sparkline"}>
+  <Sparkline data={[
+    {
+        "timestamp": 1729497600,
+        "price": 0.0859761699383211
+    },
+    {
+        "timestamp": 1729501200,
+        "price": 0.08605958846019263
+    },
+    {
+        "timestamp": 1729504800,
+        "price": 0.08700024496006961
+    },
+    {
+        "timestamp": 1729508400,
+        "price": 0.08606881239339946
+    }
+]} />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+    <Step>
+    Install Murphy Price Change
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/price-change.json`}
+    />
+    </Step>
+    <Step>
+    Install Murphy Sparkline
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/sparkline.json`}
+    />
+    </Step>
+</Steps>
+
+## Basic usage
+
+```tsx
+import { Sparkline } from "@/components/ui/murphy/sparkline";
+```
+
+```tsx
+  <Sparkline data={[
+    {
+        "timestamp": 1729497600,
+        "price": 0.0859761699383211
+    },
+    {
+        "timestamp": 1729501200,
+        "price": 0.08605958846019263
+    },
+    {
+        "timestamp": 1729504800,
+        "price": 0.08700024496006961
+    },
+    {
+        "timestamp": 1729508400,
+        "price": 0.08606881239339946
+    }
+]} />
+```
+
+## Props
+
+| Name              | Type                                      | Default |
+| ----------------- | ------------------------------------------| ------- |
+| `data`            | `{ timestamp: number; price: number }[]`  | `[]`    |
