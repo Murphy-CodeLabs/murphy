@@ -5,9 +5,17 @@ import { TerminalDemo } from "@/components/landding/terminal-demo";
 import AnimatedGroup from "@/components/ui/animated-group";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Code, Dumbbell, Layers, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  Code,
+  Dumbbell,
+  Layers,
+  Mail,
+  SendHorizonal,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { LinkButton } from "../ui/link-button";
 
 export default function HeroSection() {
@@ -52,8 +60,14 @@ export default function HeroSection() {
                   interactions, accelerate development, and unlock the full
                   potential of the Solana ecosystem.
                 </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                  <LinkButton href="/docs/onchainkit">Get Started</LinkButton>
+                <div className="flex  sm:flex-row gap-4 justify-center items-center md:justify-start">
+                  <LinkButton
+                    href="/docs/onchainkit"
+                    className="rounded-none h-10"
+                  >
+                    Get Started
+                  </LinkButton>
+                  <EmailSubscribe />
                 </div>
               </div>
             </div>
@@ -72,3 +86,77 @@ export default function HeroSection() {
     </>
   );
 }
+
+const EmailSubscribe = () => {
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsSubmitted(true);
+        setEmail("");
+        // Reset submission state after 3 seconds
+        setTimeout(() => setIsSubmitted(false), 3000);
+      }
+    } catch (error) {
+      console.error("Error subscribing:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="">
+      <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] items-center border pr-2 ">
+        <Mail className="text-caption pointer-events-none absolute inset-y-0 left-5 my-auto size-5" />
+
+        <input
+          placeholder="Your mail address"
+          className="h-10 w-full bg-transparent pl-12 focus:outline-none"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <div className="md:pr-1.5 lg:pr-0">
+          <Button
+            aria-label="submit"
+            className="rounded-none h-7"
+            type="submit"
+            disabled={isLoading || isSubmitted}
+          >
+            {isLoading ? (
+              <span className="hidden md:block">Subscribing...</span>
+            ) : isSubmitted ? (
+              <span className="hidden md:block">Subscribed!</span>
+            ) : (
+              <>
+                <span className="hidden md:block">Subscribe</span>
+                <SendHorizonal
+                  className="relative mx-auto size-5 md:hidden"
+                  strokeWidth={2}
+                />
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </form>
+  );
+};
