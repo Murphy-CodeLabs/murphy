@@ -23,6 +23,7 @@
     "txn-settings",
     "txn-list",
     "price-change",
+    "sparkline",
     "Metaplex",
     "Meteora-DBC"
   ]
