@@ -69,7 +69,7 @@ export const Feedback = () => {
     >
       <span className="flex items-center justify-center gap-3 pl-4 pr-2">
         <div className="text-sm text-black dark:text-neutral-400">
-          Like our service?
+          How are you feeling?
         </div>
         <div className="flex items-center text-neutral-400">
           {feedback.map((e) => {
