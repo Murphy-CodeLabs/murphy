@@ -8,6 +8,7 @@ import {
 import { notFound } from "next/navigation";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getMDXComponents } from "@/mdx-components";
+import { CallAction } from "@/components/docs/call-action";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -24,7 +25,7 @@ export default async function Page(props: {
       toc={toc}
       tableOfContent={{
         style: "clerk",
-        enabled: true,
+        footer: <CallAction />,
       }}
       full={page.data.full}
       editOnGithub={{
