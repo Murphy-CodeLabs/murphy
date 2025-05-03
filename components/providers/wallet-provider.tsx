@@ -103,12 +103,6 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
   );
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(
-    `Using Solana ${isMainnet ? "mainnet" : "devnet"} endpoint: ${endpoint} (${
-      currentEndpointIndex + 1
-    }/${publicRPCs.length})`
-  );
-
   return (
     <ModalContext.Provider
       value={{

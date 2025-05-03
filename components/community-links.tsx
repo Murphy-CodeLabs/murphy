@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Button } from "./ui/button";
+
 const XIcon = () => (
   <svg
     role="img"
@@ -69,3 +72,29 @@ export const linkIcons: CallActionProps[] = [
     href: "https://github.com/Murphy-CodeLabs/murphy",
   },
 ];
+
+export const LinkTree = () => {
+  return (
+    <div className="w-full rounded-sm shadow-none gap-1 p-2 border">
+      <p className="text-sm text-black dark:text-neutral-400">
+        Join Our Community
+      </p>
+
+      <div className="flex gap-2 mt-2">
+        {linkIcons.map((link) => (
+          <Button
+            size="icon"
+            className="rounded-sm shadow-none"
+            variant="ghost"
+            asChild
+            key={link.href}
+          >
+            <Link target="_blank" href={link.href}>
+              {link.icon}
+            </Link>
+          </Button>
+        ))}
+      </div>
+    </div>
+  );
+};
