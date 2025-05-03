@@ -23,14 +23,14 @@ const TokenIcon = ({ asset, size = 24 }: IconProps) => {
         alt={asset?.symbol ?? asset?.mint.toBase58() ?? ""}
         width={size}
         height={size}
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-0 rounded-full mt-0"
       />
       <img
         src={asset?.image ?? ""}
         alt={asset?.symbol ?? asset?.mint.toBase58() ?? ""}
         width={size}
         height={size}
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-0 rounded-full mt-0"
         style={{
           width: size,
           height: size,

@@ -617,6 +617,30 @@
           "target": "components/ui/murphy/sparkline.tsx"
         }
      ]
+    },
+    {
+      "name": "price-chart",
+      "type": "registry:block",
+      "title": "The PriceChart component is a chart that displays the price of a token over time.",
+      "registryDependencies": ["chart","card","toggle-group","skeleton"],
+      "dependencies": ["recharts","date-fns"],
+      "files": [
+        {
+          "path": "components/ui/murphy/price-chart.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/price-chart.tsx"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "target": "lib/utils.ts"
+        },
+          {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
+        }
+     ]
     }
   ]
 }
