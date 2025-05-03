@@ -11,8 +11,8 @@ export default function HomePage() {
     <main className="flex flex-col justify-center text-center">
       <HeroSection />
       <HighlightsSection />
-      <UseCaseSection />
-      <Partner />
+      {/* <UseCaseSection />
+      <Partner /> */}
       <StatsSection />
       <ContributeSection />
       <TestimonialsSection />
