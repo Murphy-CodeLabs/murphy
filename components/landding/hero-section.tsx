@@ -44,10 +44,10 @@ export default function HeroSection() {
 
               <div className="text-center md:text-left">
                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold tracking-tight mb-6">
-                  Murphy SDK
+                  Murphy
                 </h1>
                 <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto md:mx-0 mb-8 leading-relaxed">
-                  A powerful and developer-friendly SDK for building
+                  A powerful and developer-friendly Kit for building
                   decentralized applications on Solana. Simplify blockchain
                   interactions, accelerate development, and unlock the full
                   potential of the Solana ecosystem.
