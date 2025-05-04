@@ -1,0 +1,86 @@
+---
+title: PriceChart
+description: The PriceChart component is a chart that displays the price of a token over time.
+icon: ChartNoAxesCombined
+---
+<PreviewComponent name={"PriceChart"} v0JsonFileName={"PriceChart"}>
+    <PriceChart  
+    asset={{
+    "mint": "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
+    "name": "dogwifhat",
+    "symbol": "$WIF",
+    "image": "https://bafkreibk3covs5ltyqxa272uodhculbr6kea6betidfwy3ajsav2vjzyum.ipfs.nftstorage.link",
+    "price": 0.5922658399116827,
+    "decimals": 6
+    }}
+    description="$WIF price over time"
+    data={[
+    {
+        "timestamp": 1729497600,
+        "price": 0.0859761699383211
+    },
+    {
+        "timestamp": 1729501200,
+        "price": 0.08605958846019263
+    },
+    {
+        "timestamp": 1729504800,
+        "price": 0.08700024496006961
+    },
+    {
+        "timestamp": 1729508400,
+        "price": 0.08606881239339946
+    }
+    ]}
+    dateRangeOptions={["1D", "1W", "1M", "1Y"]}
+    timeScale={"time"}
+    defaultDateRange={"1D"}
+
+    />
+</PreviewComponent>
+
+
+## Installation
+<Steps>
+    <Step>
+    Install Murphy TokenIcon
+        <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/token-icon.json`}
+    />
+    </Step>
+    <Step>
+    Install Murphy PriceChart
+        <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/price-chart.json`}
+    />
+    </Step>
+</Steps>
+
+## Basic Usage
+```tsx
+import { PriceChart } from "@/components/ui/murphy/price-chart";
+```
+
+```tsx
+<PriceChart
+  asset={wifAsset}
+  description="$WIF price over time"
+  data={chartData}
+  timeScale={timestamps[dateRange].timeScale}
+  onDateRangeChange={(value) => setDateRange(value as DateRangeKey)}
+  dateRangeOptions={["1D", "1W", "1M", "1Y"]}
+  defaultDateRange={dateRange}
+/>  
+```
+
+## Props
+| Name               | Type                                             | Default |
+| ------------------ | -------------------------------------------------| ------- |
+| `asset`            | `SolAsset`                                       | `undefined`    |
+| `description`      | `string`                                         |     |
+| `data`             | `data: {timestamp: number; price: number; }[];`  | `[]`    |
+| `timeScale`        | `"time" \| "day" \| "date" \| "month"`           | `"time"`    |
+| `title`            | `string`                                         |     |
+| `onDateRangeChange`| `(value: DateRangeKey) => void`                  |     |
+| `dateRangeOptions` | `string[]`                                       |     |
+| `defaultDateRange` | `string`                                         |          |
