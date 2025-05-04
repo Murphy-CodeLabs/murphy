@@ -1,0 +1,43 @@
+---
+title: TokenIcon
+description: The TokenIcon component is a component for rendering token icons with loading and fallback states.
+icon: Atom
+---
+
+<PreviewComponent name={"Token Icon"} v0JsonFileName={"token-icon"}>
+  <TokenIcon     
+    asset={{
+    "mint": "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
+    "name": "dogwifhat",
+    "symbol": "$WIF",
+    "image": "https://bafkreibk3covs5ltyqxa272uodhculbr6kea6betidfwy3ajsav2vjzyum.ipfs.nftstorage.link",
+    "price": 0.5922658399116827,
+    "decimals": 6
+    }}/>
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+    <Step>
+        Install SolanaUI Token Icon
+              <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/token-icon.json`}
+    />
+    </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { TokenIcon } from "@/components/ui/murphy/token-icon";
+```
+```tsx
+<TokenIcon asset={asset} />
+````
+
+## Props
+
+| Name                     | Type                                     | Default |
+| ------------------------ | ---------------------------------------- | ------- |
+| `asset`                 | `SolAsset`                                |    |

@@ -3,14 +3,14 @@ import { OrbitingCircles } from "./orbiting-circles";
 export function OrbitingCirclesUseCase() {
   return (
     <div className="relative  flex h-[120%] w-full flex-col items-center justify-center">
-      <OrbitingCircles className="dark:invert" iconSize={75}>
+      <OrbitingCircles className="dark:invert" iconSize={30}>
         <Icons.solana />
         <Icons.tether />
         <Icons.cash />
       </OrbitingCircles>
       <OrbitingCircles
         className="dark:invert"
-        iconSize={40}
+        iconSize={25}
         radius={100}
         reverse
         speed={2}

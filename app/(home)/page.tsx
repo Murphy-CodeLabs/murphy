@@ -1,4 +1,3 @@
-import CanvasCursor from "@/components/canvas-cursor";
 import { CallActionSection } from "@/components/landding/call-action-section";
 import { ContributeSection } from "@/components/landding/contribute-section";
 import HeroSection from "@/components/landding/hero-section";
@@ -10,11 +9,10 @@ import { StatsSection } from "@/components/landding/stats";
 export default function HomePage() {
   return (
     <main className="flex flex-col justify-center text-center">
-      {/* <CanvasCursor /> */}
       <HeroSection />
       <HighlightsSection />
-      <UseCaseSection />
-      <Partner />
+      {/* <UseCaseSection />
+      <Partner /> */}
       <StatsSection />
       <ContributeSection />
       <TestimonialsSection />
