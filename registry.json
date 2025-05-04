@@ -164,7 +164,7 @@
       "type": "registry:block",
       "title": "Token Combobox",
       "description": "A searchable combobox of tokens and prices with optional user balances.",
-      "registryDependencies": ["command", "popover","button"],
+      "registryDependencies": ["command", "popover", "button"],
       "dependencies": ["@solana/web3.js"],
       "files": [
         {
@@ -213,7 +213,7 @@
           "type": "registry:component",
           "target": "components/ui/murphy/token-list.tsx"
         },
-          {
+        {
           "path": "types/swap/index.ts",
           "type": "registry:file",
           "target": "types/swap/index.ts"
@@ -226,7 +226,7 @@
         {
           "path": "components/ui/murphy/token-icon.tsx",
           "type": "registry:file",
-          "target":"components/ui/murphy/token-icon.tsx"
+          "target": "components/ui/murphy/token-icon.tsx"
         }
       ]
     },
@@ -534,7 +534,13 @@
       "type": "registry:block",
       "title": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
       "description": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
-      "registryDependencies": ["popover", "toggle-group", "input", "button","dialog"],
+      "registryDependencies": [
+        "popover",
+        "toggle-group",
+        "input",
+        "button",
+        "dialog"
+      ],
       "dependencies": [],
       "files": [
         {
@@ -561,14 +567,18 @@
           "type": "registry:file",
           "target": "lib/utils.ts"
         }
-     ]
+      ]
     },
     {
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",
       "registryDependencies": ["table"],
-      "dependencies": ["@solana/web3.js","date-fns","@solana/wallet-adapter-react"],
+      "dependencies": [
+        "@solana/web3.js",
+        "date-fns",
+        "@solana/wallet-adapter-react"
+      ],
       "files": [
         {
           "path": "components/ui/murphy/txn-list.tsx",
@@ -580,7 +590,7 @@
           "type": "registry:file",
           "target": "lib/utils.ts"
         }
-     ]
+      ]
     },
     {
       "name": "price-change",
@@ -597,7 +607,7 @@
           "type": "registry:file",
           "target": "lib/utils.ts"
         }
-     ]
+      ]
     },
     {
       "name": "sparkline",
@@ -616,7 +626,31 @@
           "type": "registry:file",
           "target": "components/ui/murphy/sparkline.tsx"
         }
-     ]
+      ]
+    },
+    {
+      "name": "price-chart",
+      "type": "registry:block",
+      "title": "The PriceChart component is a chart that displays the price of a token over time.",
+      "registryDependencies": ["chart", "card", "toggle-group", "skeleton"],
+      "dependencies": ["recharts", "date-fns"],
+      "files": [
+        {
+          "path": "components/ui/murphy/price-chart.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/price-chart.tsx"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "target": "lib/utils.ts"
+        },
+        {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
+        }
+      ]
     },
     {
       "name": "token-icon",
@@ -633,7 +667,7 @@
           "type": "registry:file",
           "target": "types/swap/index.ts"
         }
-     ]
+      ]
     }
   ]
 }

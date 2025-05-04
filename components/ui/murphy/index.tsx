@@ -18,6 +18,7 @@ import { PKInput } from "./pk-input";
 import TxnList from "./txn-list";
 import { PriceChange } from "@/components/ui/murphy/price-change";
 import { Sparkline } from "@/components/ui/murphy/sparkline";
+import { PriceChart } from "@/components/ui/murphy/price-chart";
 import { TokenIcon } from "@/components/ui/murphy/token-icon";
 
 export {
@@ -42,5 +43,6 @@ export {
   PKInput,
   PriceChange,
   Sparkline,
+  PriceChart
   TokenIcon
 };
