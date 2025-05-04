@@ -43,6 +43,6 @@ export {
   PKInput,
   PriceChange,
   Sparkline,
-  PriceChart
-  TokenIcon
+  PriceChart,
+  TokenIcon,
 };
