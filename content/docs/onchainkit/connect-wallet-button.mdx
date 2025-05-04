@@ -29,7 +29,7 @@ icon: Wallet
   <Step>
   Create a wallet provider
 
-components/wallet-provider.tsx
+components/providers/wallet-provider.tsx
 
 ```tsx
 import React, { useState, useMemo, createContext, useCallback } from "react";
@@ -187,22 +187,21 @@ NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET="https://solana-devnet.g.alchemy.com/v2/your-a
 Add the Wall to your root layout
 
 ```tsx
-import { ThemeProvider } from "@/components/wallet-provider.tsx";
+import type React from "react"
+import { ThemeProvider } from 'next-themes'
+import "@/app/globals.css"
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <body>
-          <WalletProvider autoConnect>
-            {children}
-            <Toaster />
-          </WalletProvider>
-        </body>
-      </html>
-    </>
-  );
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
+  )
 }
 ```
 
@@ -217,27 +216,35 @@ export default function RootLayout({ children }: RootLayoutProps) {
   packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/connect-wallet-button.json`}
 />
 
+  When you install successful, you can find Connect Wallet Button file in ```components/ui/murphy```
   </Step>
 </Steps>
 
 ### Basic Usage
 
 ```tsx
-import { ConnetWalletButton } from "@/components/ui/murphy/connect-wallet-button";
-import { Wallet } from "lucide-react";
+"use client"
+
+import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
+import { WalletProvider } from "@/components/providers/wallet-provider"
+import { Wallet } from "lucide-react"
 ```
 
 ```tsx
 export default function MyPage() {
   return (
-    <div>
-      <h1 className="text-xl font-bold mb-2">Connect Your Solana Wallet</h1>
-      <ConnetWalletButton>
-        <Wallet className="size-4 mr-2" />
-        Connect Wallet
-      </ConnetWalletButton>
-    </div>
-  );
+    <WalletProvider>
+      <div className="flex h-screen items-center justify-center">
+        <div className="container mx-auto max-w-md p-8 text-center">
+          <h1 className="mb-6 text-2xl font-bold">Connect Your Solana Wallet</h1>
+          <ConnectWalletButton>
+            <Wallet className="size-4 mr-2" />
+            Connect Wallet
+          </ConnectWalletButton>
+        </div>
+      </div>
+    </WalletProvider>
+  )
 }
 ```
 
