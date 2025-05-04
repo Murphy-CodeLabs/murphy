@@ -6,7 +6,7 @@ import { Input } from "../input";
 
 export const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) => {
   const [value, setValue] = React.useState("");
-  const [isInvalid, setIsValid] = React.useState(false);
+  const [isInvalid, setIsInvalid] = React.useState(false);
   const [hasBlurred, setHasBlurred] = React.useState(false);
 
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -19,8 +19,9 @@ export const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) =
       } else {
         inputRef.current.setCustomValidity("");
       }
+      setIsInvalid(!inputRef.current.validity.valid);
     }
-  }, []);
+  }, [value]);
   const handleBlur = React.useCallback(() => {
     setHasBlurred(true);
     validateField();
