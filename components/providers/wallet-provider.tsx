@@ -7,7 +7,7 @@ import {
   ConnectionProviderProps,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { TxnSettingsProvider } from "../ui/murphy";
+import { TxnSettingsProvider } from "@/components/ui/murphy/txn-settings";
 // Create wrapper components
 // @ts-ignore - Ignore React 19 compatibility error
 const ConnectionProviderWrapper = (props: ConnectionProviderProps) => (

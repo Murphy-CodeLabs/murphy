@@ -22,10 +22,18 @@ icon: Wallet
 
     Start by installing `solana/wallet-adapter-base` and `wallet-adapter-wallets`
 
-    <DependenciesInstallCommands packageUrl={"@solana/wallet-adapter-base @solana/wallet-adapter-wallets"}/>
+    <DependenciesInstallCommands packageUrl={"@solana/wallet-adapter-base @solana/wallet-adapter-wallets next-themes"}/>
 
   </Step>
+  <Step>
+    Install TXN Settings
 
+    Install Murphy TXN Settings
+
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/txn-settings.json`}
+  />
+  </Step>
   <Step>
   Create a wallet provider
 
