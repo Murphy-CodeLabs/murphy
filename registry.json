@@ -25,6 +25,11 @@
           "target": "components/ui/murphy/connect-wallet-button.tsx"
         },
         {
+          "path": "components/providers/wallet-provider.tsx",
+          "type": "registry:component",
+          "target": "components/providers/wallet-provider.tsx"
+        },
+        {
           "path": "hook/murphy/use-walletMultiButton.ts",
           "type": "registry:hook",
           "target": "hook/murphy/use-walletMultiButton.ts"
