@@ -80,7 +80,8 @@
         "sonner",
         "select",
         "dialog",
-        "dropdown-menu"
+        "dropdown-menu",
+        "slider"
       ],
       "dependencies": [
         "@solana/web3.js",
@@ -113,6 +114,21 @@
           "path": "types/swap/index.ts",
           "type": "registry:file",
           "target": "types/swap/index.ts"
+        },
+        {
+          "path": "public/crypto-logos/solana-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/solana-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/tether-usdt-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/tether-usdt-logo.svg"
         }
       ]
     },
@@ -171,6 +187,21 @@
           "path": "types/swap/index.ts",
           "type": "registry:file",
           "target": "types/swap/index.ts"
+        },
+        {
+          "path": "public/crypto-logos/solana-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/solana-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/tether-usdt-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/tether-usdt-logo.svg"
         }
       ]
     },
@@ -217,6 +248,21 @@
           "path": "components/ui/murphy/token-icon.tsx",
           "type": "registry:file",
           "target": "components/ui/murphy/token-icon.tsx"
+        },
+        {
+          "path": "public/crypto-logos/solana-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/solana-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/tether-usdt-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/tether-usdt-logo.svg"
         }
       ]
     },
