@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { SolAsset } from "@/types/swap";
+import { SolAsset } from "@/types/assets";
 
 type IconProps = {
   asset: SolAsset | null;

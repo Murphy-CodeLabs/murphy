@@ -15,7 +15,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { SolAsset } from "@/types/swap";
+import { SolAsset } from "@/types/assets";
 import { PublicKey } from "@solana/web3.js";
 import { TokenIcon } from "./token-icon";
 

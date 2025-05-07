@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ExternalLinkIcon } from "lucide-react";
 
 import { shortAddress, formatUsd, formatNumberShort, cn } from "@/lib/utils";
-import { SolAsset } from "@/types/swap";
+import { SolAsset } from "@/types/assets";
 
 import {
   Table,
