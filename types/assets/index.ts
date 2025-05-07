@@ -13,8 +13,7 @@ export type SolAsset = {
   };
 };
 
-export type FetchAssetsArgs = {
-  addresses: PublicKey[];
-  owner?: PublicKey;
-  connection?: Connection;
+export type FetchWalletArgs = {
+  owner: PublicKey;
+  limit?: number;
 };

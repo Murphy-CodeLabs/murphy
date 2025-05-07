@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronsUpDownIcon } from "lucide-react";
 import { Button } from "../button";
 import {
@@ -18,9 +18,11 @@ import {
 import { SolAsset } from "@/types/assets";
 import { PublicKey } from "@solana/web3.js";
 import { TokenIcon } from "./token-icon";
+import { fetchWalletAssets } from "@/lib/assets/birdeye/wallets";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 type TokenComboboxProps = {
-  assets: SolAsset[];
+  assets?: SolAsset[];
   trigger?: React.ReactNode;
   address?: PublicKey | null;
   showBalances?: boolean;
@@ -42,15 +44,35 @@ export function TokenCombobox({
   onSelect,
   onSearch,
 }: TokenComboboxProps) {
+  const { publicKey } = useWallet();
   const [open, setOpen] = React.useState(false);
-  const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);
+  const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets || []);
   const [value, setValue] = React.useState("");
   const [searchValue, setSearchValue] = React.useState("");
-
+  const [isLoading, setLoading] = useState(false);
   const selectedAsset = React.useMemo(
     () => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),
     [assets, value],
   );
+
+  const fetchData = async () => {
+    if (!publicKey) return;
+    try {
+      setLoading(true);
+
+      const fetchedAssets = await fetchWalletAssets({
+        owner: publicKey,
+      });
+      setAssets(fetchedAssets);
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => {
+    if (assets.length == 0) {
+      fetchData()
+    }
+  }, []);
   return (
     <Popover>
       <PopoverTrigger asChild>
