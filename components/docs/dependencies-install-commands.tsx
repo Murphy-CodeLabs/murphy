@@ -41,7 +41,7 @@ export default function DependenciesInstallCommands({
   }
 
   return (
-    <div className="rounded-lg overflow-hidden">
+    <div className="rounded-lg border overflow-hidden">
       <div className="bg-fd-background text-white">
         <Tabs defaultValue="pnpm">
           <TabsList className="bg-fd-background rounded-none h-12 px-2 w-full justify-between">
@@ -58,12 +58,7 @@ export default function DependenciesInstallCommands({
               ))}
             </div>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-white hover:bg-zinc-800 rounded-md hover:text-white"
-              onClick={handleCopy}
-            >
+            <Button variant="ghost" size="icon" onClick={handleCopy}>
               {copied ? (
                 <Check className="size-3" />
               ) : (
