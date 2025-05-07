@@ -5,7 +5,7 @@ import { Area, AreaChart, XAxis } from "recharts";
 import { format } from "date-fns";
 
 import { formatUsd } from "@/lib/utils";
-import { SolAsset } from "@/types/swap";
+import { SolAsset } from "@/types/assets";
 import {
   Card,
   CardContent,

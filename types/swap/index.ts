@@ -9,17 +9,5 @@ declare const _default: {
     Config: Config;
 };
 
-export type SolAsset = {
-  mint: PublicKey;
-  name: string;
-  symbol: string;
-  image: string;
-  decimals: number;
-  price: number;
-  userTokenAccount?: {
-    address: PublicKey;
-    amount: number;
-  };
-};
 
 export default _default; 
