@@ -5,7 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import { WalletIcon } from "lucide-react";
 
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
-import { SolAsset } from "@/types/swap";
+import { SolAsset } from "@/types/assets";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
