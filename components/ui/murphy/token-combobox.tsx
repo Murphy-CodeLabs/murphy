@@ -68,6 +68,7 @@ export function TokenCombobox({
       setLoading(false);
     }
   }
+  // In case assets array not provided -> fetch from user wallet
   useEffect(() => {
     if (assets.length == 0) {
       fetchData()
