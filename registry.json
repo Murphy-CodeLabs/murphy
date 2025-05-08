@@ -155,7 +155,7 @@
       "title": "Token Combobox",
       "description": "A searchable combobox of tokens and prices with optional user balances.",
       "registryDependencies": ["command", "popover", "button"],
-      "dependencies": ["@solana/web3.js"],
+      "dependencies": ["@solana/web3.js","@solana/wallet-adapter-react"],
       "files": [
         {
           "path": "components/ui/murphy/token-combobox.tsx",
@@ -163,14 +163,14 @@
           "target": "components/ui/murphy/token-combobox.tsx"
         },
         {
-          "path": "components/ui/murphy/token-icon.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/token-icon.tsx"
+          "path": "lib/assets/birdeye/wallets.ts",
+          "type": "registry:file",
+          "target": "lib/assets/birdeye/wallets.ts"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         }
       ]
     },
