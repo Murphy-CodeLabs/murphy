@@ -563,7 +563,7 @@
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",
-      "registryDependencies": ["table"],
+      "registryDependencies": ["table","skeleton"],
       "dependencies": [
         "@solana/web3.js",
         "date-fns",
