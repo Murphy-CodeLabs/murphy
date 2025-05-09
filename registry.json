@@ -623,7 +623,7 @@
       "type": "registry:block",
       "title": "The PriceChart component is a chart that displays the price of a token over time.",
       "registryDependencies": ["chart", "card", "toggle-group", "skeleton"],
-      "dependencies": ["recharts", "date-fns"],
+      "dependencies": ["recharts", "date-fns","@solana/web3.js"],
       "files": [
         {
           "path": "components/ui/murphy/price-chart.tsx",
@@ -636,9 +636,9 @@
           "target": "lib/utils.ts"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         }
       ]
     },
@@ -653,9 +653,9 @@
           "target": "components/ui/murphy/token-icon.tsx"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         }
       ]
     }
