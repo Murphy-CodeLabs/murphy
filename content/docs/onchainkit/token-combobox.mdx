@@ -33,9 +33,11 @@ icon: Box
     />
     </Step>
     <Step>
-    Use TokenCombobox
-</Step>
-
+      Add your Bird Eye API key to .env
+      ```bash
+NEXT_PUBLIC_BIRDEYE_API_KEY="bird-eye-api-key"
+      ```
+    </Step>
 </Steps>
 
 ## Basic Usage
@@ -51,3 +53,14 @@ onSearch={searchAssets}
 />
 
 ```
+
+## Props
+
+| Name         | Type                                           | Default   |
+|--------------|------------------------------------------------|-----------|
+| `assets`     | `SolAsset[]`                                   | `[]`      |
+| `trigger`    | `React.ReactNode`                              |           |
+| `address`    | `PublicKey \| null`                            |           |
+| `showBalances` | `boolean`                                    | `true`    |
+| `onSelect`   | `(asset: SolAsset) => void`                    |           |
+| `onSearch`   | `(query: string) => Promise<SolAsset[]>`       |           |
