@@ -204,9 +204,9 @@
           "target": "components/ui/murphy/token-list.tsx"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         },
         {
           "path": "lib/utils.ts",
