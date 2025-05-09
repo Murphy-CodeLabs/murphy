@@ -47,7 +47,7 @@
     },
     {
       "path": "types/swap/index.ts",
-      "content": "import { PublicKey, Connection } from \"@solana/web3.js\";\n\nexport interface Config {\n    JUPITER_REFERRAL_ACCOUNT?: string;\n    JUPITER_FEE_BPS?: number;\n}\n  \ndeclare const _default: {\n    Config: Config;\n};\n\nexport type SolAsset = {\n  mint: PublicKey;\n  name: string;\n  symbol: string;\n  image: string;\n  decimals: number;\n  price: number;\n  userTokenAccount?: {\n    address: PublicKey;\n    amount: number;\n  };\n};\n\nexport default _default; ",
+      "content": "import { PublicKey, Connection } from \"@solana/web3.js\";\n\nexport interface Config {\n    JUPITER_REFERRAL_ACCOUNT?: string;\n    JUPITER_FEE_BPS?: number;\n}\n  \ndeclare const _default: {\n    Config: Config;\n};\n\n\nexport default _default; ",
       "type": "registry:file",
       "target": "types/swap/index.ts"
     }
