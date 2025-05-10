@@ -1,0 +1,33 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-card",
+  "type": "registry:block",
+  "description": "The TokenCard component is a card that shows a token's metatda, price, and price history.",
+  "dependencies": [
+    "@solana/web3.js"
+  ],
+  "registryDependencies": [
+    "skeleton",
+    "card"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/token-card.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\nimport Link from \"next/link\";\nimport { ExternalLinkIcon } from \"lucide-react\";\n\nimport { formatUsd, shortAddress, cn } from \"@/lib/utils\";\nimport { SolAsset } from \"@/types/assets\";\n\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\";\nimport { Skeleton } from \"@/components/ui/skeleton\";\n\nimport { TokenIcon } from \"@/components/ui/murphy/token-icon\";\nimport { Sparkline } from \"@/components/ui/murphy/sparkline\";\nimport { PublicKey } from \"@solana/web3.js\";\n\ntype TokenCardProps = {\n  asset: SolAsset | null;\n  chartData?: { timestamp: number; price: number }[];\n  size?: \"sm\" | \"md\";\n};\n\nconst TokenCard = ({ asset, chartData = [], size = \"md\" }: TokenCardProps) => {\n  if (!asset) {\n    return (\n      <Card className=\"w-full\">\n        <CardHeader className={cn(\"p-4\", size === \"md\" && \"p-6\")}>\n          <CardTitle className=\"flex items-center gap-3\">\n            <span className=\"sr-only\">Loading...</span>\n            <Skeleton className=\"h-[48px] w-[48px] shrink-0 rounded-full\" />\n            <div className=\"flex w-full flex-col gap-2\">\n              <Skeleton className=\"h-[12px] w-4/5\" />\n              <Skeleton className=\"h-[12px] w-4/5\" />\n            </div>\n          </CardTitle>\n          <CardDescription className=\"sr-only\">Loading...</CardDescription>\n        </CardHeader>\n        <CardContent className={cn(\"p-5\", size === \"md\" && \"p-6\")}>\n          <Skeleton className=\"h-[88px] w-full\" />\n        </CardContent>\n      </Card>\n    );\n  }\nconst href= asset.mint instanceof PublicKey ?`https://solscan.io/token/${asset.mint.toBase58()}`:`https://solscan.io/token/${asset}`\n  return (\n    <Card className=\"w-full\">\n      <CardHeader className={cn(\"p-4 pb-2\", size === \"md\" && \"p-6\")}>\n        <CardTitle\n          className={cn(\n            \"flex items-center gap-2 text-sm\",\n            size === \"md\" && \"text-lg\",\n          )}\n        >\n          <TokenIcon asset={asset} size={size === \"sm\" ? 32 : 48} />\n          <div className=\"flex flex-col\">\n            {asset.symbol}\n            <a\n              href={href}\n              className=\"inline-flex items-center gap-1 text-xs font-normal text-muted-foreground no-underline\"\n            >\n              <ExternalLinkIcon size={16} />\n              {shortAddress(asset.mint)}\n            </a>\n          </div>\n        </CardTitle>\n      </CardHeader>\n      <CardContent className={cn(\"space-y-4 p-4 pb-0\", size === \"md\" && \"p-6\")}>\n        {asset.price && (\n          <p className={cn(\"text-xl\", size === \"md\" && \"text-4xl\")}>\n            {formatUsd(asset.price)}\n          </p>\n        )}\n        <Sparkline data={chartData} />\n      </CardContent>\n    </Card>\n  );\n};\n\nexport { TokenCard };\n",
+      "type": "registry:component",
+      "target": "components/ui/murphy/token-card.tsx"
+    },
+    {
+      "path": "types/assets/index.ts",
+      "content": "import { PublicKey,Connection } from \"@solana/web3.js\";\n\nexport type SolAsset = {\n  mint: PublicKey;\n  name: string;\n  symbol: string;\n  image: string;\n  decimals: number;\n  price: number;\n  userTokenAccount?: {\n    address: PublicKey;\n    amount: number;\n  };\n};\n\nexport type FetchWalletArgs = {\n  owner: PublicKey;\n  limit?: number;\n};",
+      "type": "registry:file",
+      "target": "types/assets/index.ts"
+    },
+    {
+      "path": "lib/utils.ts",
+      "content": "import { PublicKey } from \"@solana/web3.js\";\nimport { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\nimport millify from \"millify\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nexport const shortAddress = (address: PublicKey | string) => {\n  const key = typeof address === \"string\" ? address : address.toBase58();\n  return `${key.slice(0, 4)}...${key.slice(-4)}`;\n};\n\nexport const formatUsd = (num: number): string => {\n  return formatNumber(num, { style: \"currency\", currency: \"USD\" });\n};\n\nexport const formatNumber = (\n  num: number,\n  options: Intl.NumberFormatOptions = {},\n): string => {\n  if (num === null || num === undefined) return \"0\";\n\n  const absNum = Math.abs(num);\n  let decimals = 2;\n\n  if (absNum < 1) {\n    decimals = Math.max(2, Math.min(20, Math.ceil(-Math.log10(absNum)) + 2));\n  }\n\n  return new Intl.NumberFormat(\"en-US\", {\n    minimumFractionDigits: 2,\n    maximumFractionDigits: decimals,\n    ...options,\n  }).format(num);\n};\n\nexport const formatNumberShort = (num: number): string => {\n  if (num < 1000) return formatNumber(num);\n  return millify(num, {\n    precision: 2,\n  });\n};\n\nexport const formatNumberGrouped = (\n  value: number,\n  expThreshold: number = 0.0001,\n  expPrecision: number = 1,\n) => {\n  if (value === 0) return \"0\";\n\n  if (Math.abs(value) < expThreshold) {\n    return value.toExponential(expPrecision);\n  }\n\n  if (Number.isInteger(value)) {\n    return new Intl.NumberFormat(\"en-US\", { useGrouping: true }).format(value);\n  }\n\n  const valueParts = value.toString().split(\".\");\n  const decimalPart = valueParts[1] ?? \"\";\n  const leadingZeros = decimalPart.match(/^0*/)?.[0].length ?? 0;\n  const minimumFractionDigits = leadingZeros > 0 ? leadingZeros + 1 : 2;\n\n  return new Intl.NumberFormat(\"en-US\", {\n    useGrouping: true,\n    minimumFractionDigits: minimumFractionDigits,\n    maximumFractionDigits: Math.max(2, minimumFractionDigits),\n  }).format(value);\n};\n\nexport const validatePublicKey = (address: PublicKey | string) => {\n  try {\n    if (typeof address == \"string\") {\n      new PublicKey(address);\n    } else {\n      address.toBase58();\n    }\n    return true;\n  } catch (error) {\n        return false;\n\n  }\n};\n",
+      "type": "registry:file",
+      "target": "lib/utils.ts"
+    }
+  ]
+}

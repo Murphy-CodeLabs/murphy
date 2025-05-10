@@ -741,6 +741,30 @@
           "target": "components/ui/murphy/mint-cToken.tsx"
         }
       ]
+    },
+    {
+      "name": "token-card",
+      "type": "registry:block",
+      "description": "The TokenCard component is a card that shows a token's metatda, price, and price history.",
+      "registryDependencies": ["skeleton","card"],
+      "dependencies": ["@solana/web3.js"],
+      "files": [
+        {
+          "path": "components/ui/murphy/token-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/token-card.tsx"
+        },
+        {
+          "path": "types/assets/index.ts",
+          "type": "registry:file",
+          "target": "types/assets/index.ts"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "target": "lib/utils.ts"
+        }
+      ]
     }
   ]
 }

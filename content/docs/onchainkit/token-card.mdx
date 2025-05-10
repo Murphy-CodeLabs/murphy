@@ -1,0 +1,104 @@
+---
+title: Token Card
+description: The TokenCard component is a card that shows a token's metatda, price, and price history.
+icon: CreditCard
+---
+
+<PreviewComponent name={"Token Input"} v0JsonFileName={"token-input"}>
+    <div className="w-1/2 h-1/2">
+        <TokenCard  asset={{
+    "mint": "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
+    "name": "dogwifhat",
+    "symbol": "$WIF",
+    "image": "https://bafkreibk3covs5ltyqxa272uodhculbr6kea6betidfwy3ajsav2vjzyum.ipfs.nftstorage.link",
+    "price": 0.5922658399116827,
+    "decimals": 6
+    }} 
+    chartData={[    {
+        "timestamp": 1729497600,
+        "price": 0.0859761699383211
+    },
+    {
+        "timestamp": 1729501200,
+        "price": 0.08605958846019263
+    },
+    {
+        "timestamp": 1729504800,
+        "price": 0.08700024496006961
+    },
+    {
+        "timestamp": 1729508400,
+        "price": 0.08606881239339946
+    }]} />
+    </div>
+
+</PreviewComponent>
+
+## Installation
+<Steps>
+    <Step>
+        Install Murphy TokenIcon
+        <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/token-icon.json`} />
+    </Step>
+    <Step>
+        Install Murphy Sparkline
+        <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/sparkline.json`} />
+    </Step>
+    <Step>
+        Install Murphy TokenCard
+        <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/token-card.json`} />
+    </Step>
+</Steps>
+
+## Basic Usage
+    ```tsx
+    import { TokenCard } from "@/components/ui/murphy/token-card";  
+    ```
+    ```tsx
+    import { PublicKey } from "@solana/web3.js";
+
+    const asset = {
+        mint: new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
+        name: "dogwifhat",
+        symbol: "$WIF",
+        image: "https://bafkreibk3covs5ltyqxa272uodhculbr6kea6betidfwy3ajsav2vjzyum.ipfs.nftstorage.link",
+        price: 0.5922658399116827,
+        decimals: 6,
+    };
+
+    const chartData = [
+    {
+        timestamp: 1729497600,
+        price: 0.0859761699383211,
+    },
+    {
+        timestamp: 1729501200,
+        price: 0.08605958846019263,
+    },
+    {
+        timestamp: 1729504800,
+        price: 0.08700024496006961,
+    },
+    {
+        timestamp: 1729508400,
+        price: 0.08606881239339946,
+    },
+    ];
+
+    ```
+    ```tsx
+    <TokenCard
+    asset={asset}
+    chartData={chartData}
+    />
+    ```
+
+## Props
+
+| Name        | Type                                                                 | Default |
+|-------------|----------------------------------------------------------------------|---------|
+| assets      | `SolAsset[]`                                                         | `[]`    |
+| trigger     | `React.ReactNode`                                                    |         |
+| showBalances| `boolean`                                                            | `true`  |
+| onSelect    | `(token: SolAsset) => void`                                          |         |
+| onSearch    | `({ query: string, owner?: PublicKey }) => Promise<SolAsset[]>`      |         |
