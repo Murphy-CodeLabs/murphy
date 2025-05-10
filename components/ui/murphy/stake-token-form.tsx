@@ -24,13 +24,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { ConnectWalletButton } from "./connect-wallet-button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Slider } from "@/components/ui/slider";
 import { ModalContext } from "@/components/providers/wallet-provider";
+import { cn } from "@/lib/utils";
 
 // Type for stake form values
 type StakeFormValues = {
@@ -60,7 +55,7 @@ const customResolver = (data: any) => {
   };
 };
 
-export function StakeForm() {
+export function StakeForm({className}: {className?: string}) {
   // State variables
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
@@ -526,7 +521,7 @@ export function StakeForm() {
   };
 
   return (
-    <Card>
+    <Card className={cn("w-full", className)}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Stake SOL</span>
