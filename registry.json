@@ -199,6 +199,7 @@
           "type": "registry:file",
           "target": "types/assets/index.ts"
         },
+        {
           "path": "types/swap/index.ts",
           "type": "registry:file",
           "target": "types/swap/index.ts"
