@@ -19,13 +19,6 @@ const TokenIcon = ({ asset, size = 24 }: IconProps) => {
       }}
     >
       <img
-        src="/token-icons/placeholder.jpg"
-        alt={asset?.symbol ?? asset?.mint.toBase58() ?? ""}
-        width={size}
-        height={size}
-        className="absolute inset-0 rounded-full mt-0"
-      />
-      <img
         src={asset?.image ?? ""}
         alt={asset?.symbol ?? asset?.mint.toBase58() ?? ""}
         width={size}
