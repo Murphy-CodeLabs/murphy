@@ -5,7 +5,8 @@
   "title": "Token Combobox",
   "description": "A searchable combobox of tokens and prices with optional user balances.",
   "dependencies": [
-    "@solana/web3.js"
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react"
   ],
   "registryDependencies": [
     "command",
@@ -48,6 +49,17 @@
       "content": "<svg id=\"Layer_1\" data-name=\"Layer 1\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 339.43 295.27\"><title>tether-usdt-logo</title><path d=\"M62.15,1.45l-61.89,130a2.52,2.52,0,0,0,.54,2.94L167.95,294.56a2.55,2.55,0,0,0,3.53,0L338.63,134.4a2.52,2.52,0,0,0,.54-2.94l-61.89-130A2.5,2.5,0,0,0,275,0H64.45a2.5,2.5,0,0,0-2.3,1.45h0Z\" style=\"fill:#50af95;fill-rule:evenodd\"/><path d=\"M191.19,144.8v0c-1.2.09-7.4,0.46-21.23,0.46-11,0-18.81-.33-21.55-0.46v0c-42.51-1.87-74.24-9.27-74.24-18.13s31.73-16.25,74.24-18.15v28.91c2.78,0.2,10.74.67,21.74,0.67,13.2,0,19.81-.55,21-0.66v-28.9c42.42,1.89,74.08,9.29,74.08,18.13s-31.65,16.24-74.08,18.12h0Zm0-39.25V79.68h59.2V40.23H89.21V79.68H148.4v25.86c-48.11,2.21-84.29,11.74-84.29,23.16s36.18,20.94,84.29,23.16v82.9h42.78V151.83c48-2.21,84.12-11.73,84.12-23.14s-36.09-20.93-84.12-23.15h0Zm0,0h0Z\" style=\"fill:#fff;fill-rule:evenodd\"/></svg>",
       "type": "registry:file",
       "target": "public/crypto-logos/tether-usdt-logo.svg"
+    },
+      "path": "lib/assets/birdeye/wallets.ts",
+      "content": "import { PublicKey } from \"@solana/web3.js\";\nimport { SolAsset, FetchWalletArgs } from \"@/types/assets\";\n\n/* fetch all token addresses of a wallet using bird eye */\nconst fetchWalletAssets = async ({\n  owner,\n  limit = 20,\n}: FetchWalletArgs): Promise<SolAsset[]> => {\n  const headers = {\n    \"x-api-key\": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,\n    accept: \"application/json\",\n    \"x-chain\": \"solana\",\n  };\n\n  try {\n    const response = await fetch(\n      `https://public-api.birdeye.so/v1/wallet/token_list?wallet=${owner.toString()}`,\n      { headers },\n    );\n\n    const { success, data } = await response.json();\n\n    if (!success || !data?.items) {\n      return [];\n    }\n\n    const items = data.items\n      .filter((item: { symbol: string }) => item.symbol)\n      .map(\n        (item: {\n          address: string;\n          name: string;\n          symbol: string;\n          icon: string;\n          logoURI: string;\n          priceUsd: number;\n          decimals: number;\n          uiAmount: number;\n        }) => ({\n          mint: new PublicKey(item.address),\n          name: item.name,\n          symbol: item.symbol,\n          image: item.icon || item.logoURI,\n          price: item.priceUsd,\n          decimals: item.decimals,\n          userTokenAccount: {\n            address: owner,\n            amount: item.uiAmount,\n          },\n        }),\n      );\n\n    return items\n      .sort((a: SolAsset, b: SolAsset) => {\n        const aValue = (a.userTokenAccount?.amount || 0) * (a.price || 0);\n        const bValue = (b.userTokenAccount?.amount || 0) * (b.price || 0);\n        return bValue - aValue;\n      })\n      .slice(0, limit);\n  } catch (error) {\n    console.error(\"Error fetching wallet assets:\", error);\n    return [];\n  }\n};\n\nexport { fetchWalletAssets };\n",
+      "type": "registry:file",
+      "target": "lib/assets/birdeye/wallets.ts"
+    },
+    {
+      "path": "types/assets/index.ts",
+      "content": "import { PublicKey,Connection } from \"@solana/web3.js\";\n\nexport type SolAsset = {\n  mint: PublicKey;\n  name: string;\n  symbol: string;\n  image: string;\n  decimals: number;\n  price: number;\n  userTokenAccount?: {\n    address: PublicKey;\n    amount: number;\n  };\n};\n\nexport type FetchWalletArgs = {\n  owner: PublicKey;\n  limit?: number;\n};",
+      "type": "registry:file",
+      "target": "types/assets/index.ts"
     }
   ]
 }

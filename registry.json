@@ -16,7 +16,8 @@
       ],
       "dependencies": [
         "@solana/wallet-adapter-react",
-        "@solana/wallet-adapter-base"
+        "@solana/wallet-adapter-base",
+        "@lazorkit/wallet"
       ],
       "files": [
         {
@@ -38,6 +39,16 @@
           "path": "hook/murphy/use-walletModal.ts",
           "type": "registry:hook",
           "target": "hook/murphy/use-walletModal.ts"
+        },
+        {
+          "path": "components/providers/lazorkit-wallet-context.tsx",
+          "type": "registry:component",
+          "target": "components/providers/lazorkit-wallet-context.tsx"
+        },
+        {
+          "path": "components/providers/client-lazorkit-provider.tsx",
+          "type": "registry:component",
+          "target": "components/providers/client-lazorkit-provider.tsx"
         }
       ]
     },
@@ -171,7 +182,7 @@
       "title": "Token Combobox",
       "description": "A searchable combobox of tokens and prices with optional user balances.",
       "registryDependencies": ["command", "popover", "button"],
-      "dependencies": ["@solana/web3.js"],
+      "dependencies": ["@solana/web3.js","@solana/wallet-adapter-react"],
       "files": [
         {
           "path": "components/ui/murphy/token-combobox.tsx",
@@ -179,11 +190,15 @@
           "target": "components/ui/murphy/token-combobox.tsx"
         },
         {
-          "path": "components/ui/murphy/token-icon.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/token-icon.tsx"
+          "path": "lib/assets/birdeye/wallets.ts",
+          "type": "registry:file",
+          "target": "lib/assets/birdeye/wallets.ts"
         },
         {
+          "path": "types/assets/index.ts",
+          "type": "registry:file",
+          "target": "types/assets/index.ts"
+        },
           "path": "types/swap/index.ts",
           "type": "registry:file",
           "target": "types/swap/index.ts"
@@ -235,9 +250,9 @@
           "target": "components/ui/murphy/token-list.tsx"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         },
         {
           "path": "lib/utils.ts",
@@ -609,7 +624,7 @@
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",
-      "registryDependencies": ["table"],
+      "registryDependencies": ["table","skeleton"],
       "dependencies": [
         "@solana/web3.js",
         "date-fns",
@@ -669,7 +684,7 @@
       "type": "registry:block",
       "title": "The PriceChart component is a chart that displays the price of a token over time.",
       "registryDependencies": ["chart", "card", "toggle-group", "skeleton"],
-      "dependencies": ["recharts", "date-fns"],
+      "dependencies": ["recharts", "date-fns","@solana/web3.js"],
       "files": [
         {
           "path": "components/ui/murphy/price-chart.tsx",
@@ -682,9 +697,9 @@
           "target": "lib/utils.ts"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         }
       ]
     },
@@ -699,9 +714,9 @@
           "target": "components/ui/murphy/token-icon.tsx"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         }
       ]
     },

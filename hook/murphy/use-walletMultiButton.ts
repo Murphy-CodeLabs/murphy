@@ -36,12 +36,10 @@ export function useWalletMultiButton({ onSelectWallet }: Config): ButtonState {
     }
     const handleConnect = useCallback(() => {
         connect().catch(() => {
-            // Silently catch because any errors are caught by the context `onError` handler
         });
     }, [connect]);
     const handleDisconnect = useCallback(() => {
         disconnect().catch(() => {
-            // Silently catch because any errors are caught by the context `onError` handler
         });
     }, [disconnect]);
     const handleSelectWallet = useCallback(() => {
