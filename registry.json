@@ -16,7 +16,8 @@
       ],
       "dependencies": [
         "@solana/wallet-adapter-react",
-        "@solana/wallet-adapter-base"
+        "@solana/wallet-adapter-base",
+        "@lazorkit/wallet"
       ],
       "files": [
         {
@@ -38,6 +39,16 @@
           "path": "hook/murphy/use-walletModal.ts",
           "type": "registry:hook",
           "target": "hook/murphy/use-walletModal.ts"
+        },
+        {
+          "path": "components/providers/lazorkit-wallet-context.tsx",
+          "type": "registry:component",
+          "target": "components/providers/lazorkit-wallet-context.tsx"
+        },
+        {
+          "path": "components/providers/client-lazorkit-provider.tsx",
+          "type": "registry:component",
+          "target": "components/providers/client-lazorkit-provider.tsx"
         }
       ]
     },
