@@ -215,9 +215,9 @@
           "target": "components/ui/murphy/token-list.tsx"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         },
         {
           "path": "lib/utils.ts",
@@ -574,7 +574,7 @@
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",
-      "registryDependencies": ["table"],
+      "registryDependencies": ["table","skeleton"],
       "dependencies": [
         "@solana/web3.js",
         "date-fns",
@@ -634,7 +634,7 @@
       "type": "registry:block",
       "title": "The PriceChart component is a chart that displays the price of a token over time.",
       "registryDependencies": ["chart", "card", "toggle-group", "skeleton"],
-      "dependencies": ["recharts", "date-fns"],
+      "dependencies": ["recharts", "date-fns","@solana/web3.js"],
       "files": [
         {
           "path": "components/ui/murphy/price-chart.tsx",
@@ -647,9 +647,9 @@
           "target": "lib/utils.ts"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         }
       ]
     },
@@ -664,9 +664,9 @@
           "target": "components/ui/murphy/token-icon.tsx"
         },
         {
-          "path": "types/swap/index.ts",
+          "path": "types/assets/index.ts",
           "type": "registry:file",
-          "target": "types/swap/index.ts"
+          "target": "types/assets/index.ts"
         }
       ]
     }

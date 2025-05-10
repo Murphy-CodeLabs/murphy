@@ -9,7 +9,8 @@
     "@solana/wallet-adapter-react"
   ],
   "registryDependencies": [
-    "table"
+    "table",
+    "skeleton"
   ],
   "files": [
     {
