@@ -1,6 +1,6 @@
 ---
 title: Connect Wallet Button
-description: A Solana wallet connection component with shadcn UI styling
+description: Solana wallet connection component with LazorKit Passkey support and shadcn UI interface
 icon: Wallet
 ---
 
@@ -20,9 +20,9 @@ icon: Wallet
   <Step>
     Install dependencies
 
-    Start by installing `solana/wallet-adapter-base` and `wallet-adapter-wallets`
+    Start by installing `@solana/wallet-adapter-base`, `wallet-adapter-wallets`, and `@lazorkit/wallet` for Passkey
 
-    <DependenciesInstallCommands packageUrl={"@solana/wallet-adapter-base @solana/wallet-adapter-wallets next-themes"}/>
+    <DependenciesInstallCommands packageUrl={"@solana/wallet-adapter-base @solana/wallet-adapter-wallets @lazorkit/wallet next-themes"}/>
 
   </Step>
   <Step>
@@ -35,7 +35,7 @@ icon: Wallet
   />
   </Step>
   <Step>
-  Create a wallet provider
+  Create Wallet Provider
 
 components/providers/wallet-provider.tsx
 
@@ -49,7 +49,8 @@ import {
   ConnectionProviderProps,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-
+import { TxnSettingsProvider } from "@/components/ui/murphy/txn-settings";
+import { LazorKitWalletProvider } from "./lazorkit-wallet-context";
 // Create wrapper components
 // @ts-ignore - Ignore React 19 compatibility error
 const ConnectionProviderWrapper = (props: ConnectionProviderProps) => (
@@ -76,6 +77,8 @@ interface ModalContextState {
   availableEndpoints: string[];
   currentEndpointIndex: number;
   isMainnet: boolean;
+  walletType: 'standard' | 'lazorkit';
+  setWalletType: (type: 'standard' | 'lazorkit') => void;
 }
 
 export const ModalContext = createContext<ModalContextState>({
@@ -86,6 +89,8 @@ export const ModalContext = createContext<ModalContextState>({
   availableEndpoints: [],
   currentEndpointIndex: 0,
   isMainnet: true,
+  walletType: 'standard',
+  setWalletType: () => null,
 });
 
 export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
@@ -144,12 +149,7 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
     [props.wallets]
   );
   const [isOpen, setIsOpen] = useState(false);
-
-  console.log(
-    `Using Solana ${isMainnet ? "mainnet" : "devnet"} endpoint: ${endpoint} (${
-      currentEndpointIndex + 1
-    }/${publicRPCs.length})`
-  );
+  const [walletType, setWalletType] = useState<'standard' | 'lazorkit'>('standard');
 
   return (
     <ModalContext.Provider
@@ -161,11 +161,15 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
         availableEndpoints: publicRPCs,
         currentEndpointIndex,
         isMainnet,
+        walletType,
+        setWalletType,
       }}
     >
       <ConnectionProviderWrapper endpoint={endpoint}>
         <WalletProviderWrapper wallets={wallets} autoConnect>
-          {children}
+          <LazorKitWalletProvider>
+            <TxnSettingsProvider>{children}</TxnSettingsProvider>
+          </LazorKitWalletProvider>
         </WalletProviderWrapper>
       </ConnectionProviderWrapper>
     </ModalContext.Provider>
@@ -175,14 +179,91 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
 
   </Step>
   <Step>
-  Create .env file
+  Create LazorKit Wallet Context
+
+components/providers/lazorkit-wallet-context.tsx
+
+```tsx
+// components/providers/lazorkit-wallet-context.tsx
+"use client"
+
+import React, { createContext, useContext, useState, useEffect } from "react"
+import dynamic from "next/dynamic"
+
+// Interface for context
+interface LazorKitWalletContextState {
+  isConnected: boolean
+  isLoading: boolean
+  publicKey: string | null
+  smartWalletAuthorityPubkey: string | null
+  error: string | null
+  credentialId?: string | null
+  connect: () => Promise<void>
+  disconnect: () => void
+  signMessage: (instruction: any) => Promise<string>
+}
+
+// Create context with default values
+export const LazorKitWalletContext = createContext<LazorKitWalletContextState>({
+  isConnected: false,
+  isLoading: false,
+  publicKey: null,
+  smartWalletAuthorityPubkey: null,
+  error: null,
+  credentialId: null,
+  connect: async () => {},
+  disconnect: () => {},
+  signMessage: async () => "",
+})
+
+// Export hook to use context
+export const useLazorKitWalletContext = () => useContext(LazorKitWalletContext)
+
+// Client-only component
+const LazorKitWalletProviderClient = dynamic(() => import('./client-lazorkit-provider').then(mod => mod.ClientLazorKitProvider), {
+  ssr: false
+})
+
+// Provider Component
+export function LazorKitWalletProvider({ children }: { children: React.ReactNode }) {
+  return <LazorKitWalletProviderClient>{children}</LazorKitWalletProviderClient>
+}
+```
+
+  </Step>
+  <Step>
+  Create LazorKit Wallet Client Provider
+
+components/providers/client-lazorkit-provider.tsx
+
+```tsx
+"use client"
+
+import React, { useEffect } from "react"
+import { useWallet } from "@lazorkit/wallet"
+import { LazorKitWalletContext } from "./lazorkit-wallet-context"
+
+export function ClientLazorKitProvider({ children }: { children: React.ReactNode }) {
+  const walletState = useWallet()
   
+  return (
+    <LazorKitWalletContext.Provider value={walletState}>
+      {children}
+    </LazorKitWalletContext.Provider>
+  )
+}
+```
+
+  </Step>
+  <Step>
+  Create file .env
+
   .env
 
 ```bash
-# Use mainnet or testnet
+# Using mainnet or testnet
 NEXT_PUBLIC_USE_MAINNET=false
-# Solana RPC URLs , alchemy.com
+# Solana RPC URLs, from alchemy.com or providers
 NEXT_PUBLIC_SOLANA_RPC_URL="https://solana-mainnet.g.alchemy.com/v2/your-alchemy-api-key"
 NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET="https://solana-devnet.g.alchemy.com/v2/your-alchemy-api-key"
 ```
@@ -190,14 +271,15 @@ NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET="https://solana-devnet.g.alchemy.com/v2/your-a
   </Step>
 
   <Step>
-  Wrap your root layout
+  Update root layout
 
-Add the Wall to your root layout
+Add WalletProvider into root layout
 
 ```tsx
 import type React from "react"
 import { ThemeProvider } from 'next-themes'
 import "@/app/globals.css"
+import { WalletProvider } from "@/components/providers/wallet-provider";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -205,7 +287,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
+          <WalletProvider>
+            {children}
+          </WalletProvider>
         </ThemeProvider>
       </body>
     </html>
@@ -224,34 +308,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/connect-wallet-button.json`}
 />
 
-  When you install successful, you can find Connect Wallet Button file in ```components/ui/murphy```
+  After successful installation, you can find the Connect Wallet Button file in ```components/ui/murphy```
   </Step>
 </Steps>
 
-### Basic Usage
+### Usage basic
 
 ```tsx
 "use client"
 
 import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
-import { WalletProvider } from "@/components/providers/wallet-provider"
 import { Wallet } from "lucide-react"
 ```
 
 ```tsx
 export default function MyPage() {
   return (
-    <WalletProvider>
-      <div className="flex h-screen items-center justify-center">
-        <div className="container mx-auto max-w-md p-8 text-center">
-          <h1 className="mb-6 text-2xl font-bold">Connect Your Solana Wallet</h1>
-          <ConnectWalletButton>
-            <Wallet className="size-4 mr-2" />
-            Connect Wallet
-          </ConnectWalletButton>
-        </div>
+    <div className="flex h-screen items-center justify-center">
+      <div className="container mx-auto max-w-md p-8 text-center">
+        <h1 className="mb-6 text-2xl font-bold">Connect your Solana wallet</h1>
+        <ConnectWalletButton>
+          <Wallet className="size-4 mr-2" />
+          Connect Wallet
+        </ConnectWalletButton>
       </div>
-    </WalletProvider>
+    </div>
   )
 }
 ```
