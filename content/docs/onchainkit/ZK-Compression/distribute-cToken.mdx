@@ -1,0 +1,54 @@
+---
+title: Distribute Compressed Token
+description: Solana compressed token distribution component with shadcn UI interface
+icon: ArrowRight
+---
+
+<PreviewComponent name={"Distribute Compressed Token Form"} v0JsonFileName={"distribute-cToken"}>
+  <DistributeTokenForm className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install necessary libraries
+
+    Start by installing the required Solana libraries
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/spl-token @solana/wallet-adapter-react @lightprotocol/stateless.js @lightprotocol/compressed-token bs58 dotenv"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Ensure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Token Distribution Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/distribute-cToken.json`}
+    />
+
+  </Step>
+</Steps>
+
+### Usage basic
+
+```tsx
+import { DistributeTokenForm } from "@/components/ui/murphy/distribute-cToken";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Distribute cToken</h1>
+      <DistributeTokenForm className="max-w-md" />
+    </div>
+  );
+}
