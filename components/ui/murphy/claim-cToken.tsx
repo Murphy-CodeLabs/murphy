@@ -54,7 +54,7 @@ import {
     // Use hook from wallet adapter
     const { publicKey, signTransaction, sendTransaction, connected } = useWallet();
     const { connection } = useConnection();
-    const { endpoint, isMainnet } = useContext(ModalContext);
+    const { endpoint } = useContext(ModalContext);
     
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [currentStage, setCurrentStage] = React.useState<'input' | 'success' | 'error'>('input');
@@ -64,6 +64,7 @@ import {
       ata: string;
     } | null>(null);
     const [showScanner, setShowScanner] = React.useState(false);
+    const [isMainnet, setIsMainnet] = React.useState(true);
 
     const form = useForm<FormValues>({
       resolver: zodResolver(formSchema),
@@ -476,14 +477,14 @@ import {
                 <Switch
                   id="network-switch"
                   checked={isMainnet}
-                  disabled={true} // Use value from context
-                  className="cursor-not-allowed"
+                  disabled={false}
+                  onCheckedChange={setIsMainnet}
                 />
                 <span className="text-sm text-muted-foreground">Mainnet</span>
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Network selection is controlled by your wallet settings
+              Select the network you want to use to process tokens
             </p>
           </div>
 
