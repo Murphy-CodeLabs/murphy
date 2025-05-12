@@ -33,6 +33,9 @@ import {
   import { Label } from "@/components/ui/label";
   import { ConnectWalletButton } from "./connect-wallet-button";
   import { ModalContext } from "@/components/providers/wallet-provider";
+  import { QrScannerComponent } from "./QrScannerComponent";
+  import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+  import { Alert, AlertDescription } from "@/components/ui/alert";
   
   // Form schema
   const formSchema = z.object({
@@ -41,6 +44,11 @@ import {
   });
 
   type FormValues = z.infer<typeof formSchema>;
+
+  // Add this data type at the top of the file or just before the component
+  interface QrResult {
+    getText(): string;
+  }
 
   export function ClaimTokenForm({ className }: { className?: string }) {
     // Use hook from wallet adapter
@@ -55,6 +63,7 @@ import {
       txId: string;
       ata: string;
     } | null>(null);
+    const [showScanner, setShowScanner] = React.useState(false);
 
     const form = useForm<FormValues>({
       resolver: zodResolver(formSchema),
@@ -258,6 +267,64 @@ import {
       return `https://solscan.io/${type}/${id}${cluster}`;
     };
 
+    // Add function to handle successful QR scan
+    const handleScan = (data: string) => {
+      try {
+        console.log("QR data received:", data);
+
+        // Try parsing JSON data
+        let parsedData;
+        try {
+          parsedData = JSON.parse(data);
+        } catch (e) {
+          // If not JSON, check if it's simple text
+          if (data.includes("mintAddress")) {
+            // Extract information from text string
+            const mintMatch = data.match(/mintAddress[=:]\s*["']?([^"',}&\s]+)/i);
+            const amountMatch = data.match(/amount[=:]\s*["']?([0-9]+)/i);
+            
+            if (mintMatch) {
+              parsedData = {
+                mintAddress: mintMatch[1],
+                amount: amountMatch ? parseInt(amountMatch[1]) : 100
+              };
+            }
+          }
+        }
+
+        // Check if data is compressed token data
+        if (parsedData && parsedData.mintAddress) {
+          // Check Solana address format
+          try {
+            new PublicKey(parsedData.mintAddress);
+          } catch (e) {
+            toast.error("Invalid token address");
+            return;
+          }
+
+          // Check type to confirm this is a compressed token QR code
+          if (parsedData.type === "compressed-token-claim" || !parsedData.type) {
+            form.setValue("mintAddress", parsedData.mintAddress);
+            if (parsedData.amount && !isNaN(Number(parsedData.amount))) {
+              form.setValue("amount", Number(parsedData.amount));
+            }
+            
+            setShowScanner(false);
+            toast.success("QR code scanned successfully", {
+              description: `Token: ${parsedData.mintAddress.slice(0, 6)}...${parsedData.mintAddress.slice(-4)}`
+            });
+          } else {
+            toast.error("QR code is not a compressed token");
+          }
+        } else {
+          toast.error("QR code does not contain valid token information");
+        }
+      } catch (error) {
+        console.error("QR processing error:", error);
+        toast.error("Unable to process QR code");
+      }
+    };
+
     // Render success view
     const renderSuccess = () => (
       <div className="space-y-4">
@@ -418,6 +485,36 @@ import {
             <p className="text-xs text-muted-foreground mt-1">
               Network selection is controlled by your wallet settings
             </p>
+          </div>
+
+          <div className="flex justify-end mb-2">
+            <Dialog open={showScanner} onOpenChange={setShowScanner}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="sm">
+                  Scan QR Code
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-full max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Scan QR Code</DialogTitle>
+                </DialogHeader>
+                <div className="w-full py-2">
+                  <QrScannerComponent
+                    onScan={handleScan}
+                    stopScanning={!showScanner}
+                  />
+                </div>
+                <div className="bg-muted p-3 rounded-md text-sm">
+                  Bring the QR code into the camera's view to automatically fill in the token information
+                </div>
+                
+                <Alert className="mt-2 bg-yellow-500/10 text-yellow-600 border-yellow-200">
+                  <AlertDescription className="text-xs">
+                    Note: After a successful scan, you still need to press the "Decompress Tokens" button to confirm
+                  </AlertDescription>
+                </Alert>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <FormField

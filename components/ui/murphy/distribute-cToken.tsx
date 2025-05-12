@@ -19,6 +19,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { toast } from "sonner";
+import QRCode from "react-qr-code";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -345,6 +347,39 @@ export function DistributeTokenForm({ className }: { className?: string }) {
         <Button onClick={resetForm} className="flex-1">
           Distribute More Tokens
         </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="flex-1">
+              Generate QR Code
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>QR Code to Claim Token</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col items-center justify-center p-4">
+              <QRCode
+                value={JSON.stringify({
+                  mintAddress: form.getValues("mintAddress"),
+                  amount: form.getValues("amount"),
+                  type: "compressed-token-claim",
+                  timestamp: new Date().toISOString(),
+                })}
+                size={250}
+                level="H"
+                fgColor="#000"
+                bgColor="#fff"
+              />
+              <p className="text-sm text-muted-foreground mt-4">
+                Người nhận có thể quét mã QR này để nhận token
+              </p>
+              <div className="flex flex-col items-center mt-2 w-full">
+                <p className="text-xs text-muted-foreground">Token: {truncateText(form.getValues("mintAddress"), 10)}</p>
+                <p className="text-xs text-muted-foreground">Số lượng: {form.getValues("amount")}</p>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
         <Button 
           variant="outline" 
           className="flex-1"

@@ -82,6 +82,8 @@
     "react-dom": "^19.1.0",
     "react-fast-marquee": "^1.6.5",
     "react-hook-form": "^7.55.0",
+    "react-qr-code": "^2.0.15",
+    "react-qr-reader": "3.0.0-beta-1",
     "recharts": "^2.15.3",
     "rehype-katex": "^7.0.1",
     "remark": "^15.0.1",

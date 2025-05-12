@@ -805,6 +805,11 @@
           "path": "components/ui/murphy/claim-cToken.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/claim-cToken.tsx"
+        },
+        {
+          "path": "components/ui/murphy/QrScannerComponent.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/QrScannerComponent.tsx"
         }
       ]
     }
