@@ -22,6 +22,9 @@ import { PriceChart } from "@/components/ui/murphy/price-chart";
 import { TokenIcon } from "@/components/ui/murphy/token-icon";
 import { MintTokenForm } from "@/components/ui/murphy/mint-cToken";
 import { TokenCard } from "@/components/ui/murphy/token-card";
+import { DistributeTokenForm } from "@/components/ui/murphy/distribute-cToken";
+import { ClaimTokenForm } from "@/components/ui/murphy/claim-cToken";
+
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -47,5 +50,7 @@ export {
   PriceChart,
   TokenIcon,
   MintTokenForm,
-  TokenCard
+  TokenCard,
+  DistributeTokenForm,
+  ClaimTokenForm,
 };
