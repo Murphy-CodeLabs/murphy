@@ -46,7 +46,7 @@ export function DistributeTokenForm({ className }: { className?: string }) {
   // Use hook from wallet adapter
   const { publicKey, signTransaction, connected } = useWallet();
   const { connection } = useConnection();
-  const { endpoint, isMainnet } = useContext(ModalContext);
+  const { endpoint } = useContext(ModalContext);
   
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [currentStage, setCurrentStage] = React.useState<'input' | 'success' | 'error'>('input');
@@ -54,6 +54,7 @@ export function DistributeTokenForm({ className }: { className?: string }) {
   const [result, setResult] = React.useState<{
     txId: string;
   } | null>(null);
+  const [isMainnet, setIsMainnet] = React.useState(true);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -371,11 +372,11 @@ export function DistributeTokenForm({ className }: { className?: string }) {
                 bgColor="#fff"
               />
               <p className="text-sm text-muted-foreground mt-4">
-                Người nhận có thể quét mã QR này để nhận token
+                Recipients can scan this QR code to claim tokens
               </p>
               <div className="flex flex-col items-center mt-2 w-full">
                 <p className="text-xs text-muted-foreground">Token: {truncateText(form.getValues("mintAddress"), 10)}</p>
-                <p className="text-xs text-muted-foreground">Số lượng: {form.getValues("amount")}</p>
+                <p className="text-xs text-muted-foreground">Amount: {form.getValues("amount")}</p>
               </div>
             </div>
           </DialogContent>
@@ -423,14 +424,14 @@ export function DistributeTokenForm({ className }: { className?: string }) {
               <Switch
                 id="network-switch"
                 checked={isMainnet}
-                disabled={true} // Use value from context
-                className="cursor-not-allowed"
+                disabled={false}
+                onCheckedChange={setIsMainnet}
               />
               <span className="text-sm text-muted-foreground">Mainnet</span>
             </div>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            Network selection is controlled by your wallet settings
+            Select the network you want to use for token processing
           </p>
         </div>
 
