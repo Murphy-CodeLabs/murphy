@@ -24,7 +24,7 @@ import { MintTokenForm } from "@/components/ui/murphy/mint-cToken";
 import { TokenCard } from "@/components/ui/murphy/token-card";
 import { DistributeTokenForm } from "@/components/ui/murphy/distribute-cToken";
 import { ClaimTokenForm } from "@/components/ui/murphy/claim-cToken";
-
+import { Avatar } from "@/components/ui/murphy/avatar";
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -53,4 +53,5 @@ export {
   TokenCard,
   DistributeTokenForm,
   ClaimTokenForm,
+  Avatar
 };
