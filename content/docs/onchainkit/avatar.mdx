@@ -1,0 +1,40 @@
+---
+title: Avatar
+description: Murphy Avatar Icon
+icon: CircleUserRound
+---
+
+<PreviewComponent  v0JsonFileName="avatar">
+<Avatar address={"123456789"}/>
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+    <Step>
+        Install Murphy Avatar
+        <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/avatar.json`}/>
+
+    </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { Avatar } from "@/components/ui/murphy//avatar";
+import { PublicKey } from "@solana/web3.js";
+const address = new PublicKey("your-public-key")
+<Avatar address={address}/>
+
+
+```
+
+##  Props
+
+| Name       | Type       | Default |
+|------------|------------|---------|
+| `address`  | `PublicKey`|         |
+| `size`     | `number`   | `48`    |
+| `className`| `string`   |         |
+
+

@@ -74,6 +74,7 @@
     "javascript": "link:shiki/engine/javascript",
     "lucide-react": "^0.488.0",
     "millify": "^6.1.0",
+    "minidenticons": "^4.2.1",
     "mongoose": "^8.14.1",
     "motion": "^12.7.3",
     "next": "15.3.0",
