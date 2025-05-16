@@ -12,7 +12,8 @@
         "button",
         "dialog",
         "collapsible",
-        "dropdown-menu"
+        "dropdown-menu",
+        "tabs"
       ],
       "dependencies": [
         "@solana/wallet-adapter-react",

@@ -13,7 +13,8 @@
     "button",
     "dialog",
     "collapsible",
-    "dropdown-menu"
+    "dropdown-menu",
+    "tabs"
   ],
   "files": [
     {
