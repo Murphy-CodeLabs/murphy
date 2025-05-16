@@ -40,6 +40,7 @@ icon: Wallet
 components/providers/wallet-provider.tsx
 
 ```tsx
+"use client"
 import React, { useState, useMemo, createContext, useCallback } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import type { Adapter } from "@solana/wallet-adapter-base";
