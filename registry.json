@@ -63,7 +63,11 @@
         "form",
         "card",
         "sonner",
-        "select"
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "collapsible",
+        "tabs"
       ],
       "dependencies": [
         "@solana/web3.js",
