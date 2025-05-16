@@ -15,7 +15,11 @@
     "form",
     "card",
     "sonner",
-    "select"
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "collapsible",
+    "tabs"
   ],
   "files": [
     {
