@@ -1,14 +1,14 @@
-# Contributing to Murphy
+# Contributing
 
-Thank you for your interest in contributing to Murphy! We're excited to have you join our community of developers building the future of Web3 on Solana.
+Thanks for your interest in contributing to Murphy. We're happy to have you here.
 
-Please take a moment to review this document before submitting your first pull request. We also recommend checking for open issues and pull requests to see if someone else is already working on something similar.
+Please take a moment to review this document before submitting your first pull request. We also strongly recommend that you check for open issues and pull requests to see if someone else is working on something similar.
 
-If you need help, feel free to open an issue or reach out to the maintainers.
+If you need any help, feel free to open an issue or reach out to the maintainers.
 
 ## About this repository
 
-- We use [pnpm](https://pnpm.io) as our package manager
+- We use [pnpm](https://pnpm.io) for development
 - We use [Next.js](https://nextjs.org/) for our documentation and examples
 - We follow a component-based architecture with shadcn UI components
 
@@ -16,8 +16,8 @@ If you need help, feel free to open an issue or reach out to the maintainers.
 
 | Path             | Description                                  |
 | ---------------- | -------------------------------------------- |
-| `/app`           | Next.js application structure                |
-| `/components`    | Reusable React components                    |
+| `/app`           | The Next.js application for the website      |
+| `/components`    | The React components for the website         |
 | `/lib`           | Utility functions and shared code            |
 | `/types`         | TypeScript type definitions                  |
 | `/content`       | Documentation content                        |
@@ -27,21 +27,21 @@ If you need help, feel free to open an issue or reach out to the maintainers.
 
 ### Fork this repo
 
-You can fork this repo by clicking the fork button in the top right corner of the repository page.
+You can fork this repo by clicking the fork button in the top right corner of this page.
 
 ### Clone on your local machine
 
 ```bash
-git clone https://github.com/murphy/murphy
+git clone https://github.com/murphy-codelabs/murphy
 ```
 
-### Navigate to the project directory
+### Navigate to project directory
 
 ```bash
 cd murphy
 ```
 
-### Create a new branch
+### Create a new Branch
 
 ```bash
 git checkout -b my-new-branch
@@ -59,16 +59,25 @@ pnpm install
 pnpm dev
 ```
 
-This will start the development server at http://localhost:3000.
-
 ## Components
 
-We use shadcn UI for our component library. If you're adding or modifying components, please:
+We use a registry system for developing components. You can find the source code for the components under `app/components/ui/murphy`.
 
-1. Make sure to maintain consistent styling with the existing components
-2. Update type definitions as needed
-3. Write clear documentation for any new components
-4. Test your changes thoroughly before submitting a PR
+```bash
+app
+└── components
+    └── ui
+        ├── murphy
+            ├── connect-wallet-button.tsx
+            └── index.tsx
+```
+
+When adding or modifying components, please ensure that:
+
+1. You make the changes for every style
+2. You update the documentation
+3. Update `registry.json` [registry docs ](https://ui.shadcn.com/docs/registry/registry-json).
+4. You run `pnpm registry:build` to update the registry
 
 ### Component Auto-Import for Documentation
 
@@ -89,22 +98,24 @@ export {
 };
 ```
 
-This export pattern allows the component to be automatically available in MDX files through the `mdx-components.tsx` configuration, so documentation authors can use components directly without imports.
-
 ## Commit Convention
 
-We follow conventional commits in this repository. When creating a commit, please use the convention `category(scope): message` with one of the following categories:
+Before you create a Pull Request, please check whether your commits comply with the commit conventions used in this repository.
 
-- `feat`: New features or additions
-- `fix`: Bug fixes
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code changes that neither fix bugs nor add features
-- `perf`: Performance improvements
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks, dependency updates, etc.
+When you create a commit we kindly ask you to follow the convention `category(scope or module): message` in your commit message while using one of the following categories:
 
-Example: `feat(sdk): add new token utility function`
+- `feat / feature`: all changes that introduce completely new code or new features
+- `fix`: changes that fix a bug (ideally you will additionally reference an issue if present)
+- `refactor`: any code related change that is not a fix nor a feature
+- `docs`: changing existing or creating new documentation
+- `style`: code style changes (formatting, etc.)
+- `perf`: performance improvements
+- `test`: all changes regarding tests
+- `chore`: all changes to the repository that do not fit into any of the above categories
+
+e.g. `feat(components): add new prop to the avatar component`
+
+If you are interested in the detailed specification you can visit https://www.conventionalcommits.org/ or check out the [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines).
 
 ## Pull Request Process
 
