@@ -1,0 +1,33 @@
+{
+    "name": "mint-nft-form",
+    "type": "registry:block",
+    "title": "Mint NFT Form",
+    "description": "A simple mint NFT form component.",
+    "registryDependencies": [
+      "input",
+      "button",
+      "form",
+      "card",
+      "sonner",
+      "select",
+      "dialog",
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/mint-nft-form.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/mint-nft-form.tsx"
+      },
+      {
+        "path": "hook/murphy/use-walletModal.ts",
+        "type": "registry:hook",
+        "target": "hook/murphy/use-walletModal.ts"
+      }
+    ]
+}

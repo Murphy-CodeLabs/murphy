@@ -4,507 +4,23 @@
   "homepage": "https://murphy.vercel.app/",
   "items": [
     {
-      "name": "connect-wallet-button",
+      "name": "avatar",
+      "description": "A simple avatar icon",
       "type": "registry:block",
-      "title": "Connect Wallet Button",
-      "description": "A simple connect wallet button component.",
-      "registryDependencies": [
-        "button",
-        "dialog",
-        "collapsible",
-        "dropdown-menu",
-        "tabs"
-      ],
-      "dependencies": [
-        "@solana/wallet-adapter-react",
-        "@solana/wallet-adapter-base",
-        "@lazorkit/wallet"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/connect-wallet-button.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/connect-wallet-button.tsx"
-        },
-        {
-          "path": "components/providers/wallet-provider.tsx",
-          "type": "registry:component",
-          "target": "components/providers/wallet-provider.tsx"
-        },
-        {
-          "path": "hook/murphy/use-walletMultiButton.ts",
-          "type": "registry:hook",
-          "target": "hook/murphy/use-walletMultiButton.ts"
-        },
-        {
-          "path": "hook/murphy/use-walletModal.ts",
-          "type": "registry:hook",
-          "target": "hook/murphy/use-walletModal.ts"
-        },
-        {
-          "path": "components/providers/lazorkit-wallet-context.tsx",
-          "type": "registry:component",
-          "target": "components/providers/lazorkit-wallet-context.tsx"
-        },
-        {
-          "path": "components/providers/client-lazorkit-provider.tsx",
-          "type": "registry:component",
-          "target": "components/providers/client-lazorkit-provider.tsx"
-        }
-      ]
-    },
-    {
-      "name": "send-token-form",
-      "type": "registry:block",
-      "title": "Send Token Form",
-      "description": "A simple send token form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu",
-        "collapsible",
-        "tabs"
-      ],
       "dependencies": [
         "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
+        "minidenticons"
       ],
       "files": [
         {
-          "path": "components/ui/murphy/send-token-form.tsx",
+          "path": "components/ui/murphy/avatar.tsx",
           "type": "registry:component",
-          "target": "components/ui/murphy/send-token-form.tsx"
-        }
-      ]
-    },
-    {
-      "name": "swap-token-form",
-      "type": "registry:block",
-      "title": "Swap Token Form",
-      "description": "A simple swap token form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu",
-        "slider"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "@coral-xyz/anchor"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/swap-token-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/swap-token-form.tsx"
-        },
-        {
-          "path": "hook/murphy/use-JupiterTrade.ts",
-          "type": "registry:hook",
-          "target": "hook/murphy/use-JupiterTrade.ts"
-        },
-        {
-          "path": "config/swap/index.ts",
-          "type": "registry:file",
-          "target": "config/swap/index.ts"
-        },
-        {
-          "path": "constants/swap/jupiter-constants.ts",
-          "type": "registry:file",
-          "target": "constants/swap/jupiter-constants.ts"
-        },
-        {
-          "path": "types/swap/index.ts",
-          "type": "registry:file",
-          "target": "types/swap/index.ts"
-        },
-        {
-          "path": "public/crypto-logos/solana-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/solana-logo.svg"
-        },
-        {
-          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
-        },
-        {
-          "path": "public/crypto-logos/tether-usdt-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/tether-usdt-logo.svg"
-        }
-      ]
-    },
-    {
-      "name": "stake-token-form",
-      "type": "registry:block",
-      "title": "Stake Token Form",
-      "description": "A simple stake token form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/stake-token-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/stake-token-form.tsx"
-        },
-        {
-          "path": "app/api/murphy/solayer/stake/route.ts",
-          "type": "registry:file",
-          "target": "app/api/murphy/solayer/stake/route.ts"
-        }
-      ]
-    },
-    {
-      "name": "token-combobox",
-      "type": "registry:block",
-      "title": "Token Combobox",
-      "description": "A searchable combobox of tokens and prices with optional user balances.",
-      "registryDependencies": ["command", "popover", "button"],
-      "dependencies": ["@solana/web3.js","@solana/wallet-adapter-react"],
-      "files": [
-        {
-          "path": "components/ui/murphy/token-combobox.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/token-combobox.tsx"
-        },
-        {
-          "path": "lib/assets/birdeye/wallets.ts",
-          "type": "registry:file",
-          "target": "lib/assets/birdeye/wallets.ts"
-        },
-        {
-          "path": "types/assets/index.ts",
-          "type": "registry:file",
-          "target": "types/assets/index.ts"
-        },
-        {
-          "path": "types/swap/index.ts",
-          "type": "registry:file",
-          "target": "types/swap/index.ts"
-        },
-        {
-          "path": "public/crypto-logos/solana-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/solana-logo.svg"
-        },
-        {
-          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
-        },
-        {
-          "path": "public/crypto-logos/tether-usdt-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/tether-usdt-logo.svg"
-        }
-      ]
-    },
-    {
-      "name": "token-list",
-      "type": "registry:block",
-      "title": "Token List",
-      "description": "A simple token list component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu",
-        "skeleton",
-        "table"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "millify"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/token-list.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/token-list.tsx"
-        },
-        {
-          "path": "types/assets/index.ts",
-          "type": "registry:file",
-          "target": "types/assets/index.ts"
+          "target": "components/ui/murphy/avatar.tsx"
         },
         {
           "path": "lib/utils.ts",
           "type": "registry:file",
           "target": "lib/utils.ts"
-        },
-        {
-          "path": "components/ui/murphy/token-icon.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/token-icon.tsx"
-        },
-        {
-          "path": "public/crypto-logos/solana-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/solana-logo.svg"
-        },
-        {
-          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
-        },
-        {
-          "path": "public/crypto-logos/tether-usdt-logo.svg",
-          "type": "registry:file",
-          "target": "public/crypto-logos/tether-usdt-logo.svg"
-        }
-      ]
-    },
-    {
-      "name": "create-collection-form",
-      "type": "registry:block",
-      "title": "Create Collection Form",
-      "description": "A simple create collection form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "@metaplex-foundation/umi-bundle-defaults",
-        "@metaplex-foundation/umi-signer-wallet-adapters",
-        "@metaplex-foundation/mpl-token-metadata",
-        "@metaplex-foundation/umi"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/create-collection-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/create-collection-form.tsx"
-        }
-      ]
-    },
-    {
-      "name": "create-merkleTree-form",
-      "type": "registry:block",
-      "title": "Create Merkle Tree Form",
-      "description": "A simple create merkle tree form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "@metaplex-foundation/umi-bundle-defaults",
-        "@metaplex-foundation/umi-signer-wallet-adapters",
-        "@metaplex-foundation/mpl-token-metadata",
-        "@metaplex-foundation/umi"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/create-merkleTree-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/create-merkleTree-form.tsx"
-        }
-      ]
-    },
-    {
-      "name": "get-nft-form",
-      "type": "registry:block",
-      "title": "Get NFT Form",
-      "description": "A simple get NFT form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/get-nft-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/get-nft-form.tsx"
-        }
-      ]
-    },
-    {
-      "name": "mint-cnft-form",
-      "type": "registry:block",
-      "title": "Mint CNFT Form",
-      "description": "A simple mint CNFT form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/mint-cnft-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/mint-cnft-form.tsx"
-        }
-      ]
-    },
-    {
-      "name": "mint-nft-form",
-      "type": "registry:block",
-      "title": "Mint NFT Form",
-      "description": "A simple mint NFT form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/mint-nft-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/mint-nft-form.tsx"
-        },
-        {
-          "path": "hook/murphy/use-walletModal.ts",
-          "type": "registry:hook",
-          "target": "hook/murphy/use-walletModal.ts"
-        }
-      ]
-    },
-    {
-      "name": "token-input",
-      "type": "registry:block",
-      "title": "token-input",
-      "description": "The TokenInput component is an input field with support for user balances, half / max buttons, and number formatting.",
-      "registryDependencies": ["input", "button"],
-      "dependencies": ["@solana/web3.js"],
-      "files": [
-        {
-          "path": "components/ui/murphy/token-input.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/token-input.tsx"
-        },
-        {
-          "path": "components/ui/murphy/token-combobox.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/token-combobox.tsx"
-        },
-        {
-          "path": "lib/utils.ts",
-          "type": "registry:file",
-          "target": "lib/utils.ts"
-        },
-        {
-          "path": "types/swap/index.ts",
-          "type": "registry:file",
-          "target": "types/swap/index.ts"
-        }
-      ]
-    },
-    {
-      "name": "createConfig-form",
-      "type": "registry:block",
-      "title": "Build Curve and Create Config Form",
-      "description": "A simple build curve and create config form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/createConfig-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/createConfig-form.tsx"
-        },
-        {
-          "path": "hook/murphy/use-walletModal.ts",
-          "type": "registry:hook",
-          "target": "hook/murphy/use-walletModal.ts"
-        },
-        {
-          "path": "hook/murphy/use-walletModal.ts",
-          "type": "registry:hook",
-          "target": "hook/murphy/use-walletModal.ts"
         }
       ]
     },
@@ -587,23 +103,338 @@
       ]
     },
     {
-      "name": "txn-settings",
+      "name": "claim-cToken",
       "type": "registry:block",
-      "title": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
-      "description": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
+      "title": "Claim cToken",
+      "description": "A simple claim cToken form component.",
       "registryDependencies": [
-        "popover",
-        "toggle-group",
         "input",
         "button",
-        "dialog"
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
       ],
-      "dependencies": [],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@lightprotocol/stateless.js",
+        "@lightprotocol/compressed-token"
+      ],
       "files": [
         {
-          "path": "components/ui/murphy/txn-settings.tsx",
+          "path": "components/ui/murphy/claim-cToken.tsx",
           "type": "registry:component",
-          "target": "components/ui/murphy/txn-settings.tsx"
+          "target": "components/ui/murphy/claim-cToken.tsx"
+        },
+        {
+          "path": "components/ui/murphy/QrScannerComponent.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/QrScannerComponent.tsx"
+        }
+      ]
+    },
+    {
+      "name": "connect-wallet-button",
+      "type": "registry:block",
+      "title": "Connect Wallet Button",
+      "description": "A simple connect wallet button component.",
+      "registryDependencies": [
+        "button",
+        "dialog",
+        "collapsible",
+        "dropdown-menu",
+        "tabs"
+      ],
+      "dependencies": [
+        "@solana/wallet-adapter-react",
+        "@solana/wallet-adapter-base",
+        "@lazorkit/wallet"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/connect-wallet-button.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/connect-wallet-button.tsx"
+        },
+        {
+          "path": "components/providers/wallet-provider.tsx",
+          "type": "registry:component",
+          "target": "components/providers/wallet-provider.tsx"
+        },
+        {
+          "path": "hook/murphy/use-walletMultiButton.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-walletMultiButton.ts"
+        },
+        {
+          "path": "hook/murphy/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-walletModal.ts"
+        },
+        {
+          "path": "components/providers/lazorkit-wallet-context.tsx",
+          "type": "registry:component",
+          "target": "components/providers/lazorkit-wallet-context.tsx"
+        },
+        {
+          "path": "components/providers/client-lazorkit-provider.tsx",
+          "type": "registry:component",
+          "target": "components/providers/client-lazorkit-provider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "create-collection-form",
+      "type": "registry:block",
+      "title": "Create Collection Form",
+      "description": "A simple create collection form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/create-collection-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/create-collection-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "create-merkleTree-form",
+      "type": "registry:block",
+      "title": "Create Merkle Tree Form",
+      "description": "A simple create merkle tree form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/create-merkleTree-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/create-merkleTree-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "createConfig-form",
+      "type": "registry:block",
+      "title": "Build Curve and Create Config Form",
+      "description": "A simple build curve and create config form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/createConfig-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/createConfig-form.tsx"
+        },
+        {
+          "path": "hook/murphy/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-walletModal.ts"
+        },
+        {
+          "path": "hook/murphy/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-walletModal.ts"
+        }
+      ]
+    },
+    {
+      "name": "distribute-cToken",
+      "type": "registry:block",
+      "title": "Distribute cToken",
+      "description": "A simple distribute cToken form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@lightprotocol/stateless.js",
+        "@lightprotocol/compressed-token"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/distribute-cToken.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/distribute-cToken.tsx"
+        }
+      ]
+    },
+    {
+      "name": "get-nft-form",
+      "type": "registry:block",
+      "title": "Get NFT Form",
+      "description": "A simple get NFT form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/get-nft-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/get-nft-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mint-cToken",
+      "type": "registry:block",
+      "title": "Mint cToken",
+      "description": "A simple mint cToken form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@lightprotocol/stateless.js",
+        "@lightprotocol/compressed-token"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/mint-cToken.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/mint-cToken.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mint-cnft-form",
+      "type": "registry:block",
+      "title": "Mint CNFT Form",
+      "description": "A simple mint CNFT form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/mint-cnft-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/mint-cnft-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mint-nft-form",
+      "type": "registry:block",
+      "title": "Mint NFT Form",
+      "description": "A simple mint NFT form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/mint-nft-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/mint-nft-form.tsx"
+        },
+        {
+          "path": "hook/murphy/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-walletModal.ts"
         }
       ]
     },
@@ -611,36 +442,17 @@
       "name": "pk-input",
       "type": "registry:block",
       "title": "The PKInput component is an input field with support for inline public key validation.",
-      "registryDependencies": ["input"],
-      "dependencies": ["@solana/web3.js"],
+      "registryDependencies": [
+        "input"
+      ],
+      "dependencies": [
+        "@solana/web3.js"
+      ],
       "files": [
         {
           "path": "components/ui/murphy/pk-input.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/pk-input.tsx"
-        },
-        {
-          "path": "lib/utils.ts",
-          "type": "registry:file",
-          "target": "lib/utils.ts"
-        }
-      ]
-    },
-    {
-      "name": "txn-list",
-      "type": "registry:block",
-      "title": "The TxnList component is a table of transactions with metadata.",
-      "registryDependencies": ["table","skeleton"],
-      "dependencies": [
-        "@solana/web3.js",
-        "date-fns",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/txn-list.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/txn-list.tsx"
         },
         {
           "path": "lib/utils.ts",
@@ -667,30 +479,20 @@
       ]
     },
     {
-      "name": "sparkline",
-      "type": "registry:block",
-      "title": "The Sparkline component is a line chart that displays the price of a token over time.",
-      "registryDependencies": ["chart"],
-      "dependencies": ["recharts"],
-      "files": [
-        {
-          "path": "components/ui/murphy/price-change.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/price-change.tsx"
-        },
-        {
-          "path": "components/ui/murphy/sparkline.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/sparkline.tsx"
-        }
-      ]
-    },
-    {
       "name": "price-chart",
       "type": "registry:block",
       "title": "The PriceChart component is a chart that displays the price of a token over time.",
-      "registryDependencies": ["chart", "card", "toggle-group", "skeleton"],
-      "dependencies": ["recharts", "date-fns","@solana/web3.js"],
+      "registryDependencies": [
+        "chart",
+        "card",
+        "toggle-group",
+        "skeleton"
+      ],
+      "dependencies": [
+        "recharts",
+        "date-fns",
+        "@solana/web3.js"
+      ],
       "files": [
         {
           "path": "components/ui/murphy/price-chart.tsx",
@@ -706,6 +508,238 @@
           "path": "types/assets/index.ts",
           "type": "registry:file",
           "target": "types/assets/index.ts"
+        }
+      ]
+    },
+    {
+      "name": "send-token-form",
+      "type": "registry:block",
+      "title": "Send Token Form",
+      "description": "A simple send token form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "collapsible",
+        "tabs"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/send-token-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/send-token-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sparkline",
+      "type": "registry:block",
+      "title": "The Sparkline component is a line chart that displays the price of a token over time.",
+      "registryDependencies": [
+        "chart"
+      ],
+      "dependencies": [
+        "recharts"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/price-change.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/price-change.tsx"
+        },
+        {
+          "path": "components/ui/murphy/sparkline.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/sparkline.tsx"
+        }
+      ]
+    },
+    {
+      "name": "stake-token-form",
+      "type": "registry:block",
+      "title": "Stake Token Form",
+      "description": "A simple stake token form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/stake-token-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/stake-token-form.tsx"
+        },
+        {
+          "path": "app/api/murphy/solayer/stake/route.ts",
+          "type": "registry:file",
+          "target": "app/api/murphy/solayer/stake/route.ts"
+        }
+      ]
+    },
+    {
+      "name": "swap-token-form",
+      "type": "registry:block",
+      "title": "Swap Token Form",
+      "description": "A simple swap token form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "slider"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@coral-xyz/anchor"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/swap-token-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/swap-token-form.tsx"
+        },
+        {
+          "path": "hook/murphy/use-JupiterTrade.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-JupiterTrade.ts"
+        },
+        {
+          "path": "config/swap/index.ts",
+          "type": "registry:file",
+          "target": "config/swap/index.ts"
+        },
+        {
+          "path": "constants/swap/jupiter-constants.ts",
+          "type": "registry:file",
+          "target": "constants/swap/jupiter-constants.ts"
+        },
+        {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
+        },
+        {
+          "path": "public/crypto-logos/solana-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/solana-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/tether-usdt-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/tether-usdt-logo.svg"
+        }
+      ]
+    },
+    {
+      "name": "token-card",
+      "type": "registry:block",
+      "description": "The TokenCard component is a card that shows a token's metatda, price, and price history.",
+      "registryDependencies": [
+        "skeleton",
+        "card"
+      ],
+      "dependencies": [
+        "@solana/web3.js"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/token-card.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/token-card.tsx"
+        },
+        {
+          "path": "types/assets/index.ts",
+          "type": "registry:file",
+          "target": "types/assets/index.ts"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "token-combobox",
+      "type": "registry:block",
+      "title": "Token Combobox",
+      "description": "A searchable combobox of tokens and prices with optional user balances.",
+      "registryDependencies": [
+        "command",
+        "popover",
+        "button"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/token-combobox.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/token-combobox.tsx"
+        },
+        {
+          "path": "lib/assets/birdeye/wallets.ts",
+          "type": "registry:file",
+          "target": "lib/assets/birdeye/wallets.ts"
+        },
+        {
+          "path": "types/assets/index.ts",
+          "type": "registry:file",
+          "target": "types/assets/index.ts"
+        },
+        {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
+        },
+        {
+          "path": "public/crypto-logos/solana-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/solana-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/tether-usdt-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/tether-usdt-logo.svg"
         }
       ]
     },
@@ -727,37 +761,68 @@
       ]
     },
     {
-      "name": "mint-cToken",
+      "name": "token-input",
       "type": "registry:block",
-      "title": "Mint cToken",
-      "description": "A simple mint cToken form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+      "title": "token-input",
+      "description": "The TokenInput component is an input field with support for user balances, half / max buttons, and number formatting.",
+      "registryDependencies": [
+        "input",
+        "button"
+      ],
       "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "@lightprotocol/stateless.js",
-        "@lightprotocol/compressed-token"
+        "@solana/web3.js"
       ],
       "files": [
         {
-          "path": "components/ui/murphy/mint-cToken.tsx",
+          "path": "components/ui/murphy/token-input.tsx",
           "type": "registry:component",
-          "target": "components/ui/murphy/mint-cToken.tsx"
+          "target": "components/ui/murphy/token-input.tsx"
+        },
+        {
+          "path": "components/ui/murphy/token-combobox.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/token-combobox.tsx"
+        },
+        {
+          "path": "lib/utils.ts",
+          "type": "registry:file",
+          "target": "lib/utils.ts"
+        },
+        {
+          "path": "types/swap/index.ts",
+          "type": "registry:file",
+          "target": "types/swap/index.ts"
         }
       ]
     },
     {
-      "name": "token-card",
+      "name": "token-list",
       "type": "registry:block",
-      "description": "The TokenCard component is a card that shows a token's metatda, price, and price history.",
-      "registryDependencies": ["skeleton","card"],
-      "dependencies": ["@solana/web3.js"],
+      "title": "Token List",
+      "description": "A simple token list component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "skeleton",
+        "table"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "millify"
+      ],
       "files": [
         {
-          "path": "components/ui/murphy/token-card.tsx",
+          "path": "components/ui/murphy/token-list.tsx",
           "type": "registry:component",
-          "target": "components/ui/murphy/token-card.tsx"
+          "target": "components/ui/murphy/token-list.tsx"
         },
         {
           "path": "types/assets/index.ts",
@@ -768,74 +833,73 @@
           "path": "lib/utils.ts",
           "type": "registry:file",
           "target": "lib/utils.ts"
-        }
-      ]
-    },
-    {
-      "name": "distribute-cToken",
-      "type": "registry:block",
-      "title": "Distribute cToken",
-      "description": "A simple distribute cToken form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "@lightprotocol/stateless.js",
-        "@lightprotocol/compressed-token"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/distribute-cToken.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/distribute-cToken.tsx"
-        }
-      ]
-    },
-    {
-      "name": "claim-cToken",
-      "type": "registry:block",
-      "title": "Claim cToken",
-      "description": "A simple claim cToken form component.",
-      "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "@lightprotocol/stateless.js",
-        "@lightprotocol/compressed-token"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/claim-cToken.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/claim-cToken.tsx"
         },
         {
-          "path": "components/ui/murphy/QrScannerComponent.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/QrScannerComponent.tsx"
+          "path": "components/ui/murphy/token-icon.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/token-icon.tsx"
+        },
+        {
+          "path": "public/crypto-logos/solana-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/solana-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
+        },
+        {
+          "path": "public/crypto-logos/tether-usdt-logo.svg",
+          "type": "registry:file",
+          "target": "public/crypto-logos/tether-usdt-logo.svg"
         }
       ]
     },
     {
-      "name": "avatar",
-      "description": "A simple avatar icon",
+      "name": "txn-list",
       "type": "registry:block",
-      "dependencies":[
-                "@solana/web3.js",
-                "minidenticons"
+      "title": "The TxnList component is a table of transactions with metadata.",
+      "registryDependencies": [
+        "table",
+        "skeleton"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "date-fns",
+        "@solana/wallet-adapter-react"
       ],
       "files": [
         {
-          "path": "components/ui/murphy/avatar.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/avatar.tsx"
+          "path": "components/ui/murphy/txn-list.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/txn-list.tsx"
         },
         {
           "path": "lib/utils.ts",
           "type": "registry:file",
           "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "txn-settings",
+      "type": "registry:block",
+      "title": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
+      "description": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
+      "registryDependencies": [
+        "popover",
+        "toggle-group",
+        "input",
+        "button",
+        "dialog"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/txn-settings.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/txn-settings.tsx"
         }
       ]
     }

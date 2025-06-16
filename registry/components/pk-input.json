@@ -1,0 +1,19 @@
+{
+    "name": "pk-input",
+    "type": "registry:block",
+    "title": "The PKInput component is an input field with support for inline public key validation.",
+    "registryDependencies": ["input"],
+    "dependencies": ["@solana/web3.js"],
+    "files": [
+      {
+        "path": "components/ui/murphy/pk-input.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/pk-input.tsx"
+      },
+      {
+        "path": "lib/utils.ts",
+        "type": "registry:file",
+        "target": "lib/utils.ts"
+      }
+    ]
+}

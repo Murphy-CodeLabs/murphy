@@ -1,0 +1,30 @@
+{
+  "name": "send-token-form",
+  "type": "registry:block",
+  "title": "Send Token Form",
+  "description": "A simple send token form component.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "collapsible",
+    "tabs"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/spl-token",
+    "@solana/wallet-adapter-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/send-token-form.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/send-token-form.tsx"
+    }
+  ]
+} 
