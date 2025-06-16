@@ -1,0 +1,32 @@
+{
+    "name": "create-collection-form",
+    "type": "registry:block",
+    "title": "Create Collection Form",
+    "description": "A simple create collection form component.",
+    "registryDependencies": [
+      "input",
+      "button",
+      "form",
+      "card",
+      "sonner",
+      "select",
+      "dialog",
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react",
+      "@metaplex-foundation/umi-bundle-defaults",
+      "@metaplex-foundation/umi-signer-wallet-adapters",
+      "@metaplex-foundation/mpl-token-metadata",
+      "@metaplex-foundation/umi"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/create-collection-form.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/create-collection-form.tsx"
+      }
+    ]
+}

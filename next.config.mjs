@@ -12,5 +12,12 @@ const config = {
       },
     ],
   },
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.json$/,
+      type: "json",
+    });
+    return config;
+  },
 };
 export default withMDX(config);

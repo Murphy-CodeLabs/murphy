@@ -1,0 +1,21 @@
+{
+    "name": "distribute-cToken",
+    "type": "registry:block",
+    "title": "Distribute cToken",
+    "description": "A simple distribute cToken form component.",
+    "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react",
+      "@lightprotocol/stateless.js",
+      "@lightprotocol/compressed-token"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/distribute-cToken.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/distribute-cToken.tsx"
+      }
+    ]
+}

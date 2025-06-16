@@ -1,0 +1,61 @@
+{
+    "name": "token-list",
+    "type": "registry:block",
+    "title": "Token List",
+    "description": "A simple token list component.",
+    "registryDependencies": [
+      "input",
+      "button",
+      "form",
+      "card",
+      "sonner",
+      "select",
+      "dialog",
+      "dropdown-menu",
+      "skeleton",
+      "table"
+    ],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react",
+      "millify"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/token-list.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/token-list.tsx"
+      },
+      {
+        "path": "types/assets/index.ts",
+        "type": "registry:file",
+        "target": "types/assets/index.ts"
+      },
+      {
+        "path": "lib/utils.ts",
+        "type": "registry:file",
+        "target": "lib/utils.ts"
+      },
+      {
+        "path": "components/ui/murphy/token-icon.tsx",
+        "type": "registry:file",
+        "target": "components/ui/murphy/token-icon.tsx"
+      },
+      {
+        "path": "public/crypto-logos/solana-logo.svg",
+        "type": "registry:file",
+        "target": "public/crypto-logos/solana-logo.svg"
+      },
+      {
+        "path": "public/crypto-logos/usd-coin-usdc-logo.svg",
+        "type": "registry:file",
+        "target": "public/crypto-logos/usd-coin-usdc-logo.svg"
+      },
+      {
+        "path": "public/crypto-logos/tether-usdt-logo.svg",
+        "type": "registry:file",
+        "target": "public/crypto-logos/tether-usdt-logo.svg"
+      }
+    ]
+}

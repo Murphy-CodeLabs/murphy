@@ -1,0 +1,26 @@
+{
+    "name": "claim-cToken",
+    "type": "registry:block",
+    "title": "Claim cToken",
+    "description": "A simple claim cToken form component.",
+    "registryDependencies": ["input", "button", "form", "card", "sonner", "select", "dialog", "dropdown-menu"],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react",
+      "@lightprotocol/stateless.js",
+      "@lightprotocol/compressed-token"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/claim-cToken.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/claim-cToken.tsx"
+      },
+      {
+        "path": "components/ui/murphy/QrScannerComponent.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/QrScannerComponent.tsx"
+      }
+    ]
+}

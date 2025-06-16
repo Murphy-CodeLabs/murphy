@@ -1,0 +1,21 @@
+{
+    "name": "avatar",
+    "description": "A simple avatar icon",
+    "type": "registry:block",
+    "dependencies":[
+              "@solana/web3.js",
+              "minidenticons"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/avatar.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/avatar.tsx"
+      },
+      {
+        "path": "lib/utils.ts",
+        "type": "registry:file",
+        "target": "lib/utils.ts"
+      }
+    ]
+}
