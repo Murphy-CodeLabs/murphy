@@ -1,0 +1,33 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+    "name": "transfer-nft-form",
+    "type": "registry:block",
+    "title": "Transfer NFT Form",
+    "description": "A simple transfer NFT form component.",
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+    ],
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/transfer-nft-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/transfer-nft-form.tsx"
+        }
+    ]
+}

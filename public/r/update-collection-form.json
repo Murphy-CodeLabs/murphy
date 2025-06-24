@@ -1,0 +1,32 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+    "name": "update-collection-form",
+    "type": "registry:block",
+    "title": "Update Collection Form",
+    "description": "A simple update collection form component.",
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+    ],
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/update-collection-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/update-collection-form.tsx"
+        }
+    ]
+}

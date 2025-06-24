@@ -1,0 +1,173 @@
+---
+title: Transfer NFT Form
+description: A Solana NFT transfer component with shadcn UI styling
+icon: "Send"
+---
+
+<PreviewComponent
+  name={"Transfer NFT Form"}
+  v0JsonFileName={"transfer-nft-form"}
+>
+  <TransferNFTForm />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana and Metaplex dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/spl-token @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Transfer NFT Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/transfer-nft-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { TransferNFTForm } from "@/components/ui/murphy/transfer-nft-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Transfer NFT</h1>
+      <TransferNFTForm />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **NFT Verification**: Automatically verify NFT existence before transfer
+- **Form Validation**: Built-in validation for mint addresses and recipient addresses
+- **Real-time Transfer**: Live feedback during the transfer process
+- **Network Detection**: Automatically detects and displays current network
+- **Transaction Links**: Direct links to view transactions and NFTs on explorers
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Wallet Integration**: Seamless integration with Solana wallet adapters
+- **Transfer Confirmation**: Success confirmation with all transfer details
+
+## Advanced Usage
+
+You can pre-populate the NFT mint address and handle transfer callbacks:
+
+```tsx
+export default function MyPage() {
+  const handleNFTTransferred = (signature: string, recipient: string) => {
+    console.log(`NFT transferred: ${signature} to ${recipient}`);
+  };
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Transfer NFT</h1>
+      <TransferNFTForm
+        className="max-w-md"
+        nftMint="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ"
+        onNFTTransferred={handleNFTTransferred}
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `nftMint` | `string` | `undefined` | Pre-populate NFT mint address |
+| `onNFTTransferred` | `(signature: string, recipient: string) => void` | `undefined` | Callback fired when NFT is transferred |
+| `className` | `string` | `undefined` | Additional CSS classes |
+
+## Usage Examples
+
+### Basic Transfer
+
+```tsx
+import { TransferNFTForm } from "@/components/ui/murphy/transfer-nft-form";
+
+export default function TransferPage() {
+  return (
+    <div className="max-w-md mx-auto">
+      <TransferNFTForm />
+    </div>
+  );
+}
+```
+
+### Pre-filled NFT Mint
+
+```tsx
+import { TransferNFTForm } from "@/components/ui/murphy/transfer-nft-form";
+
+export default function TransferSpecificNFT() {
+  return (
+    <div className="max-w-md mx-auto">
+      <TransferNFTForm 
+        nftMint="ABC123...XYZ789"
+      />
+    </div>
+  );
+}
+```
+
+### With Transfer Callback
+
+```tsx
+import { TransferNFTForm } from "@/components/ui/murphy/transfer-nft-form";
+import { toast } from "sonner";
+
+export default function TransferWithCallback() {
+  const handleTransferComplete = (signature: string, recipient: string) => {
+    // Custom logic after transfer
+    toast.success(`NFT sent to ${recipient.slice(0, 8)}...`);
+    
+    // Update your app state, refresh NFT list, etc.
+    console.log('Transfer completed:', signature);
+  };
+
+  return (
+    <div className="max-w-md mx-auto">
+      <TransferNFTForm 
+        onNFTTransferred={handleTransferComplete}
+      />
+    </div>
+  );
+}
+```
+
+## Notes
+
+- Only the current owner of the NFT can transfer it
+- Make sure your wallet has the necessary permissions and owns the NFT
+- The form will automatically verify NFT existence when you enter a mint address
+- Transfers are processed on-chain and may take a few seconds to complete
+- Both standard NFTs and compressed NFTs (cNFTs) are supported
+- Gas fees will be deducted from your wallet for the transfer transaction
+
+## Related Components
+
+- [Mint NFT Form](/docs/onchainkit/Metaplex/mint-nft-form) - Create new NFTs
+- [View NFT Form](/docs/onchainkit/Metaplex/get-nft-form) - Look up NFT information
+- [Mint CNFT Form](/docs/onchainkit/Metaplex/mint-cnft-form) - Create compressed NFTs
+- [Create Collection Form](/docs/onchainkit/Metaplex/create-collection-form) - Create NFT collections
