@@ -40,7 +40,7 @@ icon: Wallet
 components/providers/wallet-provider.tsx
 
 ```tsx
-"use client"
+"use client";
 import React, { useState, useMemo, createContext, useCallback } from "react";
 import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
 import type { Adapter } from "@solana/wallet-adapter-base";
@@ -78,8 +78,8 @@ interface ModalContextState {
   availableEndpoints: string[];
   currentEndpointIndex: number;
   isMainnet: boolean;
-  walletType: 'standard' | 'lazorkit';
-  setWalletType: (type: 'standard' | 'lazorkit') => void;
+  walletType: "standard" | "lazorkit";
+  setWalletType: (type: "standard" | "lazorkit") => void;
 }
 
 export const ModalContext = createContext<ModalContextState>({
@@ -90,7 +90,7 @@ export const ModalContext = createContext<ModalContextState>({
   availableEndpoints: [],
   currentEndpointIndex: 0,
   isMainnet: true,
-  walletType: 'standard',
+  walletType: "standard",
   setWalletType: () => null,
 });
 
@@ -150,7 +150,9 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
     [props.wallets]
   );
   const [isOpen, setIsOpen] = useState(false);
-  const [walletType, setWalletType] = useState<'standard' | 'lazorkit'>('standard');
+  const [walletType, setWalletType] = useState<"standard" | "lazorkit">(
+    "standard"
+  );
 
   return (
     <ModalContext.Provider
@@ -186,22 +188,22 @@ components/providers/lazorkit-wallet-context.tsx
 
 ```tsx
 // components/providers/lazorkit-wallet-context.tsx
-"use client"
+"use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react"
-import dynamic from "next/dynamic"
+import React, { createContext, useContext, useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 
 // Interface for context
 interface LazorKitWalletContextState {
-  isConnected: boolean
-  isLoading: boolean
-  publicKey: string | null
-  smartWalletAuthorityPubkey: string | null
-  error: string | null
-  credentialId?: string | null
-  connect: () => Promise<void>
-  disconnect: () => void
-  signMessage: (instruction: any) => Promise<string>
+  isConnected: boolean;
+  isLoading: boolean;
+  publicKey: string | null;
+  smartWalletAuthorityPubkey: string | null;
+  error: string | null;
+  credentialId?: string | null;
+  connect: () => Promise<void>;
+  disconnect: () => void;
+  signMessage: (instruction: any) => Promise<string>;
 }
 
 // Create context with default values
@@ -215,19 +217,31 @@ export const LazorKitWalletContext = createContext<LazorKitWalletContextState>({
   connect: async () => {},
   disconnect: () => {},
   signMessage: async () => "",
-})
+});
 
 // Export hook to use context
-export const useLazorKitWalletContext = () => useContext(LazorKitWalletContext)
+export const useLazorKitWalletContext = () => useContext(LazorKitWalletContext);
 
 // Client-only component
-const LazorKitWalletProviderClient = dynamic(() => import('./client-lazorkit-provider').then(mod => mod.ClientLazorKitProvider), {
-  ssr: false
-})
+const LazorKitWalletProviderClient = dynamic(
+  () =>
+    import("./client-lazorkit-provider").then(
+      (mod) => mod.ClientLazorKitProvider
+    ),
+  {
+    ssr: false,
+  }
+);
 
 // Provider Component
-export function LazorKitWalletProvider({ children }: { children: React.ReactNode }) {
-  return <LazorKitWalletProviderClient>{children}</LazorKitWalletProviderClient>
+export function LazorKitWalletProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <LazorKitWalletProviderClient>{children}</LazorKitWalletProviderClient>
+  );
 }
 ```
 
@@ -238,20 +252,24 @@ export function LazorKitWalletProvider({ children }: { children: React.ReactNode
 components/providers/client-lazorkit-provider.tsx
 
 ```tsx
-"use client"
+"use client";
 
-import React, { useEffect } from "react"
-import { useWallet } from "@lazorkit/wallet"
-import { LazorKitWalletContext } from "./lazorkit-wallet-context"
+import React, { useEffect } from "react";
+import { useWallet } from "@lazorkit/wallet";
+import { LazorKitWalletContext } from "./lazorkit-wallet-context";
 
-export function ClientLazorKitProvider({ children }: { children: React.ReactNode }) {
-  const walletState = useWallet()
-  
+export function ClientLazorKitProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const walletState = useWallet();
+
   return (
     <LazorKitWalletContext.Provider value={walletState}>
       {children}
     </LazorKitWalletContext.Provider>
-  )
+  );
 }
 ```
 
@@ -259,7 +277,7 @@ export function ClientLazorKitProvider({ children }: { children: React.ReactNode
   <Step>
   Create file .env
 
-  .env
+.env
 
 ```bash
 # Using mainnet or testnet
@@ -277,24 +295,26 @@ NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET="https://solana-devnet.g.alchemy.com/v2/your-a
 Add WalletProvider into root layout
 
 ```tsx
-import type React from "react"
-import { ThemeProvider } from 'next-themes'
-import "@/app/globals.css"
+import type React from "react";
+import { ThemeProvider } from "next-themes";
+import "@/app/globals.css";
 import { WalletProvider } from "@/components/providers/wallet-provider";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <WalletProvider>
-            {children}
-          </WalletProvider>
+          <WalletProvider>{children}</WalletProvider>
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
 ```
 
@@ -309,17 +329,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/connect-wallet-button.json`}
 />
 
-  After successful installation, you can find the Connect Wallet Button file in ```components/ui/murphy```
+After successful installation, you can find the Connect Wallet Button file in `components/ui/murphy`
+
   </Step>
 </Steps>
 
 ### Usage basic
 
 ```tsx
-"use client"
+"use client";
 
-import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
-import { Wallet } from "lucide-react"
+import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button";
+import { Wallet } from "lucide-react";
 ```
 
 ```tsx
@@ -334,7 +355,7 @@ export default function MyPage() {
         </ConnectWalletButton>
       </div>
     </div>
-  )
+  );
 }
 ```
 
@@ -369,4 +390,13 @@ You can customize the button appearance by passing props:
       default: "false",
     },
   }}
+/>
+
+### Tutorial Video
+
+<TutorialVideoDialog
+  animationStyle="from-bottom"
+  videoSrc="https://www.youtube.com/embed/dQw4w9WgXcQ?si=iGPw_RYxfAY6bCSo"
+  thumbnailSrc="/images/thumbnails/tutorial-video-thumbnail.png"
+  thumbnailAlt="Tutorial Video"
 />
