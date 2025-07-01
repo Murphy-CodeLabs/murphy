@@ -1,0 +1,12 @@
+{
+    "title": "Token Metadata",
+    "description": "Digital ownership standard",
+    "icon": "Coins",
+    "pages": [
+        "create-collection-form",
+        "mint-nft-form",
+        "transfer-nft-form",
+        "update-collection-form",
+        "view-nft-form"
+    ]
+}

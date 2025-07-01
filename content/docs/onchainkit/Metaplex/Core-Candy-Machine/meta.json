@@ -2,5 +2,7 @@
     "title": "Core Candy Machine",
     "description": "Core Asset launchpad",
     "icon": "Zap",
-    "pages": []
+    "pages": [
+        "core-candy-machine-form"
+    ]
 }

@@ -8,6 +8,13 @@ import { MintCNFT } from "./mint-cnft-form";
 import { MintNFT } from "./mint-nft-form";
 import { SwapForm } from "./swap-token-form";
 import CreateCollectionForm from "./create-collection-form";
+import TransferNFTForm from "./transfer-nft-form";
+import UpdateCollectionForm from "./update-collection-form";
+import CandyMachineForm from "./candy-machine-form";
+import CoreCandyMachineForm from "./core-candy-machine-form";
+import BubblegumLegacyForm from "./bubblegum-legacy-form";
+import ImprovedCNFTManager from "./improved-cnft-manager";
+import CompressedNFTViewer from "./compressed-nft-viewer"
 import { CreateMerkleTree } from "./create-merkleTree-form";
 import { TokenList } from "./token-list";
 import { StakeForm } from "./stake-token-form";
@@ -36,6 +43,13 @@ export {
   MintNFT,
   SwapForm,
   CreateCollectionForm,
+  TransferNFTForm,
+  UpdateCollectionForm,
+  CompressedNFTViewer,
+  ImprovedCNFTManager,
+  CoreCandyMachineForm,
+  BubblegumLegacyForm,
+  CandyMachineForm,
   CreateMerkleTree,
   TokenList,
   StakeForm,

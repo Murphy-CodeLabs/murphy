@@ -4,6 +4,8 @@
     "icon": "TreePine",
     "pages": [
         "mint-cnft-form",
-        "create-merkleTree-form"
+        "create-merkleTree-form",
+        "compressed-nft-viewer",
+        "improved-cnft-manager"
     ]
 }
