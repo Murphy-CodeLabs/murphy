@@ -1,0 +1,80 @@
+---
+title: Recurring History List
+icon: History
+description: Murphy component to view Jupiter Recurring DCA Order history on Solana mainnet
+---
+
+import { RecurringHistoryList } from "@/components/ui/murphy/Jupiter-Recurring/RecurringHistoryList";
+import { PreviewComponent } from "@/components/docs/preview-component";
+
+> **Warning:** This is a test UI. Data in the preview is only a sample, not real on-chain data.
+
+<PreviewComponent name={"Recurring History List"}>
+  <RecurringHistoryList />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react sonner"}/>
+  </Step>
+  <Step>
+    Add Wallet Provider
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+  </Step>
+  <Step>
+    Add RecurringHistoryList
+    <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/RecurringHistoryList.json`} />
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { RecurringHistoryList } from "@/components/ui/murphy/Jupiter-Recurring/RecurringHistoryList";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">My Recurring Order History</h1>
+      <RecurringHistoryList />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Auto-fetch**: Automatically loads data when wallet connects (no manual refresh needed)
+- **Real-time data**: View all historical recurring DCA orders from Jupiter Recurring API (mainnet, no mock)
+- **Interactive cards**: Each order displayed in RecurringOrderCard with copy/view functionality
+- **Status filtering**: View completed, cancelled, expired, or failed orders
+- **Murphy UI**: Card layout, loading/error/empty states, responsive design
+- **Fully on-chain**: No test/fake data, all real Solana mainnet data
+
+## Props
+
+| Name        | Type   | Default   | Description                       |
+|-------------|--------|-----------|-----------------------------------|
+| `className` | string | undefined | Additional CSS classes            |
+
+## Types
+
+```ts
+export interface RecurringOrder {
+  id: string;
+  inputMint: string;
+  outputMint: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  [key: string]: any;
+}
+```
+
+## API
+
+- [Jupiter Recurring Orders API](https://dev.jup.ag/docs/recurring-api/get-recurring-orders)
+- [Solscan](https://solscan.io/) 

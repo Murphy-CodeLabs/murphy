@@ -1,0 +1,87 @@
+---
+title: Recurring Order Widget
+icon: Settings
+description: Murphy component to manage and filter Jupiter Recurring DCA Orders on Solana mainnet
+---
+
+import { RecurringOrderWidget } from "@/components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget";
+import { PreviewComponent } from "@/components/docs/preview-component";
+
+<PreviewComponent name={"Recurring Order Widget"}>
+  <RecurringOrderWidget />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react sonner"}/>
+  </Step>
+  <Step>
+    Add Wallet Provider
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+  </Step>
+  <Step>
+    Add RecurringOrderWidget
+    <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/RecurringOrderWidget.json`} />
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { RecurringOrderWidget } from "@/components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">My Recurring Orders</h1>
+      <RecurringOrderWidget />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Auto-fetch**: Automatically loads data when wallet connects (no manual refresh needed)
+- **Advanced filtering**: Filter by recurring type (Time-based, Price-based, All) and order status (Active, History)
+- **Extended status filtering**: When viewing history, filter by specific statuses (All, Completed, Cancelled, Expired, Failed)
+- **Failed transaction inclusion**: Option to include or exclude failed transactions
+- **Consistent UI**: Uses RecurringOrderCard for uniform display across all components
+- **Real-time data**: All data from Jupiter Recurring API (mainnet, no mock)
+- **Murphy UI**: Responsive design with proper spacing and layout
+- **Fully on-chain**: No test/fake data, all real Solana mainnet data
+
+## Props
+
+| Name        | Type   | Default   | Description                       |
+|-------------|--------|-----------|-----------------------------------|
+| `className` | string | undefined | Additional CSS classes            |
+
+## Types
+
+```ts
+export interface RecurringOrder {
+  id: string;
+  inputMint: string;
+  outputMint: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  [key: string]: any;
+}
+
+export type RecurringType = "time" | "price" | "all";
+export type OrderStatus = "active" | "history";
+```
+
+## API
+
+- [Jupiter Recurring Orders API](https://dev.jup.ag/docs/recurring-api/get-recurring-orders)
+- [Solscan](https://solscan.io/)
+
+---
+
+**Note:** This component is fully mainnet, no mock/test data, and is composable for any Solana dApp, dashboard, or wallet. 

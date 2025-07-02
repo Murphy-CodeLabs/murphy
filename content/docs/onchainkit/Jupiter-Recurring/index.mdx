@@ -1,0 +1,198 @@
+---
+title: "Jupiter Recurring DCA"
+description: "Complete React components for Jupiter Recurring DCA orders on Solana - build automated trading UIs in minutes"
+---
+
+# 📖 Jupiter Recurring DCA
+
+Transform your Solana dApp with **automated Dollar-Cost Averaging (DCA)** using Jupiter's Recurring API. This Murphy SDK extension provides production-ready React components that let users set up, monitor, and manage recurring token purchases with zero configuration.
+
+## 🚀 Why Add Recurring DCA to Your dApp?
+
+- **Increase User Retention**: Automated purchases keep users engaged with your platform
+- **Reduce Friction**: One-time setup for continuous trading
+- **Professional UX**: Enterprise-grade components with real-time updates
+- **Mainnet Ready**: Production components using Jupiter's official API
+
+## 📦 Components Overview
+
+### `RecurringSetupForm`
+**Purpose**: Complete form for creating new recurring DCA orders
+- **Why you need this**: Streamlined onboarding with wallet integration and real-time validation
+- **Why you need this**: Supports time-based and price-based triggers with flexible parameters
+
+### `RecurringOrderWidget` 
+**Purpose**: Dashboard widget displaying user's active and historical orders
+- **Why you need this**: Real-time order monitoring with filtering by type and status
+- **Why you need this**: Built-in refresh and failed transaction handling
+
+### `RecurringOrderCard`
+**Purpose**: Individual order display with status indicators and key metrics
+- **Why you need this**: Clean, scannable order information with visual status cues
+- **Why you need this**: Responsive design that works in any layout
+
+### `RecurringActiveOrders`
+**Purpose**: Focused view of only active recurring orders
+- **Why you need this**: Quick overview for users managing ongoing DCA strategies
+- **Why you need this**: Optimized for performance with minimal API calls
+
+### `RecurringHistoryList`
+**Purpose**: Historical order tracking with completion status
+- **Why you need this**: Audit trail and performance analysis for users
+- **Why you need this**: Filterable by completion status (completed, cancelled, expired, failed)
+
+### `CancelRecurringOrder`
+**Purpose**: Order cancellation interface with transaction signing
+- **Why you need this**: Safe order termination with proper wallet integration
+- **Why you need this**: Supports both time-based and price-based order types
+
+### `useRecurringJupiter` Hook
+**Purpose**: Custom hook for fetching and managing recurring order data
+- **Why you need this**: Reusable data layer for building custom UIs
+- **Why you need this**: Handles API errors gracefully with retry logic
+
+## 🎨 Design & Customization
+
+All components follow **Murphy SDK** design principles:
+- **Atomic & Composable**: Mix and match components for your exact needs
+- **Shadcn/Tailwind**: Consistent styling that adapts to your theme
+- **Real Data Only**: No mocks or test data - everything connects to mainnet/devnet
+- **TypeScript**: Full type safety with comprehensive interfaces
+
+### Environment Support
+- **Mainnet**: Production trading with real SOL/USDC/USDT
+- **Devnet**: Testing with devnet tokens and mock transactions
+- **Configurable**: Set `NEXT_PUBLIC_CLUSTER` for environment switching
+
+## 🚀 Quick Start
+
+```tsx
+import { RecurringSetupForm, RecurringOrderWidget } from "@/components/ui/murphy/Jupiter-Recurring";
+
+export default function MyDCAApp() {
+  return (
+    <div className="space-y-6">
+      <RecurringSetupForm onOrderCreated={(orderId) => console.log('New order:', orderId)} />
+      <RecurringOrderWidget />
+    </div>
+  );
+}
+```
+
+## 🔗 Live Demo
+
+**View the live demo on Vercel → [https://murphy-sdk.vercel.app/jupiter-dashboard](https://murphy-sdk.vercel.app/jupiter-dashboard)**
+
+Experience the full Jupiter Recurring DCA workflow with real Solana mainnet integration, including:
+- ✅ **Cluster Toggle**: Switch between mainnet and devnet
+- ✅ **Wallet Integration**: Connect with Phantom and other Solana wallets
+- ✅ **Real API Calls**: All components use Jupiter's official Recurring API
+- ✅ **Complete Workflow**: Create, monitor, and cancel recurring orders
+- ✅ **Responsive Design**: Works on desktop and mobile devices
+
+---
+
+## 📋 Deployment Guide
+
+### Deploy to Vercel
+
+Follow these steps to deploy your Jupiter Recurring DCA feature branch:
+
+#### 1. Connect GitHub Repository
+1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+2. Click "New Project"
+3. Import your GitHub repository
+4. Select the branch containing your Recurring DCA UI work
+
+#### 2. Configure Environment Variables
+Add these required environment variables in Vercel:
+
+```bash
+# Required for Solana connection
+NEXT_PUBLIC_CLUSTER=mainnet  # or devnet for testing
+
+# Jupiter API (optional - uses public endpoint by default)
+NEXT_PUBLIC_JUP_API=https://lite-api.jup.ag
+
+# Solana RPC URLs
+NEXT_PUBLIC_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET=https://api.devnet.solana.com
+
+# Use Mainnet by default
+NEXT_PUBLIC_USE_MAINNET=true
+
+# Base URL for the application
+NEXT_PUBLIC_BASE_URL=https://your-project.vercel.app
+```
+
+#### 3. Build Settings
+Vercel will automatically detect Next.js settings. Ensure:
+- **Framework Preset**: Next.js
+- **Build Command**: `npm run build` or `pnpm build`
+- **Output Directory**: `.next` (default)
+
+#### 4. Deploy & Share
+1. Click "Deploy" to trigger the build
+2. Wait for deployment to complete
+3. Share your deployment URL: `https://your-project.vercel.app/jupiter-dashboard`
+
+### Required Vercel Settings
+
+**For Shadcn/UI Components:**
+- No additional configuration needed - components use CSS-in-JS
+
+**For Tailwind CSS:**
+- Vercel automatically processes Tailwind classes
+- Ensure `tailwind.config.js` is in your project root
+
+**For React/TypeScript:**
+- Vercel auto-detects TypeScript configuration
+- Ensure `tsconfig.json` is properly configured
+
+**For Solana Wallet Integration:**
+- No additional configuration needed
+- Components use `@solana/wallet-adapter-react` which works out of the box
+
+### Post-Deployment Testing
+1. **Test Wallet Connections**: Connect Phantom or other Solana wallets
+2. **Verify Cluster Toggle**: Switch between mainnet and devnet
+3. **Test Order Creation**: Create a recurring DCA order (use devnet for testing)
+4. **Check Order Monitoring**: Verify that orders display correctly
+5. **Test Order Cancellation**: Cancel an existing order
+6. **Mobile Responsiveness**: Test on mobile devices
+
+### Local Development Setup
+
+For local development, create a `.env.local` file:
+
+```bash
+# Jupiter Recurring DCA Demo Environment Variables
+
+# Cluster Configuration (mainnet or devnet)
+NEXT_PUBLIC_CLUSTER=mainnet
+
+# Jupiter API Configuration (optional - uses public endpoint by default)
+NEXT_PUBLIC_JUP_API=https://lite-api.jup.ag
+
+# Solana RPC URLs
+NEXT_PUBLIC_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
+NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET=https://api.devnet.solana.com
+
+# Use Mainnet by default
+NEXT_PUBLIC_USE_MAINNET=true
+
+# Base URL for the application
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
+
+Then run:
+```bash
+npm install
+npm run dev
+```
+
+Visit `http://localhost:3000/jupiter-dashboard` to see the demo.
+
+---
+
+> **Built with Murphy SDK • Powered by Jupiter Recurring API • Deploy on Vercel** 

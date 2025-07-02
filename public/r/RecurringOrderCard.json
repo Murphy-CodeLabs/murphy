@@ -1,0 +1,26 @@
+{
+  "name": "RecurringOrderCard",
+  "type": "component",
+  "description": "Murphy component to display a single Jupiter Recurring DCA Order on Solana mainnet",
+  "files": [
+    "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react",
+    "sonner"
+  ],
+  "category": "Jupiter Recurring",
+  "keywords": [
+    "jupiter",
+    "recurring",
+    "dca",
+    "order",
+    "card",
+    "display",
+    "solana",
+    "wallet"
+  ],
+  "author": "Murphy",
+  "license": "MIT"
+} 
