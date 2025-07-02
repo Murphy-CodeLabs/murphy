@@ -1,0 +1,125 @@
+---
+title: Cancel Recurring Order
+icon: Trash2
+description: Murphy component to cancel Jupiter Recurring DCA Orders on Solana mainnet
+---
+
+import { CancelRecurringOrder } from "@/components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder";
+import { PreviewComponent } from "@/components/docs/preview-component";
+
+<PreviewComponent name={"Cancel Recurring Order"}>
+  <CancelRecurringOrder />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react sonner"}/>
+  </Step>
+  <Step>
+    Add Wallet Provider
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+  </Step>
+  <Step>
+    Add CancelRecurringOrder
+    <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/CancelRecurringOrder.json`} />
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { CancelRecurringOrder } from "@/components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Cancel Recurring Orders</h1>
+      <CancelRecurringOrder />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Real-time cancellation**: Cancel recurring DCA orders directly on Solana mainnet
+- **Two-step process**: Get cancellation transaction from Jupiter API, then execute it
+- **Wallet integration**: Requires connected wallet with signing capability
+- **Type selection**: Support for both time-based and price-based recurring orders
+- **Safety warnings**: Clear warning about permanent cancellation
+- **Result feedback**: Success/error messages with transaction details
+- **Murphy UI**: Consistent design with proper loading states and alerts
+- **Fully on-chain**: No test/fake data, all real Solana mainnet transactions
+
+## How It Works
+
+1. **Get Order ID**: User enters the order ID they want to cancel
+2. **Select Type**: Choose between time-based or price-based recurring order
+3. **API Call**: Component calls Jupiter's `/cancelOrder` endpoint to get transaction
+4. **Execute**: Component calls Jupiter's `/execute` endpoint to submit transaction
+5. **Result**: User receives confirmation with transaction details
+
+## Props
+
+| Name        | Type   | Default   | Description                       |
+|-------------|--------|-----------|-----------------------------------|
+| `className` | string | undefined | Additional CSS classes            |
+
+## Types
+
+```ts
+export type RecurringType = "time" | "price";
+
+interface CancelOrderResponse {
+  requestId: string;
+  transaction: string;
+}
+
+interface CancelOrderError {
+  code: number;
+  error: string;
+  status: string;
+}
+```
+
+## API Endpoints
+
+- **Cancel Order**: `POST https://lite-api.jup.ag/recurring/v1/cancelOrder`
+- **Execute Transaction**: `POST https://lite-api.jup.ag/recurring/v1/execute`
+
+## Request Body
+
+```json
+{
+  "order": "4DWzP4TdTsuwvYMaMWrRqzya4UTFKFoVjfUWNWh8zhzd",
+  "user": "wallet_public_key",
+  "recurringType": "time"
+}
+```
+
+## Response
+
+**Success Response:**
+```json
+{
+  "requestId": "36779346-ae51-41e9-97ce-8613c8c50553",
+  "transaction": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAgORL7cu4ZNuxh1wI9W7GVURyr3A06dH348HDpIQzcAJ4oZOZHXAukWalAX/odOiV55UZa1ePBg8d2tRKQyqCjV6C/H8IQcrfZR4QeOJFykenP3QJznc6vNpqe2D57HTD7Gd1R4MYi595YUO8ViNwpWb17+Q9DxkVcz5fWpSqjtDyiji2RfCl7yoUfzkV42QPexQNFjBK5/+pJhV8QuWShN6r9vLZM5XJNS670dgAgf7wC+wCLLIFWHgjgWx32LJMnJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADBkZv5SEXMv/srbpyw5vnvIzlu8X3EmssQ5s6QAAAAAabiFf+q4GE+2h/Y0YYwDXaxDncGus7VZig8AAAAAABBt324ddloZPZy+FGzut5rBy0he1fWzeROoz1hX7/AKmMlyWPTiSJ8bs9ECkUjg2DC1oTmdr/EIQEjnvY2+n4WbB1qAZjecpv43A3/wwo1VSm5NY22ehRjP5uuuk/Ujb+tSfUXWQOPsFfYV1bDiOlSpa4PwuCC/cGNfJDSsZAzATG+nrzvtutOj1l82qryXQxsbvkwtL24OR8pgIDRS9dYVCj/auTzJLgPke1v9c3puAy81rBYgsabmuLUTEQsZyVAwcABQL9WQEABwAJA0ANAwAAAAAADA0AAg0IAQQDBQYJCgsMCBYHIWKotyLz"
+}
+```
+
+**Error Response:**
+```json
+{
+  "code": 400,
+  "error": "Failed to deserialize account data: failed to fill whole buffer",
+  "status": "Bad Request"
+}
+```
+
+## API Reference
+
+- [Jupiter Recurring API - Cancel Order](https://dev.jup.ag/docs/recurring-api/cancel-order)
+- [Jupiter Recurring API - Execute Order](https://dev.jup.ag/docs/recurring-api/execute-order) 

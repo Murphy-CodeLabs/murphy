@@ -6,9 +6,14 @@ import {
   ConnectionProvider as SolanaConnectionProvider,
   ConnectionProviderProps,
 } from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { TxnSettingsProvider } from "@/components/ui/murphy/txn-settings";
 import { LazorKitWalletProvider } from "./lazorkit-wallet-context";
+
+// Import wallet adapter CSS
+import "@solana/wallet-adapter-react-ui/styles.css";
+
 // Create wrapper components
 // @ts-ignore - Ignore React 19 compatibility error
 const ConnectionProviderWrapper = (props: ConnectionProviderProps) => (
@@ -125,9 +130,11 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
     >
       <ConnectionProviderWrapper endpoint={endpoint}>
         <WalletProviderWrapper wallets={wallets} autoConnect>
-          <LazorKitWalletProvider>
-            <TxnSettingsProvider>{children}</TxnSettingsProvider>
-          </LazorKitWalletProvider>
+          <WalletModalProvider>
+            <LazorKitWalletProvider>
+              <TxnSettingsProvider>{children}</TxnSettingsProvider>
+            </LazorKitWalletProvider>
+          </WalletModalProvider>
         </WalletProviderWrapper>
       </ConnectionProviderWrapper>
     </ModalContext.Provider>
