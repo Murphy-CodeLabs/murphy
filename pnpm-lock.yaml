@@ -35,6 +35,12 @@ importers:
       '@metaplex-foundation/mpl-bubblegum':
         specifier: ^4.4.0
         version: 4.4.0(@metaplex-foundation/umi@1.2.0)
+      '@metaplex-foundation/mpl-core':
+        specifier: ^1.4.1
+        version: 1.4.1(@metaplex-foundation/umi@1.2.0)(@noble/hashes@1.7.2)
+      '@metaplex-foundation/mpl-core-candy-machine':
+        specifier: ^0.3.0
+        version: 0.3.0(@metaplex-foundation/mpl-core@1.4.1(@metaplex-foundation/umi@1.2.0)(@noble/hashes@1.7.2))(@metaplex-foundation/umi@1.2.0)
       '@metaplex-foundation/mpl-token-metadata':
         specifier: ^3.4.0
         version: 3.4.0(@metaplex-foundation/umi@1.2.0)
@@ -1085,6 +1091,23 @@ packages:
     peerDependencies:
       '@metaplex-foundation/umi': '>= 0.8.9 <= 1'
 
+  '@metaplex-foundation/mpl-core-candy-machine@0.3.0':
+    resolution: {integrity: sha512-J2eo6aggZ0BrKyJ6qusEfANM7eSsGzneyLTp/KxfcxUTI0etzdAbivj+cBzTLYVzTC/lHNyvSDA3J96lYwFaSA==}
+    peerDependencies:
+      '@metaplex-foundation/mpl-core': '>= 0.4.7'
+      '@metaplex-foundation/umi': '>= 0.8.2 <= 1'
+
+  '@metaplex-foundation/mpl-core@1.4.1':
+    resolution: {integrity: sha512-fSwiiZeonD0n0TE3809RFMevRVogWxB0MHeZciGe9pd1FlkbB7zD7VHSE97EWWiymbDLimvjq76kdoCpXrtFvQ==}
+    peerDependencies:
+      '@metaplex-foundation/umi': '>=0.8.2 <= 1.0'
+      '@noble/hashes': ^1.3.1
+
+  '@metaplex-foundation/mpl-token-metadata@3.0.0-alpha.27':
+    resolution: {integrity: sha512-MSERz5HB2XZ/K+FOMh0tPeqcZZEpGVzdy7e+Cy3MHg7x52JtbGBDtWIoxBJn1OBZayCBfX9gytEoqrXe2YRGqQ==}
+    peerDependencies:
+      '@metaplex-foundation/umi': ^0.8.2
+
   '@metaplex-foundation/mpl-token-metadata@3.2.1':
     resolution: {integrity: sha512-26W1NhQwDWmLOg/pBRYut7x/vEs/5kFS2sWVEY5/X0f2jJOLhnd4NaZQcq+5u+XZsXvm1jq2AtrRGPNK43oqWQ==}
     peerDependencies:
@@ -1204,6 +1227,10 @@ packages:
 
   '@mongodb-js/saslprep@1.2.2':
     resolution: {integrity: sha512-EB0O3SCSNRUFk66iRCpI+cXzIjdswfCs7F6nOC3RAGJ7xr5YhaicvsRwJ9eyzYvYRlCSDUO/c7g4yNulxKC1WA==}
+
+  '@msgpack/msgpack@3.1.2':
+    resolution: {integrity: sha512-JEW4DEtBzfe8HvUYecLU9e6+XJnKDlUAIve8FvPzF3Kzs6Xo/KuZkZJsDH0wJXl/qEZbeeE7edxDNY3kMs39hQ==}
+    engines: {node: '>= 18'}
 
   '@mswjs/interceptors@0.37.6':
     resolution: {integrity: sha512-wK+5pLK5XFmgtH3aQ2YVvA3HohS3xqV/OxuVOdNx9Wpnz7VE/fnC+e1A7ln6LFYeck7gOJ/dsZV6OLplOtAJ2w==}
@@ -8141,6 +8168,26 @@ snapshots:
       '@noble/hashes': 1.7.2
       merkletreejs: 0.3.11
 
+  '@metaplex-foundation/mpl-core-candy-machine@0.3.0(@metaplex-foundation/mpl-core@1.4.1(@metaplex-foundation/umi@1.2.0)(@noble/hashes@1.7.2))(@metaplex-foundation/umi@1.2.0)':
+    dependencies:
+      '@metaplex-foundation/mpl-core': 1.4.1(@metaplex-foundation/umi@1.2.0)(@noble/hashes@1.7.2)
+      '@metaplex-foundation/mpl-token-metadata': 3.0.0-alpha.27(@metaplex-foundation/umi@1.2.0)
+      '@metaplex-foundation/mpl-toolbox': 0.9.4(@metaplex-foundation/umi@1.2.0)
+      '@metaplex-foundation/umi': 1.2.0
+      '@noble/hashes': 1.7.2
+      merkletreejs: 0.3.11
+
+  '@metaplex-foundation/mpl-core@1.4.1(@metaplex-foundation/umi@1.2.0)(@noble/hashes@1.7.2)':
+    dependencies:
+      '@metaplex-foundation/umi': 1.2.0
+      '@msgpack/msgpack': 3.1.2
+      '@noble/hashes': 1.7.2
+
+  '@metaplex-foundation/mpl-token-metadata@3.0.0-alpha.27(@metaplex-foundation/umi@1.2.0)':
+    dependencies:
+      '@metaplex-foundation/mpl-toolbox': 0.9.4(@metaplex-foundation/umi@1.2.0)
+      '@metaplex-foundation/umi': 1.2.0
+
   '@metaplex-foundation/mpl-token-metadata@3.2.1(@metaplex-foundation/umi@1.2.0)':
     dependencies:
       '@metaplex-foundation/mpl-toolbox': 0.9.4(@metaplex-foundation/umi@1.2.0)
@@ -8285,6 +8332,8 @@ snapshots:
   '@mongodb-js/saslprep@1.2.2':
     dependencies:
       sparse-bitfield: 3.0.3
+
+  '@msgpack/msgpack@3.1.2': {}
 
   '@mswjs/interceptors@0.37.6':
     dependencies:

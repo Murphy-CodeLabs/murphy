@@ -1,0 +1,106 @@
+---
+title: Update Collection Form
+description: A Solana NFT collection update component with shadcn UI styling
+icon: "Settings"
+---
+
+<PreviewComponent
+  name={"Update Collection Form"}
+  v0JsonFileName={"update-collection-form"}
+>
+  <UpdateCollectionForm />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Update Collection Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/update-collection-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { UpdateCollectionForm } from "@/components/ui/murphy/update-collection-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Update NFT Collection</h1>
+      <UpdateCollectionForm />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Load Existing Metadata**: Automatically fetch and populate current collection metadata
+- **Form Validation**: Built-in validation for mint addresses and metadata URIs
+- **Real-time Updates**: Live feedback during the update process
+- **Network Detection**: Automatically detects and displays current network
+- **Transaction Links**: Direct links to view transactions and collections on explorers
+- **Error Handling**: Comprehensive error handling with user-friendly messages
+- **Wallet Integration**: Seamless integration with Solana wallet adapters
+
+## Advanced Usage
+
+You can pre-populate the collection mint address and handle update callbacks:
+
+```tsx
+export default function MyPage() {
+  const handleCollectionUpdated = (collectionMint: string) => {
+    console.log(`Collection updated: ${collectionMint}`);
+  };
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Update Collection</h1>
+      <UpdateCollectionForm
+        className="max-w-md"
+        collectionMint="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ"
+        onCollectionUpdated={handleCollectionUpdated}
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `collectionMint` | `string` | `undefined` | Pre-populate collection mint address |
+| `onCollectionUpdated` | `(mint: string) => void` | `undefined` | Callback fired when collection is updated |
+| `className` | `string` | `undefined` | Additional CSS classes |
+
+## Notes
+
+- Only the collection authority can update collection metadata
+- Make sure your wallet has the necessary permissions to update the collection
+- The form will automatically load existing metadata when a valid mint address is provided
+- Updates are processed on-chain and may take a few seconds to complete

@@ -1,0 +1,8 @@
+{
+    "title": "Candy Machine",
+    "description": "TM NFT launchpad",
+    "icon": "Rocket",
+    "pages": [
+        "candy-machine-form"
+    ]
+}

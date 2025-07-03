@@ -1,0 +1,45 @@
+---
+title: Bubblegum Legacy Form
+description: A Metaplex Bubblegum v1 (legacy) compressed NFT creation component with shadcn UI styling
+---
+
+<PreviewComponent
+  name={"Bubblegum Legacy Form"}
+  v0JsonFileName={"bubblegum-legacy-form"}
+>
+  <BubblegumLegacyForm className="max-w-4xl" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Metaplex Bubblegum v1 dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters @metaplex-foundation/mpl-token-metadata @metaplex-foundation/mpl-bubblegum @metaplex-foundation/umi"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Bubblegum Legacy Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/bubblegum-legacy-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { BubblegumLegacyForm } from "@/components/ui/murphy/bubblegum-legacy-form";

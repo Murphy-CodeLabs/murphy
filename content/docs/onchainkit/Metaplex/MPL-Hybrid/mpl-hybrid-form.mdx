@@ -1,0 +1,54 @@
+---
+title: MPL Hybrid Form
+description: Advanced hybrid token and escrow operations with Metaplex Hybrid protocol
+icon: RefreshCw
+---
+
+<PreviewComponent
+  name={"MPL Hybrid Form"}
+  v0JsonFileName={"mpl-hybrid-form"}
+>
+  <MPLHybridForm className="max-w-2xl" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Metaplex Hybrid dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/mpl-hybrid @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi-signer-wallet-adapters react-hook-form @hookform/resolvers zod"} />
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add MPL Hybrid Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/mpl-hybrid-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { MPLHybridForm } from "@/components/ui/murphy/mpl-hybrid-form";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Hybrid Operations</h1>
+      <MPLHybridForm className="max-w-2xl" />
+    </div>
+  );
+}

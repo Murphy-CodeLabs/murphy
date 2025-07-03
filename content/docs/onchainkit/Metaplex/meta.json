@@ -1,0 +1,17 @@
+{
+    "title": "Metaplex",
+    "description": "Solana NFT and digital asset ecosystem",
+    "pages": [
+        "Token-Metadata",
+        "Core",
+        "Bubblegum-v1",
+        "Bubblegum-v2",
+        "Candy-Machine",
+        "Core-Candy-Machine",
+        "Fusion",
+        "Hydra",
+        "Inscription",
+        "MPL-Hybrid",
+        "Token-Auth-Rules"
+    ]
+}

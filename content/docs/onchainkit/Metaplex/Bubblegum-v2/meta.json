@@ -1,0 +1,11 @@
+{
+    "title": "Bubblegum v2",
+    "description": "Improved Compressed NFTs",
+    "icon": "TreePine",
+    "pages": [
+        "mint-cnft-form",
+        "create-merkleTree-form",
+        "compressed-nft-viewer",
+        "improved-cnft-manager"
+    ]
+}
