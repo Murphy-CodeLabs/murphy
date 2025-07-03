@@ -1,0 +1,39 @@
+{
+    "name": "buildCurveAndCreateConfig-form",
+    "type": "registry:block",
+    "title": "Build Curve and Create Config Form",
+    "description": "A simple build curve and create config form component.",
+    "registryDependencies": [
+      "input",
+      "button",
+      "form",
+      "card",
+      "sonner",
+      "select",
+      "dialog",
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react",
+      "meteora-dbc"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/buildCurveAndCreateConfig-form.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/buildCurveAndCreateConfig-form.tsx"
+      },
+      {
+        "path": "hook/murphy/use-walletModal.ts",
+        "type": "registry:hook",
+        "target": "hook/murphy/use-walletModal.ts"
+      },
+      {
+        "path": "hook/murphy/use-walletModal.ts",
+        "type": "registry:hook",
+        "target": "hook/murphy/use-walletModal.ts"
+      }
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "name": "txn-settings",
+    "type": "registry:block",
+    "title": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
+    "description": "The TxnSettings component is a popover that allows users to set the transaction priority, fee cap, and other transaction settings.",
+    "registryDependencies": [
+      "popover",
+      "toggle-group",
+      "input",
+      "button",
+      "dialog"
+    ],
+    "dependencies": [],
+    "files": [
+      {
+        "path": "components/ui/murphy/txn-settings.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/txn-settings.tsx"
+      }
+    ]
+}

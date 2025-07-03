@@ -1,0 +1,28 @@
+{
+    "name": "get-nft-form",
+    "type": "registry:block",
+    "title": "Get NFT Form",
+    "description": "A simple get NFT form component.",
+    "registryDependencies": [
+      "input",
+      "button",
+      "form",
+      "card",
+      "sonner",
+      "select",
+      "dialog",
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/get-nft-form.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/get-nft-form.tsx"
+      }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "name": "stake-token-form",
+    "type": "registry:block",
+    "title": "Stake Token Form",
+    "description": "A simple stake token form component.",
+    "registryDependencies": [
+      "input",
+      "button",
+      "form",
+      "card",
+      "sonner",
+      "select",
+      "dialog",
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/stake-token-form.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/stake-token-form.tsx"
+      },
+      {
+        "path": "app/api/murphy/solayer/stake/route.ts",
+        "type": "registry:file",
+        "target": "app/api/murphy/solayer/stake/route.ts"
+      }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "name": "create-merkleTree-form",
+    "type": "registry:block",
+    "title": "Create Merkle Tree Form",
+    "description": "A simple create merkle tree form component.",
+    "registryDependencies": [
+      "input",
+      "button",
+      "form",
+      "card",
+      "sonner",
+      "select",
+      "dialog",
+      "dropdown-menu"
+    ],
+    "dependencies": [
+      "@solana/web3.js",
+      "@solana/spl-token",
+      "@solana/wallet-adapter-react",
+      "@metaplex-foundation/umi-bundle-defaults",
+      "@metaplex-foundation/umi-signer-wallet-adapters",
+      "@metaplex-foundation/mpl-token-metadata",
+      "@metaplex-foundation/umi"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/create-merkleTree-form.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/create-merkleTree-form.tsx"
+      }
+    ]
+}

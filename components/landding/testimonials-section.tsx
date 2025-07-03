@@ -6,7 +6,7 @@ import { StarIcon } from "lucide-react";
 const testimonials = [
   {
     name: "Solomon",
-    role: "Solana lead dev rel",
+    role: "Head of product at SolanaFoundation",
     avatarUrl:
       "https://pbs.twimg.com/profile_images/1900239823253782528/cVjoQ-Rx_400x400.jpg",
     quote: "This looks great, how can I help",
