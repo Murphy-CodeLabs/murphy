@@ -2,5 +2,7 @@
     "title": "MPL-Hybrid",
     "description": "Hybrid Assets",
     "icon": "Shuffle",
-    "pages": []
+    "pages": [
+        "mpl-hybrid-form"
+    ]
 }

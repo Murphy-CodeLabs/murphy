@@ -1,0 +1,54 @@
+---
+title: Token Metadata Launchpad Form
+description: A comprehensive token creation component with Metaplex Token Metadata standard
+icon: Coins
+---
+
+<PreviewComponent
+  name={"Token Metadata Launchpad Form"}
+  v0JsonFileName={"tm-launchpad-form"}
+>
+  <TMLaunchpadForm className="max-w-2xl" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Metaplex Token Metadata dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi-signer-wallet-adapters react-hook-form @hookform/resolvers zod"} />
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Token Metadata Launchpad Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/tm-launchpad-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { TMLaunchpadForm } from "@/components/ui/murphy/tm-launchpad-form";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Token with Metadata</h1>
+      <TMLaunchpadForm className="max-w-2xl" />
+    </div>
+  );
+}

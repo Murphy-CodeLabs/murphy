@@ -1,6 +1,8 @@
 {
     "title": "Hydra",
-    "description": "Fanout wallets",
+    "description": "Metaplex Hydra fanout wallets for multi-recipient distributions",
     "icon": "GitBranch",
-    "pages": []
+    "pages": [
+        "hydra-fanout-form"
+    ]
 }

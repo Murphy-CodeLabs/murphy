@@ -465,7 +465,7 @@ export default function BubblegumLegacyForm({
   // Render functions
   const renderForm = () => (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {/* Legacy Warning */}
         <Alert>
           <AlertTriangle className="h-4 w-4" />
@@ -497,7 +497,7 @@ export default function BubblegumLegacyForm({
             )}
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               control={form.control}
               name="symbol"
@@ -598,7 +598,7 @@ export default function BubblegumLegacyForm({
               )}
             />
           ) : (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="maxDepth"
