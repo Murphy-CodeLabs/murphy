@@ -1,0 +1,23 @@
+{
+    "name": "txn-list",
+    "type": "registry:block",
+    "title": "The TxnList component is a table of transactions with metadata.",
+    "registryDependencies": ["table","skeleton"],
+    "dependencies": [
+      "@solana/web3.js",
+      "date-fns",
+      "@solana/wallet-adapter-react"
+    ],
+    "files": [
+      {
+        "path": "components/ui/murphy/txn-list.tsx",
+        "type": "registry:file",
+        "target": "components/ui/murphy/txn-list.tsx"
+      },
+      {
+        "path": "lib/utils.ts",
+        "type": "registry:file",
+        "target": "lib/utils.ts"
+      }
+    ]
+}
