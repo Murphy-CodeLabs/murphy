@@ -1,0 +1,172 @@
+---
+title: Token Metadata Viewer
+description: A component to view on-chain metadata of Solana tokens using the Metaplex Token-Metadata standard
+icon: "Eye"
+---
+
+<PreviewComponent
+  name={"Token Metadata Viewer"}
+  v0JsonFileName={"token-metadata-viewer"}
+>
+  <TokenMetadataViewer className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Solana and Metaplex dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Token Metadata Viewer
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/token-metadata-viewer.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { TokenMetadataViewer } from "@/components/ui/murphy/token-metadata-viewer";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">View Token Metadata</h1>
+      <TokenMetadataViewer className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Metaplex Token-Metadata Standard**: Uses the official Metaplex Token-Metadata standard
+- **Comprehensive Metadata Display**: Shows all on-chain metadata including name, symbol, URI, creators, and collection info
+- **Network Detection**: Automatically detects and adapts to devnet/mainnet
+- **Copy to Clipboard**: Easy copying of addresses and other data
+- **Explorer Integration**: Direct links to view tokens in Solana Explorer or Solscan
+- **Error Handling**: Robust error handling with retry capability
+- **Multi-stage UI**: Clean interface with loading, success, and error states
+
+## Advanced Usage
+
+You can specify a mint address to view metadata for a specific token:
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">NFT Metadata</h1>
+      <TokenMetadataViewer
+        className="max-w-md"
+        mintAddress="DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ"
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    mintAddress: {
+      description: "Optional mint address to view metadata for",
+      type: "string",
+      default: "undefined",
+    },
+    className: {
+      description: "Additional CSS classes to apply to the component",
+      type: "string",
+      default: "undefined",
+    },
+  }}
+/>
+
+## Displayed Information
+
+The component displays comprehensive metadata information:
+
+### Basic Information
+- **Name**: Token name from metadata
+- **Symbol**: Token symbol  
+- **Mint Address**: The mint address of the token
+- **Update Authority**: Address authorized to update metadata
+
+### Metadata Details
+- **URI**: Link to off-chain metadata JSON
+- **Seller Fee Basis Points**: Royalty percentage for secondary sales
+- **Primary Sale Happened**: Whether initial sale has occurred
+- **Is Mutable**: Whether metadata can be updated
+
+### Collection (if applicable)
+- **Collection Address**: Parent collection mint address
+- **Verified**: Whether collection verification is confirmed
+
+### Creators (if applicable)
+- **Creator Addresses**: List of creator wallet addresses
+- **Shares**: Percentage share for each creator
+- **Verified Status**: Verification status for each creator
+
+## Usage Examples
+
+### View NFT Metadata
+```tsx
+<TokenMetadataViewer 
+  mintAddress="CKfatsPMUf8SkiURsDXs7eK6GWb4Jsd6UDbs7twMCWxo"
+  className="max-w-lg"
+/>
+```
+
+### Search Any Token
+```tsx
+<TokenMetadataViewer className="w-full max-w-2xl" />
+```
+
+## Technical Notes
+
+- Uses Metaplex UMI framework for blockchain interactions
+- Fetches metadata directly from on-chain program accounts
+- Supports both fungible tokens and NFTs
+- Automatically handles network switching between devnet and mainnet
+- Implements proper error boundaries and retry logic
+
+## Performance
+
+- Efficient data fetching with minimal RPC calls
+- Caches metadata to prevent unnecessary re-fetching
+- Optimized rendering with skeleton loading states
+- Responsive design works on all screen sizes
+
+## Notes
+
+- The component fetches metadata from the Metaplex Token-Metadata program
+- Works with any token that has metadata created via Metaplex standards
+- For tokens without metadata, appropriate error messages are displayed
+- URI links may require CORS configuration for off-chain metadata viewing
+
+## Related Components
+
+- [Mint NFT Form](/docs/onchainkit/Metaplex/Token-Metadata/mint-nft-form) - Create NFTs with metadata
+- [Get NFT Form](/docs/onchainkit/Metaplex/Token-Metadata/get-nft-form) - View NFT details
+- [Create Collection Form](/docs/onchainkit/Metaplex/Token-Metadata/create-collection-form) - Create NFT collections
+- [Update Collection Form](/docs/onchainkit/Metaplex/Token-Metadata/update-collection-form) - Update collection metadata

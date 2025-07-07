@@ -1,0 +1,8 @@
+{
+    "title": "Core",
+    "description": "Next gen NFT standard",
+    "icon": "Cpu",
+    "pages": [
+        "core-asset-launchpad"
+    ]
+}

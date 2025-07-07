@@ -8,6 +8,13 @@ import { MintCNFT } from "./mint-cnft-form";
 import { MintNFT } from "./mint-nft-form";
 import { SwapForm } from "./swap-token-form";
 import CreateCollectionForm from "./create-collection-form";
+import TransferNFTForm from "./transfer-nft-form";
+import UpdateCollectionForm from "./update-collection-form";
+import CandyMachineForm from "./candy-machine-form";
+import CoreCandyMachineForm from "./core-candy-machine-form";
+import BubblegumLegacyForm from "./bubblegum-legacy-form";
+import ImprovedCNFTManager from "./improved-cnft-manager";
+import CompressedNFTViewer from "./compressed-nft-viewer"
 import { CreateMerkleTree } from "./create-merkleTree-form";
 import { TokenList } from "./token-list";
 import { StakeForm } from "./stake-token-form";
@@ -25,6 +32,12 @@ import { TokenCard } from "@/components/ui/murphy/token-card";
 import { DistributeTokenForm } from "@/components/ui/murphy/distribute-cToken";
 import { ClaimTokenForm } from "@/components/ui/murphy/claim-cToken";
 import { Avatar } from "@/components/ui/murphy/avatar";
+import { TMLaunchpadForm } from "./tm-launchpad-form";
+import { CoreAssetLaunchpad } from "./core-asset-launchpad";
+import { HydraFanoutForm } from "./hydra-fanout-form";
+import { MPLHybridForm } from "./mpl-hybrid-form";
+import { TokenMetadataViewer } from "./token-metadata-viewer";
+
 export {
   ConnectWalletButton,
   SendTokenForm,
@@ -36,10 +49,18 @@ export {
   MintNFT,
   SwapForm,
   CreateCollectionForm,
+  TransferNFTForm,
+  UpdateCollectionForm,
+  CompressedNFTViewer,
+  ImprovedCNFTManager,
+  CoreCandyMachineForm,
+  BubblegumLegacyForm,
+  CandyMachineForm,
   CreateMerkleTree,
   TokenList,
   StakeForm,
   CreateConfigForm,
+  CoreAssetLaunchpad,
   BuildCurveAndCreateConfigByMarketCapForm,
   TxnSettings,
   TxnSettingsProvider,
@@ -53,5 +74,9 @@ export {
   TokenCard,
   DistributeTokenForm,
   ClaimTokenForm,
-  Avatar
+  Avatar,
+  TMLaunchpadForm,
+  HydraFanoutForm,
+  MPLHybridForm,
+  TokenMetadataViewer
 };

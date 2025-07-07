@@ -10,7 +10,20 @@ import * as icons from "lucide-react";
 import * as docsComponents from "@/components/docs";
 import * as murphyComponents from "@/components/ui/murphy";
 
-// use this function to get MDX components, you will need it for rendering MDX
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from "@/components/ui/table";
+
+const ApiTable = Table;
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...(icons as unknown as MDXComponents),
@@ -25,6 +38,22 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Steps,
     Accordion,
     Accordions,
+    Alert,
+    AlertDescription,
+    AlertTitle,
+    Badge,
+    Button,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
     pre: ({ ref: _ref, ...props }) => (
       <CodeBlock {...props}>
         <Pre>{props.children}</Pre>
