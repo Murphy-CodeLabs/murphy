@@ -1,0 +1,17 @@
+{
+    "name": "price-change",
+    "type": "registry:block",
+    "title": "The PriceChange component displays the change of a price over time.",
+    "files": [
+      {
+        "path": "components/ui/murphy/price-change.tsx",
+        "type": "registry:file",
+        "target": "components/ui/murphy/price-change.tsx"
+      },
+      {
+        "path": "lib/utils.ts",
+        "type": "registry:file",
+        "target": "lib/utils.ts"
+      }
+    ]
+}

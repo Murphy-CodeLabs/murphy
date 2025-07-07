@@ -1,0 +1,50 @@
+{
+  "name": "connect-wallet-button",
+  "type": "registry:block",
+  "title": "Connect Wallet Button",
+  "description": "A simple connect wallet button component.",
+  "registryDependencies": [
+    "button",
+    "dialog",
+    "collapsible",
+    "dropdown-menu",
+    "tabs"
+  ],
+  "dependencies": [
+    "@solana/wallet-adapter-react",
+    "@solana/wallet-adapter-base",
+    "@lazorkit/wallet"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/connect-wallet-button.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/connect-wallet-button.tsx"
+    },
+    {
+      "path": "components/providers/wallet-provider.tsx",
+      "type": "registry:component",
+      "target": "components/providers/wallet-provider.tsx"
+    },
+    {
+      "path": "hook/murphy/use-walletMultiButton.ts",
+      "type": "registry:hook",
+      "target": "hook/murphy/use-walletMultiButton.ts"
+    },
+    {
+      "path": "hook/murphy/use-walletModal.ts",
+      "type": "registry:hook",
+      "target": "hook/murphy/use-walletModal.ts"
+    },
+    {
+      "path": "components/providers/lazorkit-wallet-context.tsx",
+      "type": "registry:component",
+      "target": "components/providers/lazorkit-wallet-context.tsx"
+    },
+    {
+      "path": "components/providers/client-lazorkit-provider.tsx",
+      "type": "registry:component",
+      "target": "components/providers/client-lazorkit-provider.tsx"
+    }
+  ]
+} 
