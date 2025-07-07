@@ -10,6 +10,8 @@ import { CancelRecurringOrder } from "@/components/ui/murphy/Jupiter-Recurring/C
 import { useWallet } from "@solana/wallet-adapter-react"
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui"
 import { toast } from "sonner"
+import { Navbar } from "@/components/layouts/home/navbar"
+import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
 
 // Murphy DashboardLayout: grid, responsive, customizable with shadcn theming
 function DashboardLayout({
@@ -36,7 +38,7 @@ function DashboardLayout({
       {...props}
     >
       {header}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8 flex flex-col gap-8">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-8 flex flex-col gap-8 pt-20">
         {overview}
         {/* 2-top-1-bottom layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">{top}</div>
@@ -151,17 +153,17 @@ export default function JupiterDashboardPage() {
   return (
     <DashboardLayout
       header={
-        <header className="w-full border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold text-foreground tracking-tight">Murphy DCA Dashboard</span>
-              <Badge variant="secondary" className="font-semibold">
-                MAINNET
-              </Badge>
-            </div>
-            <WalletMultiButton className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg shadow-md transition" />
+        <Navbar>
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-bold text-foreground tracking-tight">Murphy DCA Dashboard</span>
+            <Badge variant="secondary" className="font-semibold">
+              MAINNET
+            </Badge>
           </div>
-        </header>
+          <div className="ml-auto">
+            <ConnectWalletButton className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg shadow-md transition" />
+          </div>
+        </Navbar>
       }
       overview={<OverviewStats {...stats} />}
       top={[
