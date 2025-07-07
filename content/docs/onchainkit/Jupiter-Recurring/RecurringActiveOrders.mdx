@@ -1,0 +1,78 @@
+---
+title: Recurring Active Orders
+icon: Repeat2
+description: Murphy component to view active Jupiter Recurring DCA Orders on Solana mainnet
+---
+
+import { RecurringActiveOrders } from "@/components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders";
+import { PreviewComponent } from "@/components/docs/preview-component";
+
+<PreviewComponent name={"Recurring Active Orders"}>
+  <RecurringActiveOrders />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react sonner"}/>
+  </Step>
+  <Step>
+    Add Wallet Provider
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+  </Step>
+  <Step>
+    Add RecurringActiveOrders
+    <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/RecurringActiveOrders.json`} />
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { RecurringActiveOrders } from "@/components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">My Active Recurring Orders</h1>
+      <RecurringActiveOrders />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Auto-fetch**: Automatically loads data when wallet connects (no manual refresh needed)
+- **Real-time data**: View all active recurring DCA orders from Jupiter Recurring API (mainnet, no mock)
+- **Consistent UI**: Uses RecurringOrderCard for uniform display across all components
+- **Interactive elements**: Copy order ID, view on Solscan, refresh button
+- **Murphy UI**: Card layout, loading/error/empty states, responsive design
+- **Fully on-chain**: No test/fake data, all real Solana mainnet data
+
+## Props
+
+| Name        | Type   | Default   | Description                       |
+|-------------|--------|-----------|-----------------------------------|
+| `className` | string | undefined | Additional CSS classes            |
+
+## Types
+
+```ts
+export interface RecurringOrder {
+  id: string;
+  inputMint: string;
+  outputMint: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  [key: string]: any;
+}
+```
+
+## API
+
+- [Jupiter Recurring Orders API](https://dev.jup.ag/docs/recurring-api/get-recurring-orders)
+- [Solscan](https://solscan.io/) 

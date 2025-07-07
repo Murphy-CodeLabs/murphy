@@ -1,0 +1,96 @@
+---
+title: Recurring Setup Form
+description: Murphy component for creating Jupiter Recurring DCA Orders on Solana mainnet
+type: form
+icon: Repeat
+---
+
+import { RecurringSetupForm } from "@/components/ui/murphy/Jupiter-Recurring/RecurringSetupForm";
+
+<PreviewComponent name={"Recurring Setup Form"}>
+  <RecurringSetupForm />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react sonner"}/>
+  </Step>
+  <Step>
+    Add Wallet Provider
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+  </Step>
+  <Step>
+    Add RecurringSetupForm
+    <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/RecurringSetupForm.json`} />
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { RecurringSetupForm } from "@/components/ui/murphy/Jupiter-Recurring/RecurringSetupForm";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Recurring DCA Order</h1>
+      <RecurringSetupForm />
+    </div>
+  );
+}
+```
+
+## Features
+
+- Connects to Solana wallet (mainnet)
+- Create real recurring DCA order via Jupiter Recurring API (no mock)
+- Select source/target token, amount, interval, number of orders
+- Murphy composable UI, atomic, shadcn style
+- Loading, success, error state with Solscan link
+- No test or fake data, all on-chain
+
+## Props
+
+| Name            | Type                                 | Default   | Description                                 |
+|-----------------|--------------------------------------|-----------|---------------------------------------------|
+| `onOrderCreated`| `(orderId: string) => void`           | undefined | Callback when order is created (txid)       |
+| `className`     | `string`                             | undefined | Additional CSS classes                      |
+
+## Types
+
+```ts
+export type RecurringSetupFormValues = {
+  inputMint: string;
+  outputMint: string;
+  inAmount: number | undefined;
+  numberOfOrders: number;
+  interval: number; // seconds
+  minPrice?: number | null;
+  maxPrice?: number | null;
+  startAt?: number | null;
+};
+```
+
+## API
+
+- [Jupiter Recurring API Docs](https://dev.jup.ag/docs/recurring-api/create-order)
+- Endpoint: `https://lite-api.jup.ag/recurring/v1/createOrder`
+
+## Success State
+
+Displays Solscan link to transaction:
+
+```tsx
+Success! Tx: <a href="https://solscan.io/tx/{txid}" target="_blank">{txid}</a>
+```
+
+## Error Handling
+
+Shows error message from API or wallet.
+
+---
+
+**Note:** This component is fully mainnet, no mock/test data, and is composable for any Solana dApp, dashboard, or wallet. 

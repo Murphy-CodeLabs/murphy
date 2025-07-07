@@ -1,0 +1,86 @@
+---
+title: Recurring Order Card
+icon: CreditCard
+description: Murphy component to display a single Jupiter Recurring DCA Order on Solana mainnet
+---
+
+import { RecurringOrderCard } from "@/components/ui/murphy/Jupiter-Recurring/RecurringOrderCard";
+import { PreviewComponent } from "@/components/docs/preview-component";
+
+<PreviewComponent name={"Recurring Order Card"}>
+  <RecurringOrderCard order={{
+    id: "8vQw...3k2A",
+    inputMint: "So11111111111111111111111111111111111111112",
+    outputMint: "Es9vMFrzaCER1bY5Qw5J5hzyXH8VEkR92pT9bkF1X6t6",
+    status: "active",
+    createdAt: (new Date()).toISOString(),
+    updatedAt: (new Date()).toISOString(),
+  }} />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react sonner lucide-react"}/>
+  </Step>
+  <Step>
+    Add RecurringOrderCard
+    <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/RecurringOrderCard.json`} />
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { RecurringOrderCard, RecurringOrder } from "@/components/ui/murphy/Jupiter-Recurring/RecurringOrderCard";
+
+const order: RecurringOrder = {
+  id: "8vQw...3k2A",
+  inputMint: "So11111111111111111111111111111111111111112",
+  outputMint: "Es9vMFrzaCER1bY5Qw5J5hzyXH8VEkR92pT9bkF1X6t6",
+  status: "active",
+  createdAt: "2024-05-01T12:00:00Z",
+  updatedAt: "2024-05-01T12:00:00Z",
+};
+
+export default function MyPage() {
+  return <RecurringOrderCard order={order} />;
+}
+```
+
+## Features
+
+- **Interactive display**: Copy order ID with one click, view on Solscan
+- **Status-aware styling**: Different badge colors for different order statuses (active, completed, cancelled, expired, failed)
+- **Responsive design**: Clean card layout with proper spacing and typography
+- **Real-time data**: Designed for on-chain data from Jupiter Recurring API
+- **Murphy UI**: Consistent with Murphy design system
+- **Fully on-chain**: No test/fake data, all real Solana mainnet data
+
+## Props
+
+| Name        | Type            | Default   | Description                       |
+|-------------|-----------------|-----------|-----------------------------------|
+| `order`     | RecurringOrder  | required  | Order object to display           |
+| `className` | string          | undefined | Additional CSS classes            |
+
+## Types
+
+```ts
+export interface RecurringOrder {
+  id: string;
+  inputMint: string;
+  outputMint: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  [key: string]: any;
+}
+```
+
+## API
+
+- [Jupiter Recurring Orders API](https://dev.jup.ag/docs/recurring-api/get-recurring-orders)
+- [Solscan](https://solscan.io/) 
