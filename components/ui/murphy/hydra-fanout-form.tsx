@@ -62,7 +62,7 @@ interface HydraFanoutResult {
 interface Recipient {
   address: string;
   amount: number;
-  share?: number; // for percentage-based distribution
+  share: number;
 }
 
 type DistributionType = 'fixed' | 'percentage' | 'equal';
@@ -70,31 +70,20 @@ type TokenType = 'SOL' | 'SPL';
 
 // Form Schema
 const formSchema = z.object({
-  // Basic Info
   distributionType: z.enum(['fixed', 'percentage', 'equal']),
   tokenType: z.enum(['SOL', 'SPL']),
-  tokenMint: z.string().optional(),
-
-  // Amount settings
-  totalAmount: z.number().min(0.000000001, "Amount must be greater than 0").optional(),
-
-  // Recipients
+  tokenMint: z.string(),
+  totalAmount: z.number().min(0, "Amount must be non-negative"),
   recipients: z.array(z.object({
-    address: z.string().min(1, "Address is required"),
-    amount: z.number().min(0, "Amount must be non-negative").optional(),
-    share: z.number().min(0).max(100).optional(),
+    address: z.string(),
+    amount: z.number().min(0, "Amount must be non-negative"),
+    share: z.number().min(0).max(100),
   })).min(1, "At least one recipient is required"),
-
-  // Batch settings
-  batchSize: z.number().min(1).max(20).default(10),
-  delayBetweenBatches: z.number().min(0).max(5000).default(1000),
-
-  // Advanced settings
-  enableFanout: z.boolean().default(false),
-  fanoutName: z.string().optional(),
-
-  // CSV import
-  csvData: z.string().optional(),
+  batchSize: z.number().min(1).max(20),
+  delayBetweenBatches: z.number().min(0).max(5000),
+  enableFanout: z.boolean(),
+  fanoutName: z.string(),
+  csvData: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -187,6 +176,11 @@ export function HydraFanoutForm({
 
   // CSV import functionality
   const handleCSVImport = (csvText: string) => {
+    if (!csvText || csvText.trim() === '') {
+      toast.error("Please enter CSV data");
+      return;
+    }
+
     try {
       const lines = csvText.trim().split('\n');
       const recipients: Recipient[] = [];
@@ -197,17 +191,22 @@ export function HydraFanoutForm({
 
         const parts = line.split(',').map(part => part.trim());
         if (parts.length < 2) {
-          throw new Error(`Invalid CSV format at line ${i + 1}`);
+          throw new Error(`Invalid CSV format at line ${i + 1}. Expected: address,amount`);
         }
 
         const address = parts[0];
         const amount = parseFloat(parts[1]);
 
-        if (!address || isNaN(amount)) {
+        if (!address || isNaN(amount) || amount < 0) {
           throw new Error(`Invalid data at line ${i + 1}`);
         }
 
-        recipients.push({ address, amount, share: 0 });
+        // Ensure all required properties are set
+        recipients.push({
+          address,
+          amount,
+          share: 0  // Default share value
+        });
       }
 
       if (recipients.length === 0) {
@@ -215,6 +214,7 @@ export function HydraFanoutForm({
       }
 
       form.setValue('recipients', recipients);
+      form.setValue('csvData', ''); // Clear CSV data after import
       toast.success(`Imported ${recipients.length} recipients from CSV`);
     } catch (err: any) {
       toast.error("CSV Import Error: " + err.message);
@@ -241,6 +241,10 @@ export function HydraFanoutForm({
       const recipient = recipients[i];
 
       // Validate address
+      if (!recipient.address || recipient.address.trim() === '') {
+        return `Address is required for recipient ${i + 1}`;
+      }
+
       try {
         new PublicKey(recipient.address);
       } catch {
@@ -331,97 +335,100 @@ export function HydraFanoutForm({
       return;
     }
 
+    // Validate recipients
+    const validationError = validateRecipients(values.recipients);
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       setCurrentStage('confirming');
       setError("");
 
-      toast.loading("Processing distribution...", { id: "hydra-fanout" });
-
-      // Validate recipients
-      const validationError = validateRecipients(values.recipients);
-      if (validationError) {
-        throw new Error(validationError);
-      }
+      toast.loading("Starting distribution...", { id: "distribution" });
 
       // Prepare recipients based on distribution type
-      let processedRecipients = [...values.recipients];
+      let finalRecipients: Recipient[] = [...values.recipients];
 
-      if (values.distributionType === 'equal') {
-        calculateEqualDistribution();
-        processedRecipients = form.getValues('recipients');
-      } else if (values.distributionType === 'percentage') {
-        const totalAmount = values.totalAmount || 0;
-        processedRecipients = values.recipients.map(r => ({
+      if (values.distributionType === 'percentage') {
+        // Calculate amounts from percentages
+        finalRecipients = values.recipients.map(r => ({
           ...r,
-          amount: (totalAmount * (r.share || 0)) / 100
+          amount: (values.totalAmount * r.share) / 100
+        }));
+      } else if (values.distributionType === 'equal') {
+        // Calculate equal amounts
+        const amountPerRecipient = values.totalAmount / values.recipients.length;
+        finalRecipients = values.recipients.map(r => ({
+          ...r,
+          amount: amountPerRecipient
         }));
       }
 
-      setCurrentStage('processing');
-
       // Process in batches
+      const signatures: string[] = [];
       const batchSize = values.batchSize;
       const batches = [];
-      for (let i = 0; i < processedRecipients.length; i += batchSize) {
-        batches.push(processedRecipients.slice(i, i + batchSize));
+
+      for (let i = 0; i < finalRecipients.length; i += batchSize) {
+        batches.push(finalRecipients.slice(i, i + batchSize));
       }
 
+      setCurrentStage('processing');
       setProgress({ current: 0, total: batches.length });
 
-      const signatures: string[] = [];
       let successfulTransfers = 0;
       let failedTransfers = 0;
 
       for (let i = 0; i < batches.length; i++) {
         try {
-          setProgress({ current: i + 1, total: batches.length });
-
           const signature = await processBatch(batches[i], i);
           signatures.push(signature);
           successfulTransfers += batches[i].length;
+
+          setProgress({ current: i + 1, total: batches.length });
 
           // Delay between batches
           if (i < batches.length - 1 && values.delayBetweenBatches > 0) {
             await new Promise(resolve => setTimeout(resolve, values.delayBetweenBatches));
           }
-        } catch (batchError) {
-          console.error(`Batch ${i + 1} failed:`, batchError);
+        } catch (err) {
+          console.error(`Batch ${i + 1} failed:`, err);
           failedTransfers += batches[i].length;
         }
       }
 
-      // Calculate totals
-      const totalAmount = processedRecipients.reduce((sum, r) => sum + (r.amount || 0), 0);
-
-      const distributionResult: HydraFanoutResult = {
-        fanout: values.enableFanout ? "fanout-address-placeholder" : "",
+      // Set result
+      const totalAmount = finalRecipients.reduce((sum, r) => sum + (r.amount || 0), 0);
+      const result: HydraFanoutResult = {
+        fanout: values.enableFanout ? `fanout-${Date.now()}` : "",
         distributionSignatures: signatures,
-        totalRecipients: processedRecipients.length,
+        totalRecipients: finalRecipients.length,
         totalAmount,
         successfulTransfers,
-        failedTransfers,
+        failedTransfers
       };
 
-      setResult(distributionResult);
+      setResult(result);
       setCurrentStage('success');
 
-      toast.success("Distribution completed!", {
-        id: "hydra-fanout",
-        description: `${successfulTransfers}/${processedRecipients.length} successful transfers`
-      });
-
       if (onDistributionComplete) {
-        onDistributionComplete(distributionResult);
+        onDistributionComplete(result);
       }
 
+      toast.success(`Distribution completed! ${successfulTransfers}/${finalRecipients.length} successful`, {
+        id: "distribution"
+      });
+
     } catch (err: any) {
-      console.error("Error processing distribution:", err);
-      setError(err.message || "Failed to process distribution");
+      console.error("Distribution error:", err);
+      setError(err.message || "Distribution failed");
       setCurrentStage('error');
 
       toast.error("Distribution failed", {
-        id: "hydra-fanout",
+        id: "distribution",
         description: err.message
       });
     } finally {

@@ -48,7 +48,6 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     CardDescription,
     CardHeader,
     CardTitle,
-    ApiTable,
     Table,
     TableBody,
     TableCell,

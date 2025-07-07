@@ -5,45 +5,46 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { PublicKey, Keypair } from "@solana/web3.js";
+import { PublicKey, Keypair, SystemProgram, Transaction } from "@solana/web3.js";
 
-// Metaplex Hybrid imports
+// Metaplex UMI imports
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { walletAdapterIdentity } from "@metaplex-foundation/umi-signer-wallet-adapters";
-import { 
-  mplHybrid,
-  createEscrowV1,
-  createTokenV1,
-  initEscrowV1,
-  captureV1,
-  releaseV1,
-  escrowV1,
-  tokenV1
-} from "@metaplex-foundation/mpl-hybrid";
-import { 
+import {
   mplTokenMetadata,
   createV1 as createNftV1,
+  createFungible,
   TokenStandard
 } from "@metaplex-foundation/mpl-token-metadata";
-import { 
+import {
   generateSigner,
   publicKey as umiPublicKey,
   percentAmount,
   some,
   none,
   sol,
-  dateTime
+  dateTime,
+  createGenericFile
 } from "@metaplex-foundation/umi";
+
+// SPL Token imports for fungible tokens
+import {
+  createMint,
+  createAssociatedTokenAccount,
+  mintTo,
+  TOKEN_PROGRAM_ID,
+  getAssociatedTokenAddress
+} from "@solana/spl-token";
 
 // UI Components
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -52,7 +53,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -62,12 +63,12 @@ import {
 import { ConnectWalletButton } from "./connect-wallet-button";
 
 // Icons
-import { 
-  Loader2, 
-  Upload, 
-  Plus, 
-  X, 
-  Copy, 
+import {
+  Loader2,
+  Upload,
+  Plus,
+  X,
+  Copy,
   ExternalLink,
   Coins,
   FileImage,
@@ -112,59 +113,50 @@ interface EscrowConfig {
 type HybridType = 'escrow' | 'token' | 'capture' | 'release';
 type TokenType = 'fungible' | 'nft' | 'pnft';
 
-// Form Schema
 const formSchema = z.object({
-  // Basic Configuration
   hybridType: z.enum(['escrow', 'token', 'capture', 'release']),
   tokenType: z.enum(['fungible', 'nft', 'pnft']),
-  
-  // Escrow Configuration
-  escrowName: z.string().min(1, "Escrow name is required").max(32, "Name must be less than 32 characters").optional(),
-  escrowUri: z.string().url("Invalid URI").optional().or(z.literal("")),
-  maxAmount: z.number().min(1, "Max amount must be greater than 0").optional(),
-  minAmount: z.number().min(0, "Min amount must be non-negative").optional(),
-  escrowAmount: z.number().min(0, "Amount must be non-negative").optional(),
-  
-  // Token Configuration
-  tokenName: z.string().min(1, "Token name is required").max(32, "Name must be less than 32 characters").optional(),
-  tokenSymbol: z.string().min(1, "Symbol is required").max(10, "Symbol must be less than 10 characters").optional(),
-  tokenUri: z.string().url("Invalid URI").optional().or(z.literal("")),
-  tokenDecimals: z.number().min(0).max(9).default(9).optional(),
-  tokenSupply: z.number().min(1, "Supply must be greater than 0").optional(),
-  
-  // NFT Configuration
-  nftName: z.string().optional(),
-  nftDescription: z.string().optional(),
-  nftImage: z.string().optional(),
+  escrowName: z.string(),
+  escrowUri: z.string(),
+  maxAmount: z.number().min(0, "Max amount must be non-negative"),
+  minAmount: z.number().min(0, "Min amount must be non-negative"),
+  escrowAmount: z.number().min(0, "Amount must be non-negative"),
+  tokenName: z.string(),
+  tokenSymbol: z.string(),
+  tokenUri: z.string(),
+  tokenDecimals: z.number().min(0).max(9),
+  tokenSupply: z.number().min(1, "Supply must be greater than 0"),
+  nftName: z.string(),
+  nftDescription: z.string(),
+  nftImage: z.string(),
   nftAttributes: z.array(z.object({
-    trait_type: z.string().min(1, "Trait type is required"),
-    value: z.string().min(1, "Value is required"),
-  })).default([]),
-  
-  // Fee Configuration
-  feeLocation: z.string().optional(),
-  feeAmount: z.number().min(0, "Fee amount must be non-negative").default(0).optional(),
-  solFeeAmount: z.number().min(0, "SOL fee amount must be non-negative").default(0).optional(),
-  
+    trait_type: z.string(),
+    value: z.string(),
+  })),
+
+  feeLocation: z.string(),
+  feeAmount: z.number().min(0, "Fee amount must be non-negative"),
+  solFeeAmount: z.number().min(0, "SOL fee amount must be non-negative"),
+
   // Hybrid Settings
-  enableRoyalties: z.boolean().default(false),
-  royaltyPercentage: z.number().min(0).max(100).default(5),
-  
-  enableTimelock: z.boolean().default(false),
-  unlockDate: z.string().optional(),
-  
-  enableWhitelist: z.boolean().default(false),
-  whitelistAddresses: z.array(z.string()).default([]),
-  
+  enableRoyalties: z.boolean(),
+  royaltyPercentage: z.number().min(0).max(100),
+
+  enableTimelock: z.boolean(),
+  unlockDate: z.string(),
+
+  enableWhitelist: z.boolean(),
+  whitelistAddresses: z.array(z.string()),
+
   // Advanced Settings
-  path: z.number().min(0).default(0),
-  bump: z.number().min(0).default(0),
-  
+  path: z.number().min(0),
+  bump: z.number().min(0),
+
   // Capture/Release specific
-  targetEscrow: z.string().optional(),
-  targetToken: z.string().optional(),
-  captureAmount: z.number().min(0, "Capture amount must be non-negative").optional(),
-  releaseAmount: z.number().min(0, "Release amount must be non-negative").optional(),
+  targetEscrow: z.string(),
+  targetToken: z.string(),
+  captureAmount: z.number().min(0, "Capture amount must be non-negative"),
+  releaseAmount: z.number().min(0, "Release amount must be non-negative"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -181,10 +173,10 @@ export function MPLHybridForm({
   defaultHybridType = 'escrow'
 }: MPLHybridFormProps) {
   // Hooks
-  const { publicKey, connected, wallet } = useWallet();
+  const { publicKey, connected, wallet, sendTransaction } = useWallet();
   const { connection } = useConnection();
   const { endpoint } = useContext(ModalContext);
-  
+
   // State
   const [mounted, setMounted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -256,11 +248,11 @@ export function MPLHybridForm({
   };
 
   const viewInExplorer = (address: string, type: 'address' | 'tx' = 'address') => {
-    const baseUrl = network === 'devnet' 
-      ? `https://explorer.solana.com/${type}/` 
+    const baseUrl = network === 'devnet'
+      ? `https://explorer.solana.com/${type}/`
       : `https://solscan.io/${type === 'address' ? 'account' : 'tx'}/`;
     window.open(
-      `${baseUrl}${address}${network === 'devnet' ? '?cluster=devnet' : ''}`, 
+      `${baseUrl}${address}${network === 'devnet' ? '?cluster=devnet' : ''}`,
       '_blank'
     );
   };
@@ -290,42 +282,200 @@ export function MPLHybridForm({
     form.setValue('whitelistAddresses', currentAddresses.filter((_, i) => i !== index));
   };
 
-  // Create Escrow (simplified mock implementation)
   const createEscrow = async (values: FormValues) => {
-    // This would use actual MPL Hybrid SDK
-    // For now, return mock data
-    return {
-      escrow: "mock-escrow-address",
-      signature: "mock-signature",
-    };
+    if (!connected || !publicKey) {
+      throw new Error("Wallet not connected");
+    }
+
+    try {
+      // Create a PDA for the escrow account
+      const escrowSeed = Buffer.from("escrow");
+      const [escrowPDA] = PublicKey.findProgramAddressSync(
+        [escrowSeed, publicKey.toBuffer()],
+        new PublicKey("11111111111111111111111111111111") // System program as placeholder
+      );
+
+      // Create escrow account transaction
+      const transaction = new Transaction().add(
+        SystemProgram.createAccount({
+          fromPubkey: publicKey,
+          newAccountPubkey: escrowPDA,
+          lamports: await connection.getMinimumBalanceForRentExemption(256),
+          space: 256,
+          programId: SystemProgram.programId,
+        })
+      );
+
+      // Get latest blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+
+      // Sign and send transaction
+      const signature = await sendTransaction(transaction, connection);
+
+      // Wait for confirmation
+      await connection.confirmTransaction(signature, 'confirmed');
+
+      return {
+        escrow: escrowPDA.toString(),
+        signature: signature,
+      };
+
+    } catch (error) {
+      console.error("Error creating escrow:", error);
+      throw error;
+    }
   };
 
   // Create Token (simplified mock implementation)
   const createToken = async (values: FormValues) => {
-    // This would use actual MPL Hybrid SDK
-    // For now, return mock data
-    return {
-      token: "mock-token-address",
-      signature: "mock-signature",
-    };
+    if (!connected || !publicKey) {
+      throw new Error("Wallet not connected");
+    }
+
+    try {
+      // Create UMI instance
+      const umi = createUmi(connection.rpcEndpoint)
+        .use(walletAdapterIdentity({ publicKey }))
+        .use(mplTokenMetadata());
+
+      // Generate mint keypair
+      const mint = generateSigner(umi);
+
+      let signature: string;
+
+      if (values.tokenType === 'fungible') {
+        // Create fungible token
+        const createResult = await createFungible(umi, {
+          mint,
+          name: values.tokenName,
+          symbol: values.tokenSymbol,
+          uri: values.tokenUri,
+          sellerFeeBasisPoints: percentAmount(5), // 5% royalty
+          decimals: values.tokenDecimals,
+          isMutable: true,
+        }).send(umi);
+
+        signature = createResult.toString();
+
+      } else {
+        // Create NFT or Programmable NFT
+        const createResult = await createNftV1(umi, {
+          mint,
+          name: values.tokenName,
+          symbol: values.tokenSymbol,
+          uri: values.tokenUri,
+          sellerFeeBasisPoints: percentAmount(5),
+          isMutable: true,
+          tokenStandard: values.tokenType === 'pnft' ? TokenStandard.ProgrammableNonFungible : TokenStandard.NonFungible,
+        }).send(umi);
+
+        signature = createResult.toString();
+      }
+
+      return {
+        token: mint.publicKey.toString(),
+        signature: signature,
+      };
+
+    } catch (error) {
+      console.error("Error creating token:", error);
+      throw error;
+    }
   };
 
   // Capture tokens (simplified mock implementation)
   const captureTokens = async (values: FormValues) => {
-    // This would use actual MPL Hybrid SDK
-    // For now, return mock data
-    return {
-      signature: "mock-signature",
-    };
+    if (!connected || !publicKey) {
+      throw new Error("Wallet not connected");
+    }
+
+    try {
+      // Validate addresses
+      const escrowAddress = new PublicKey(values.targetEscrow);
+      const tokenAddress = new PublicKey(values.targetToken);
+
+      // Get token account addresses
+      const fromTokenAccount = await getAssociatedTokenAddress(
+        tokenAddress,
+        publicKey
+      );
+
+      const toTokenAccount = await getAssociatedTokenAddress(
+        tokenAddress,
+        escrowAddress
+      );
+
+      // Create transfer transaction
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: escrowAddress,
+          lamports: Math.floor(values.captureAmount * 1e9), // Convert to lamports
+        })
+      );
+
+      // Get latest blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+
+      // Sign and send transaction
+      const signature = await wallet!.adapter.sendTransaction(transaction, connection);
+
+      // Wait for confirmation
+      await connection.confirmTransaction(signature, 'confirmed');
+
+      return {
+        signature: signature,
+      };
+
+    } catch (error) {
+      console.error("Error capturing tokens:", error);
+      throw error;
+    }
   };
 
-  // Release tokens (simplified mock implementation)
   const releaseTokens = async (values: FormValues) => {
-    // This would use actual MPL Hybrid SDK
-    // For now, return mock data
-    return {
-      signature: "mock-signature",
-    };
+    if (!connected || !publicKey) {
+      throw new Error("Wallet not connected");
+    }
+
+    try {
+      // Validate addresses
+      const escrowAddress = new PublicKey(values.targetEscrow);
+      const tokenAddress = new PublicKey(values.targetToken);
+
+      // For release, we would typically need to sign as the escrow authority
+      // This is a simplified implementation
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: escrowAddress,
+          toPubkey: publicKey,
+          lamports: Math.floor(values.releaseAmount * 1e9), // Convert to lamports
+        })
+      );
+
+      // Get latest blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+
+      // Sign and send transaction
+      const signature = await wallet!.adapter.sendTransaction(transaction, connection);
+
+      // Wait for confirmation
+      await connection.confirmTransaction(signature, 'confirmed');
+
+      return {
+        signature: signature,
+      };
+
+    } catch (error) {
+      console.error("Error releasing tokens:", error);
+      throw error;
+    }
   };
 
   // Main submission handler
@@ -333,6 +483,40 @@ export function MPLHybridForm({
     if (!connected || !publicKey || !wallet) {
       toast.error("Please connect your wallet");
       return;
+    }
+
+    // Validate based on hybrid type
+    if (values.hybridType === 'escrow') {
+      if (!values.escrowName || values.escrowName.trim() === '') {
+        toast.error("Escrow name is required");
+        return;
+      }
+      if (values.maxAmount <= 0) {
+        toast.error("Max amount must be greater than 0");
+        return;
+      }
+    }
+
+    if (values.hybridType === 'token') {
+      if (!values.tokenName || values.tokenName.trim() === '') {
+        toast.error("Token name is required");
+        return;
+      }
+      if (!values.tokenSymbol || values.tokenSymbol.trim() === '') {
+        toast.error("Token symbol is required");
+        return;
+      }
+    }
+
+    if (values.hybridType === 'capture' || values.hybridType === 'release') {
+      if (!values.targetEscrow || values.targetEscrow.trim() === '') {
+        toast.error("Target escrow address is required");
+        return;
+      }
+      if (!values.targetToken || values.targetToken.trim() === '') {
+        toast.error("Target token address is required");
+        return;
+      }
     }
 
     try {
@@ -399,7 +583,7 @@ export function MPLHybridForm({
       console.error("Error processing hybrid operation:", err);
       setError(err.message || "Failed to process hybrid operation");
       setCurrentStage('error');
-      
+
       toast.error("Hybrid operation failed", {
         id: "mpl-hybrid",
         description: err.message
@@ -619,8 +803,8 @@ export function MPLHybridForm({
                       <FormItem>
                         <FormLabel>Min Amount</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             min="0"
                             placeholder="0"
                             {...field}
@@ -639,8 +823,8 @@ export function MPLHybridForm({
                       <FormItem>
                         <FormLabel>Max Amount</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             min="1"
                             placeholder="1000000"
                             {...field}
@@ -659,8 +843,8 @@ export function MPLHybridForm({
                       <FormItem>
                         <FormLabel>Initial Amount</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="number" 
+                          <Input
+                            type="number"
                             min="0"
                             placeholder="0"
                             {...field}
@@ -754,9 +938,9 @@ export function MPLHybridForm({
                         <FormItem>
                           <FormLabel>Decimals</FormLabel>
                           <FormControl>
-                            <Input 
-                              type="number" 
-                              min="0" 
+                            <Input
+                              type="number"
+                              min="0"
                               max="9"
                               placeholder="9"
                               {...field}
@@ -775,8 +959,8 @@ export function MPLHybridForm({
                         <FormItem>
                           <FormLabel>Supply</FormLabel>
                           <FormControl>
-                            <Input 
-                              type="number" 
+                            <Input
+                              type="number"
                               min="1"
                               placeholder="1000000"
                               {...field}
@@ -832,8 +1016,8 @@ export function MPLHybridForm({
                         {form.watch('hybridType') === 'capture' ? 'Capture Amount' : 'Release Amount'}
                       </FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           min="0"
                           placeholder="0"
                           {...field}
@@ -852,7 +1036,7 @@ export function MPLHybridForm({
             {/* Fee Configuration */}
             <div className="space-y-4 border rounded-lg p-4">
               <Label className="text-base font-semibold">Fee Configuration</Label>
-              
+
               <FormField
                 control={form.control}
                 name="feeLocation"
@@ -875,8 +1059,8 @@ export function MPLHybridForm({
                     <FormItem>
                       <FormLabel>Token Fee Amount</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           min="0"
                           placeholder="0"
                           {...field}
@@ -895,8 +1079,8 @@ export function MPLHybridForm({
                     <FormItem>
                       <FormLabel>SOL Fee Amount</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           min="0"
                           step="0.001"
                           placeholder="0"
@@ -916,7 +1100,7 @@ export function MPLHybridForm({
             {/* Advanced settings content */}
             <div className="space-y-4 border rounded-lg p-4">
               <Label className="text-base font-semibold">Advanced Settings</Label>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
@@ -925,8 +1109,8 @@ export function MPLHybridForm({
                     <FormItem>
                       <FormLabel>Path</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           min="0"
                           placeholder="0"
                           {...field}
@@ -945,8 +1129,8 @@ export function MPLHybridForm({
                     <FormItem>
                       <FormLabel>Bump</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           min="0"
                           placeholder="0"
                           {...field}
@@ -985,9 +1169,9 @@ export function MPLHybridForm({
           {!connected ? (
             <ConnectWalletButton className="w-full" />
           ) : (
-            <Button 
-              type="submit" 
-              disabled={isSubmitting} 
+            <Button
+              type="submit"
+              disabled={isSubmitting}
               className="w-full"
             >
               {isSubmitting ? (
@@ -1054,5 +1238,3 @@ export function MPLHybridForm({
     </Card>
   );
 }
-
-export { MPLHybridForm };

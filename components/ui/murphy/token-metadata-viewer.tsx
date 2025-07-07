@@ -28,7 +28,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Icons and notifications
@@ -295,7 +294,7 @@ export default function TokenMetadataViewer({
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Seller Fee Basis Points</span>
               <span className="font-medium">
-                {metadata?.sellerFeeBasisPoints.basisPoints.toString()} ({metadata?.sellerFeeBasisPoints.percent}%)
+                {metadata?.sellerFeeBasisPoints} ({((metadata?.sellerFeeBasisPoints || 0) / 100).toFixed(2)}%)
               </span>
             </div>
             <div className="flex justify-between items-center">
@@ -314,23 +313,25 @@ export default function TokenMetadataViewer({
         </div>
 
         {/* Collection Info */}
-        {metadata?.collection.__option === 'Some' && (
+        {metadata?.collection && (metadata.collection as any).value && (
           <div className="bg-secondary/50 rounded-lg p-4 space-y-3">
             <h4 className="font-semibold">Collection</h4>
             <div className="grid grid-cols-1 gap-3 text-sm">
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Address</span>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs truncate max-w-[150px]">{metadata.collection.value.key}</span>
-                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard(metadata.collection.value.key.toString() || '')}>
+                  <span className="font-mono text-xs truncate max-w-[150px]">
+                    {(metadata.collection as any).value.key.toString()}
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={() => copyToClipboard((metadata.collection as any).value.key.toString())}>
                     <Copy className="h-3 w-3" />
                   </Button>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Verified</span>
-                <Badge variant={metadata.collection.value.verified ? "default" : "secondary"}>
-                  {metadata.collection.value.verified ? 'Yes' : 'No'}
+                <Badge variant={(metadata.collection as any).value.verified ? "default" : "secondary"}>
+                  {(metadata.collection as any).value.verified ? 'Yes' : 'No'}
                 </Badge>
               </div>
             </div>
@@ -338,7 +339,7 @@ export default function TokenMetadataViewer({
         )}
 
         {/* Creators */}
-        {metadata?.creators.__option === 'Some' && (
+        {metadata?.creators && 'value' in metadata.creators && metadata.creators.value && (
           <div className="bg-secondary/50 rounded-lg p-4 space-y-3">
             <h4 className="font-semibold">Creators</h4>
             <div className="space-y-3">
@@ -348,7 +349,9 @@ export default function TokenMetadataViewer({
                     <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Address</span>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono truncate max-w-[120px]">{creator.address}</span>
+                        <span className="font-mono truncate max-w-[120px]">
+                          {creator.address.toString()}
+                        </span>
                         <Button variant="ghost" size="sm" onClick={() => copyToClipboard(creator.address.toString())}>
                           <Copy className="h-3 w-3" />
                         </Button>

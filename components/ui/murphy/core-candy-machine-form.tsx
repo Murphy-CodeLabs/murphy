@@ -56,6 +56,7 @@ import {
   addConfigLines,
   fetchCandyMachine,
   CandyMachine,
+  ConfigLineArgs // Add this import for type safety
 } from '@metaplex-foundation/mpl-core-candy-machine';
 import {
   generateSigner,
@@ -64,6 +65,7 @@ import {
   dateTime,
   some,
   none,
+  Signer // Add this import
 } from '@metaplex-foundation/umi';
 
 interface CoreCandyMachineResult {
@@ -159,18 +161,19 @@ const customResolver = (data: any) => {
     };
   } else {
     data.configLines.forEach((line: ConfigLine, index: number) => {
-      if (!line.name) {
+      if (!line.name || line.name.trim() === '') {
         errors[`configLines.${index}.name`] = {
           type: "required",
           message: "Name is required",
         };
       }
-      if (!line.uri) {
+      if (!line.uri || line.uri.trim() === '') {
         errors[`configLines.${index}.uri`] = {
           type: "required",
           message: "URI is required",
         };
       } else {
+        // Validate URI format
         try {
           new URL(line.uri);
         } catch (e) {
@@ -292,111 +295,123 @@ export default function CoreCandyMachineForm({
         id: "core-candy-machine-create",
       });
 
-      // Create wallet adapter for signing transactions
-      const walletAdapter = {
-        publicKey: publicKey,
-        signTransaction,
-        signAllTransactions
-      };
-
-      // Initialize UMI with Core Candy Machine
+      // Create UMI instance
       const umi = createUmi(connection.rpcEndpoint)
-        .use(walletAdapterIdentity(walletAdapter))
+        .use(walletAdapterIdentity({
+          publicKey,
+          signTransaction: async (transaction) => {
+            if (!signTransaction) throw new Error('Wallet does not support signing');
+            return signTransaction(transaction);
+          },
+          signAllTransactions: async (transactions) => {
+            if (!signAllTransactions) throw new Error('Wallet does not support signing multiple transactions');
+            return signAllTransactions(transactions);
+          }
+        }))
         .use(mplCore())
         .use(mplCandyMachine());
 
       // Generate candy machine keypair
       const candyMachine = generateSigner(umi);
 
-      // Prepare guards
-      const guards: any = {};
-
-      if (values.enableSolPayment) {
-        guards.solPayment = some({
-          lamports: sol(values.price),
-          destination: umi.identity.publicKey,
-        });
+      // Prepare collection if provided
+      let collection: any | undefined; // Use any to avoid type conflicts
+      if (values.collection && values.collection.trim()) {
+        try {
+          collection = umiPublicKey(values.collection);
+        } catch (error) {
+          throw new Error(`Invalid collection address: ${values.collection}`);
+        }
       }
 
-      if (values.enableBotTax) {
-        guards.botTax = some({
-          lamports: BigInt(values.botTaxLamports),
-          lastInstruction: true,
-        });
-      }
-
-      if (values.enableStartDate && values.goLiveDate) {
-        guards.startDate = some({
-          date: dateTime(new Date(values.goLiveDate).toISOString()),
-        });
-      }
-
-      if (values.enableEndDate && values.endDate) {
-        guards.endDate = some({
-          date: dateTime(new Date(values.endDate).toISOString()),
-        });
-      }
-
-      // Create candy machine configuration
-      const createIx = create(umi, {
+      // Create candy machine
+      const createBuilder = await create(umi, {
         candyMachine,
-        collection: values.collection && values.collection.trim()
-          ? umiPublicKey(values.collection)
-          : undefined,
+        ...(collection && { collection }),
         collectionUpdateAuthority: umi.identity,
         itemsAvailable: values.itemsAvailable,
-        sellerFeeBasisPoints: values.sellerFeeBasisPoints,
+        authority: umi.identity,
+        symbol: values.symbol,
+        maxEditionSupply: none(),
+        isMutable: values.isMutable,
+        creators: [
+          {
+            address: umi.identity.publicKey,
+            verified: true,
+            share: 100,
+          },
+        ],
         configLineSettings: some({
-          prefixName: values.symbol + " #",
+          prefixName: "",
           nameLength: 32,
           prefixUri: "",
           uriLength: 200,
           isSequential: false,
         }),
-        guards,
+        guards: {
+          // Add guards based on form values
+          ...(values.enableSolPayment && {
+            solPayment: some({
+              lamports: sol(values.price),
+              destination: umi.identity.publicKey,
+            }),
+          }),
+          ...(values.enableBotTax && {
+            botTax: some({
+              lamports: values.botTaxLamports,
+              lastInstruction: true,
+            }),
+          }),
+          ...(values.enableStartDate && values.goLiveDate && {
+            startDate: some({
+              date: dateTime(values.goLiveDate),
+            }),
+          }),
+          ...(values.enableEndDate && values.endDate && {
+            endDate: some({
+              date: dateTime(values.endDate),
+            }),
+          }),
+        },
       });
 
-      // Send transaction
-      const createResult = await createIx.sendAndConfirm(umi);
-
-      // Convert signature to string format
-      const createSignature = typeof createResult.signature === 'string'
-        ? createResult.signature
-        : Buffer.from(createResult.signature).toString('base64');
+      // Send the transaction - Fix: Use the builder properly
+      const createResult = await createBuilder.send(umi);
+      const signature = createResult.toString();
 
       // Add config lines if provided
       if (values.configLines.length > 0) {
-        const configLinesFormatted = values.configLines.map((line) => ({
+        const configLines: ConfigLineArgs[] = values.configLines.map((line) => ({
           name: line.name,
           uri: line.uri,
         }));
 
-        const addConfigLinesIx = addConfigLines(umi, {
+        // Fix: Await the builder first
+        const addConfigLinesBuilder = await addConfigLines(umi, {
           candyMachine: candyMachine.publicKey,
-          index: 0,
-          configLines: configLinesFormatted,
+          authority: umi.identity,
+          index: 0, // Start from index 0
+          configLines,
         });
 
-        await addConfigLinesIx.sendAndConfirm(umi);
+        await addConfigLinesBuilder.send(umi);
       }
 
-      const candyMachineAddress = candyMachine.publicKey.toString();
-
       setResult({
-        candyMachine: candyMachineAddress,
-        signature: createSignature,
+        candyMachine: candyMachine.publicKey.toString(),
+        signature,
         collection: values.collection || undefined,
       });
 
       if (onCandyMachineCreated) {
-        onCandyMachineCreated(candyMachineAddress, createSignature);
+        onCandyMachineCreated(candyMachine.publicKey.toString(), signature);
       }
 
       setCurrentStage("success");
 
       toast.success("Core Candy Machine created successfully!", {
         id: "core-candy-machine-create",
-        description: `Candy Machine: ${candyMachineAddress.slice(0, 8)}...${candyMachineAddress.slice(-8)}`,
+        description: `Candy Machine: ${candyMachine.publicKey.toString().slice(0, 8)}...${candyMachine.publicKey.toString().slice(-8)}`,
       });
 
     } catch (err: any) {
@@ -405,23 +420,27 @@ export default function CoreCandyMachineForm({
       setCurrentStage("error");
       setError(err.message || "An unknown error occurred");
 
-      if (err.message && (err.message.includes("rejected") || err.message.includes("canceled"))) {
-        toast.error("Transaction rejected", {
-          id: "core-candy-machine-create",
-          description: "You have rejected the transaction",
-        });
-      } else {
-        toast.error("Cannot create Core Candy Machine", {
-          id: "core-candy-machine-create",
-          description: err.message,
-        });
+      // More specific error messages
+      let errorMessage = "Cannot create Core Candy Machine";
+      if (err.message?.includes("insufficient funds")) {
+        errorMessage = "Insufficient funds for transaction";
+      } else if (err.message?.includes("invalid program")) {
+        errorMessage = "Core Candy Machine program not available";
+      } else if (err.message?.includes("invalid account")) {
+        errorMessage = "Invalid account configuration";
+      }
 
-        if (err.message?.includes("failed to fetch") ||
-          err.message?.includes("timeout") ||
-          err.message?.includes("429") ||
-          err.message?.includes("503")) {
-          switchToNextEndpoint();
-        }
+      toast.error(errorMessage, {
+        id: "core-candy-machine-create",
+        description: err.message,
+      });
+
+      // Network error handling
+      if (err.message?.includes("failed to fetch") ||
+        err.message?.includes("timeout") ||
+        err.message?.includes("429") ||
+        err.message?.includes("503")) {
+        switchToNextEndpoint();
       }
     } finally {
       setIsSubmitting(false);

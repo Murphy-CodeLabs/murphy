@@ -7,7 +7,10 @@ import { useForm } from "react-hook-form";
 // Solana
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Transaction } from '@solana/web3.js';
-import { createTransferInstruction } from '@solana/spl-token';
+import {
+  createTransferInstruction, getAssociatedTokenAddress,
+  createAssociatedTokenAccountInstruction
+} from '@solana/spl-token';
 
 // UI components
 import { Button } from "@/components/ui/button";
@@ -40,8 +43,8 @@ import { ModalContext } from "@/components/providers/wallet-provider";
 // Import Metaplex libraries
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
-import { mplTokenMetadata, findMetadataPda, transferNft } from '@metaplex-foundation/mpl-token-metadata';
-import { publicKey } from '@metaplex-foundation/umi';
+import { mplTokenMetadata, findMetadataPda } from '@metaplex-foundation/mpl-token-metadata';
+import { publicKey as umiPublicKey } from '@metaplex-foundation/umi';
 
 interface TransferNFTResult {
   signature: string;
@@ -148,39 +151,25 @@ export default function TransferNFTForm({
     try {
       setIsLoadingNFT(true);
 
-      // Create UMI instance
-      const umi = createUmi(connection.rpcEndpoint)
-        .use(mplTokenMetadata());
+      // Simple validation - check if mint account exists
+      const mintPubkey = new PublicKey(mintAddress);
+      const accountInfo = await connection.getAccountInfo(mintPubkey);
 
-      // Fetch NFT metadata
-      const mintPublicKey = publicKey(mintAddress);
-      const metadataPda = findMetadataPda(umi, { mint: mintPublicKey });
-
-      // Get account info to check if NFT exists
-      const accountInfo = await connection.getAccountInfo(new PublicKey(mintAddress));
       if (!accountInfo) {
-        throw new Error("NFT not found");
+        throw new Error("NFT mint not found");
       }
 
-      // Try to fetch metadata URI and details
-      try {
-        const metadataAccount = await umi.rpc.getAccount(metadataPda[0]);
-        if (metadataAccount.exists) {
-          // Parse metadata if needed
-          setNftMetadata({
-            name: "NFT",
-            mint: mintAddress,
-            exists: true
-          });
-        }
-      } catch (metaErr) {
-        // Even if metadata parsing fails, we can still transfer if mint exists
-        setNftMetadata({
-          name: "NFT",
-          mint: mintAddress,
-          exists: true
-        });
+      // Check if it's a valid token mint
+      if (accountInfo.data.length !== 82) {
+        throw new Error("Invalid token mint account");
       }
+
+      // Set metadata
+      setNftMetadata({
+        name: "NFT",
+        mint: mintAddress,
+        exists: true
+      });
 
       toast.success("NFT found!", {
         description: `Ready to transfer NFT: ${mintAddress.slice(0, 8)}...`
@@ -210,42 +199,68 @@ export default function TransferNFTForm({
         id: "transfer-nft"
       });
 
-      // Create UMI instance with wallet adapter
-      const umi = createUmi(connection.rpcEndpoint)
-        .use(walletAdapterIdentity({
+      // Create transaction for NFT transfer
+      const transaction = new Transaction();
+
+      // Get mint public key
+      const mintPubkey = new PublicKey(values.nftMintAddress);
+      const recipientPubkey = new PublicKey(values.recipientAddress);
+
+      // Get associated token accounts
+      const fromTokenAccount = await getAssociatedTokenAddress(
+        mintPubkey,
+        publicKey
+      );
+
+      const toTokenAccount = await getAssociatedTokenAddress(
+        mintPubkey,
+        recipientPubkey
+      );
+
+      // Check if recipient token account exists
+      const recipientAccountInfo = await connection.getAccountInfo(toTokenAccount);
+
+      if (!recipientAccountInfo) {
+        // Create associated token account for recipient
+        const { createAssociatedTokenAccountInstruction } = await import('@solana/spl-token');
+        transaction.add(
+          createAssociatedTokenAccountInstruction(
+            publicKey,
+            toTokenAccount,
+            recipientPubkey,
+            mintPubkey
+          )
+        );
+      }
+
+      // Add transfer instruction
+      transaction.add(
+        createTransferInstruction(
+          fromTokenAccount,
+          toTokenAccount,
           publicKey,
-          signTransaction: wallet.adapter.signTransaction,
-          signAllTransactions: wallet.adapter.signAllTransactions
-        }))
-        .use(mplTokenMetadata());
+          1, // NFT amount is always 1
+          [],
+          mintPubkey
+        )
+      );
 
-      // Convert addresses to UMI public keys
-      const nftMintPubkey = publicKey(values.nftMintAddress);
-      const recipientPubkey = publicKey(values.recipientAddress);
+      // Send transaction
+      const signature = await sendTransaction(transaction, connection);
 
-      // Transfer NFT using Metaplex
-      const transferResult = await transferNft(umi, {
-        mint: nftMintPubkey,
-        authority: umi.identity,
-        tokenOwner: umi.identity.publicKey,
-        destinationOwner: recipientPubkey,
-      }).sendAndConfirm(umi);
-
-      // Convert signature to string format
-      const signatureStr = typeof transferResult.signature === 'string'
-        ? transferResult.signature
-        : Buffer.from(transferResult.signature).toString('base64');
+      // Confirm transaction
+      await connection.confirmTransaction(signature, 'confirmed');
 
       // Save result
       setResult({
-        signature: signatureStr,
+        signature,
         nftMint: values.nftMintAddress,
         recipient: values.recipientAddress
       });
 
       // Call callback if provided
       if (onNFTTransferred) {
-        onNFTTransferred(signatureStr, values.recipientAddress);
+        onNFTTransferred(signature, values.recipientAddress);
       }
 
       toast.success("NFT transferred successfully!", {

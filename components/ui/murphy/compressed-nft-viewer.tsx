@@ -43,18 +43,80 @@ import { Loader2, ExternalLink, Search, TreePine, Archive, Info, Copy } from "lu
 // Context
 import { ModalContext } from "@/components/providers/wallet-provider";
 
-// Import Metaplex libraries for Compressed NFTs
-import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
-import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
-import { mplBubblegum } from '@metaplex-foundation/mpl-bubblegum';
-import {
-  getLeafAssetId,
-  parseLeafFromMintToCollectionV1Transaction
-} from '@metaplex-foundation/mpl-bubblegum';
-import {
-  publicKey as umiPublicKey,
-} from '@metaplex-foundation/umi';
-
+interface DASApiResponse {
+  id: string;
+  interface: string;
+  ownership: {
+    frozen: boolean;
+    delegated: boolean;
+    delegate?: string;
+    ownership_model: string;
+    owner: string;
+  };
+  supply: {
+    print_max_supply: number;
+    print_current_supply: number;
+    edition_nonce: number;
+  };
+  mutable: boolean;
+  burnt: boolean;
+  mint_extensions?: any;
+  compression: {
+    eligible: boolean;
+    compressed: boolean;
+    data_hash: string;
+    creator_hash: string;
+    asset_hash: string;
+    tree: string;
+    seq: number;
+    leaf_id: number;
+  };
+  grouping: Array<{
+    group_key: string;
+    group_value: string;
+  }>;
+  royalty: {
+    royalty_model: string;
+    target?: string;
+    percent: number;
+    basis_points: number;
+    primary_sale_happened: boolean;
+    locked: boolean;
+  };
+  creators: Array<{
+    address: string;
+    share: number;
+    verified: boolean;
+  }>;
+  content: {
+    $schema: string;
+    json_uri: string;
+    files: Array<{
+      uri: string;
+      mime: string;
+    }>;
+    metadata: {
+      attributes: Array<{
+        trait_type: string;
+        value: string;
+      }>;
+      description: string;
+      name: string;
+      symbol: string;
+      image?: string;
+      external_url?: string;
+    };
+    links: {
+      external_url?: string;
+      image?: string;
+    };
+  };
+}
+interface DASApiError {
+  code: number;
+  message: string;
+  data?: any;
+}
 interface CompressedNFTData {
   assetId: string;
   tree: string;
@@ -98,7 +160,54 @@ type CompressedNFTFormValues = {
   treeAddress: string;
   leafIndex: number;
 };
+const DAS_API_ENDPOINTS = {
+  mainnet: [
+    'https://mainnet.helius-rpc.com/?api-key=YOUR_HELIUS_API_KEY',
+    'https://rpc.simplehash.com/solana-mainnet',
+    'https://solana-mainnet.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY',
+  ],
+  devnet: [
+    'https://devnet.helius-rpc.com/?api-key=YOUR_HELIUS_API_KEY',
+    'https://rpc.simplehash.com/solana-devnet',
+    'https://solana-devnet.g.alchemy.com/v2/YOUR_ALCHEMY_API_KEY',
+  ],
+};
+const getDASApiUrl = (network: string) => {
+  if (network === 'mainnet') {
+    return 'https://mainnet.helius-rpc.com/?api-key=demo'; // Replace with your API key
+  }
+  return 'https://devnet.helius-rpc.com/?api-key=demo'; // Replace with your API key
+};
 
+// DAS API method for getting asset by ID
+const callDASApi = async (method: string, params: any, network: string) => {
+  const url = getDASApiUrl(network);
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      id: 'compressed-nft-viewer',
+      method,
+      params,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`DAS API request failed: ${response.status} ${response.statusText}`);
+  }
+
+  const result = await response.json();
+
+  if (result.error) {
+    throw new Error(`DAS API error: ${result.error.message}`);
+  }
+
+  return result.result;
+};
 // Create custom resolver for form
 const customResolver = (data: any) => {
   const errors: any = {};
@@ -220,7 +329,13 @@ export default function CompressedNFTViewer({
     try {
       setIsLoadingMetadata(true);
 
-      const response = await fetch(uri, {
+      // Handle IPFS URIs
+      let metadataUrl = uri;
+      if (uri.startsWith('ipfs://')) {
+        metadataUrl = uri.replace('ipfs://', 'https://ipfs.io/ipfs/');
+      }
+
+      const response = await fetch(metadataUrl, {
         headers: {
           'Accept': 'application/json',
         },
@@ -232,20 +347,45 @@ export default function CompressedNFTViewer({
       }
 
       const metadata = await response.json();
-      setCnftMetadata(metadata);
+
+      // Transform metadata to our format
+      const transformedMetadata: CompressedNFTMetadata = {
+        name: metadata.name || cnftData?.metadata?.name || "Compressed NFT",
+        description: metadata.description || "",
+        image: metadata.image || metadata.image_url || "",
+        external_url: metadata.external_url || "",
+        attributes: metadata.attributes || [],
+        properties: metadata.properties || {},
+      };
+
+      setCnftMetadata(transformedMetadata);
     } catch (err: any) {
       console.error("Error loading metadata:", err);
 
-      // Fallback for CORS issues
+      // Enhanced fallback for various error types
       if (err.message.includes('CORS') || err.message.includes('Failed to fetch')) {
         toast.warning("Unable to load metadata due to CORS restrictions");
         setCnftMetadata({
           name: cnftData?.metadata?.name || "Compressed NFT",
-          description: "Metadata could not be loaded due to CORS restrictions",
+          description: "Metadata could not be loaded due to CORS restrictions. This is common with decentralized storage.",
+          image: "https://via.placeholder.com/300x300/6b7280/ffffff?text=CORS+Error",
+          attributes: [
+            {
+              trait_type: "Status",
+              value: "CORS Blocked"
+            }
+          ]
         });
       } else {
         toast.error("Failed to load metadata", {
           description: err.message
+        });
+
+        // Fallback metadata
+        setCnftMetadata({
+          name: cnftData?.metadata?.name || "Compressed NFT",
+          description: "Failed to load metadata",
+          image: "https://via.placeholder.com/300x300/ef4444/ffffff?text=Load+Error",
         });
       }
     } finally {
@@ -255,56 +395,114 @@ export default function CompressedNFTViewer({
 
   const getCompressedNFTByAssetId = async (assetId: string) => {
     try {
-      // Initialize UMI
-      const umi = createUmi(connection.rpcEndpoint)
-        .use(mplBubblegum());
+      console.log(`Fetching compressed NFT by asset ID: ${assetId}`);
 
-      // For demonstration, we'll simulate getting compressed NFT data
-      // In real implementation, you'd need to use DAS API or indexer
-      const mockData: CompressedNFTData = {
-        assetId,
-        tree: "11111111111111111111111111111111", // Mock tree address
-        leafIndex: 0,
-        proof: [],
+      // Call DAS API to get asset by ID
+      const dasResult: DASApiResponse = await callDASApi(
+        'getAsset',
+        { id: assetId },
+        network
+      );
+
+      // Check if asset is compressed
+      if (!dasResult.compression || !dasResult.compression.compressed) {
+        throw new Error('Asset is not a compressed NFT');
+      }
+
+      // Transform DAS response to our format
+      const compressedNFTData: CompressedNFTData = {
+        assetId: dasResult.id,
+        tree: dasResult.compression.tree,
+        leafIndex: dasResult.compression.leaf_id,
+        proof: [], // Proof would need separate API call
         metadata: {
-          name: "Compressed NFT",
-          symbol: "CNFT",
-          uri: "https://example.com/metadata.json",
-          creators: [
-            {
-              address: publicKey?.toString() || "11111111111111111111111111111111",
-              verified: true,
-              share: 100,
-            }
-          ]
+          name: dasResult.content.metadata.name,
+          symbol: dasResult.content.metadata.symbol,
+          uri: dasResult.content.json_uri,
+          creators: dasResult.creators?.map(creator => ({
+            address: creator.address,
+            verified: creator.verified,
+            share: creator.share,
+          })) || [],
         },
-        owner: publicKey?.toString() || "11111111111111111111111111111111",
-        compressed: true,
+        owner: dasResult.ownership.owner,
+        compressed: dasResult.compression.compressed,
         readable: true,
       };
 
-      return mockData;
+      return compressedNFTData;
     } catch (error: any) {
       console.error("Error fetching compressed NFT:", error);
+
+      // If DAS API fails, provide helpful error message
+      if (error.message.includes('DAS API')) {
+        throw new Error(`DAS API error: ${error.message}. Please check your API key and network settings.`);
+      }
+
+      if (error.message.includes('not a compressed NFT')) {
+        throw new Error('The provided asset ID is not a compressed NFT');
+      }
+
+      throw new Error(`Unable to retrieve compressed NFT: ${error.message}`);
+    }
+  };
+  // Add missing functions and render after getCompressedNFTByAssetId function:
+
+  const getCompressedNFTByTreeAndLeaf = async (treeAddress: string, leafIndex: number) => {
+    try {
+      console.log(`Fetching compressed NFT by tree: ${treeAddress}, leaf: ${leafIndex}`);
+
+      // Call DAS API to get assets by tree
+      const dasResult = await callDASApi(
+        'getAssetsByTree',
+        {
+          tree: treeAddress,
+          limit: 1000,
+          page: 1,
+        },
+        network
+      );
+
+      // Find the asset with matching leaf index
+      const matchingAsset = dasResult.items?.find((asset: DASApiResponse) =>
+        asset.compression.leaf_id === leafIndex
+      );
+
+      if (!matchingAsset) {
+        throw new Error(`No compressed NFT found at leaf index ${leafIndex} in tree ${treeAddress}`);
+      }
+
+      // Use the asset ID to get full details
+      return await getCompressedNFTByAssetId(matchingAsset.id);
+    } catch (error: any) {
+      console.error("Error fetching compressed NFT by tree:", error);
+
+      if (error.message.includes('DAS API')) {
+        throw new Error(`DAS API error: ${error.message}. Please check your API key and network settings.`);
+      }
+
       throw new Error(`Unable to retrieve compressed NFT: ${error.message}`);
     }
   };
 
-  const getCompressedNFTByTreeAndLeaf = async (treeAddress: string, leafIndex: number) => {
+  const getAssetProof = async (assetId: string) => {
     try {
-      // Initialize UMI
-      const umi = createUmi(connection.rpcEndpoint)
-        .use(mplBubblegum());
+      const proofResult = await callDASApi(
+        'getAssetProof',
+        { id: assetId },
+        network
+      );
 
-      // Generate asset ID from tree and leaf index
-      const treePublicKey = umiPublicKey(treeAddress);
-      const assetId = getLeafAssetId(treePublicKey, BigInt(leafIndex));
-
-      // Get compressed NFT data
-      return await getCompressedNFTByAssetId(assetId.toString());
+      return {
+        root: proofResult.root,
+        proof: proofResult.proof,
+        node_index: proofResult.node_index,
+        leaf: proofResult.leaf,
+        tree_id: proofResult.tree_id,
+      };
     } catch (error: any) {
-      console.error("Error fetching compressed NFT by tree:", error);
-      throw new Error(`Unable to retrieve compressed NFT: ${error.message}`);
+      console.warn("Could not fetch asset proof:", error);
+      return null;
     }
   };
 
@@ -320,16 +518,28 @@ export default function CompressedNFTViewer({
       if (values.assetId && values.assetId.trim()) {
         // Search by Asset ID
         data = await getCompressedNFTByAssetId(values.assetId);
+
+        // Try to fetch proof
+        const proof = await getAssetProof(values.assetId);
+        if (proof) {
+          data.proof = proof.proof;
+        }
       } else {
         // Search by Tree Address + Leaf Index
         data = await getCompressedNFTByTreeAndLeaf(values.treeAddress, values.leafIndex);
+
+        // Try to fetch proof
+        const proof = await getAssetProof(data.assetId);
+        if (proof) {
+          data.proof = proof.proof;
+        }
       }
 
       setCnftData(data);
       setCurrentStage('success');
 
       toast.success("Compressed NFT found!", {
-        description: `Asset: ${data.assetId.slice(0, 8)}...`
+        description: `Found via DAS API: ${data.assetId.slice(0, 8)}...`
       });
 
     } catch (err: any) {
@@ -337,9 +547,20 @@ export default function CompressedNFTViewer({
       setError(err.message);
       setCurrentStage('error');
 
-      toast.error("Failed to fetch Compressed NFT", {
-        description: err.message
-      });
+      // Enhanced error handling for DAS API issues
+      if (err.message.includes('DAS API')) {
+        toast.error("DAS API Error", {
+          description: "Please check your API key configuration or try again later"
+        });
+      } else if (err.message.includes('not a compressed NFT')) {
+        toast.error("Invalid Asset", {
+          description: "The provided asset ID is not a compressed NFT"
+        });
+      } else {
+        toast.error("Failed to fetch Compressed NFT", {
+          description: err.message
+        });
+      }
 
       // If query fails due to connection error, try switching to another endpoint
       if (err.message.includes('failed to fetch') ||
@@ -475,7 +696,12 @@ export default function CompressedNFTViewer({
             <Alert>
               <Info className="h-4 w-4" />
               <AlertDescription>
-                Compressed NFTs are stored in Merkle Trees and require either the Asset ID or both Tree Address and Leaf Index to retrieve.
+                <strong>DAS API Integration:</strong> This viewer uses the Digital Asset Standard (DAS) API.
+                For production use, configure your API keys for Helius, Alchemy, or other DAS providers.
+                <br />
+                <span className="text-xs mt-1 block">
+                  Current configuration uses demo endpoints with rate limits.
+                </span>
               </AlertDescription>
             </Alert>
 
@@ -627,23 +853,31 @@ export default function CompressedNFTViewer({
               </div>
             )}
 
-            {cnftData?.metadata?.creators && cnftData.metadata.creators.length > 0 && (
+            {cnftData?.proof && cnftData.proof.length > 0 && (
               <div className="bg-secondary/50 rounded-lg p-3">
-                <h4 className="text-sm font-medium mb-2">Creators</h4>
+                <h4 className="text-sm font-medium mb-2">Merkle Proof</h4>
                 <div className="space-y-1 text-xs">
-                  {cnftData.metadata.creators.map((creator, index) => (
-                    <div key={index} className="flex justify-between items-center">
-                      <span className="font-mono truncate">{creator.address.slice(0, 8)}...{creator.address.slice(-4)}</span>
-                      <div className="flex items-center gap-2">
-                        <span>{creator.share}%</span>
-                        {creator.verified && (
-                          <Badge variant="outline" className="px-1 py-0 text-xs">
-                            Verified
-                          </Badge>
-                        )}
+                  <div className="flex justify-between items-center">
+                    <span className="text-muted-foreground">Proof Length</span>
+                    <span>{cnftData.proof.length}</span>
+                  </div>
+                  <div className="max-h-32 overflow-y-auto">
+                    {cnftData.proof.map((proof, index) => (
+                      <div key={index} className="flex justify-between items-center py-1">
+                        <span className="text-muted-foreground">Proof {index + 1}</span>
+                        <div className="flex items-center gap-1">
+                          <span className="font-mono text-xs truncate max-w-[120px]">{proof}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => copyToClipboard(proof)}
+                          >
+                            <Copy className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             )}
@@ -756,7 +990,7 @@ export default function CompressedNFTViewer({
           )}
         </CardTitle>
         <CardDescription>
-          Lookup and display information of compressed NFTs on Solana
+          Lookup and display information of compressed NFTs on Solana using DAS API
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -765,5 +999,8 @@ export default function CompressedNFTViewer({
     </Card>
   );
 }
+
+// Remove the named export and use only default export
+// export { CompressedNFTViewer };
 
 export { CompressedNFTViewer };

@@ -35,10 +35,9 @@ import { Loader2, ExternalLink, CheckCircle, RefreshCw } from "lucide-react";
 // Context
 import { ModalContext } from "@/components/providers/wallet-provider";
 
-// Import Metaplex libraries
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
-import { mplTokenMetadata, updateNft, fetchMetadata } from '@metaplex-foundation/mpl-token-metadata';
+import { mplTokenMetadata, fetchMetadata, updateV1 } from '@metaplex-foundation/mpl-token-metadata';
 import { publicKey } from '@metaplex-foundation/umi';
 
 interface UpdateCollectionResult {
@@ -158,15 +157,34 @@ export default function UpdateCollectionForm({
 
       // Fetch current metadata
       const collectionPublicKey = publicKey(mintAddress);
-      const metadata = await fetchMetadata(umi, collectionPublicKey);
 
-      // Update form with current values
-      form.setValue('name', metadata.name);
-      form.setValue('uri', metadata.uri);
+      try {
+        const metadata = await fetchMetadata(umi, collectionPublicKey);
 
-      toast.success("Collection metadata loaded!", {
-        description: `Found: ${metadata.name}`
-      });
+        // Update form with current values
+        form.setValue('name', metadata.name);
+        form.setValue('uri', metadata.uri);
+
+        toast.success("Collection metadata loaded!", {
+          description: `Found: ${metadata.name}`
+        });
+      } catch (metaError) {
+        console.warn("Metadata fetch failed:", metaError);
+
+        // Try to validate mint exists by checking account
+        try {
+          const mintAccount = await umi.rpc.getAccount(collectionPublicKey);
+          if (mintAccount.exists) {
+            toast.warning("Collection found but metadata not loaded", {
+              description: "You can still update the collection"
+            });
+          } else {
+            throw new Error("Collection not found");
+          }
+        } catch (accountError) {
+          throw new Error("Collection not found or inaccessible");
+        }
+      }
 
     } catch (err: any) {
       console.error("Error loading metadata:", err);
@@ -203,19 +221,24 @@ export default function UpdateCollectionForm({
         id: "update-collection"
       });
 
-      // Update collection NFT
       const collectionPublicKey = publicKey(values.collectionMint);
 
-      const updateResult = await updateNft(umi, {
+      const updateBuilder = updateV1(umi, {
         mint: collectionPublicKey,
-        name: values.name,
-        uri: values.uri,
-      }).sendAndConfirm(umi);
+        authority: umi.identity,
+        data: {
+          name: values.name,
+          symbol: '', // Keep existing symbol
+          uri: values.uri,
+          sellerFeeBasisPoints: 0, // Keep existing royalty
+          creators: null, // Keep existing creators
+        }
+      });
 
-      // Convert signature to string format
-      const signatureStr = typeof updateResult.signature === 'string'
-        ? updateResult.signature
-        : Buffer.from(updateResult.signature).toString('base64');
+      const updateResult = await updateBuilder.send(umi);
+
+      // Handle signature properly - updateResult is TransactionSignature type
+      const signatureStr = updateResult.toString();
 
       // Save result
       setResult({

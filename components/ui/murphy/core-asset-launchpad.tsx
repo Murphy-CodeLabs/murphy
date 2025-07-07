@@ -87,48 +87,47 @@ interface PluginConfig {
 }
 
 type AssetType = 'asset' | 'collection';
-
-// Form Schema
+const formatSignature = (signature: Uint8Array | string): string => {
+  if (typeof signature === 'string') {
+    return signature;
+  }
+  return btoa(String.fromCharCode(...signature));
+};
 const formSchema = z.object({
-  // Basic Info
   assetType: z.enum(['asset', 'collection']),
   name: z.string().min(1, "Name is required").max(32, "Name must be less than 32 characters"),
-  uri: z.string().url("Invalid URI").optional().or(z.literal("")),
-
-  // Collection (for assets)
-  collection: z.string().optional(),
-
-  // Core Asset specific
-  owner: z.string().optional(),
-  updateAuthority: z.string().optional(),
-
-  // Plugins
-  enableRoyalties: z.boolean().default(false),
-  royaltyPercentage: z.number().min(0).max(100).default(5),
-
-  enableFreeze: z.boolean().default(false),
-  freezeAuthority: z.string().optional(),
-
-  enableBurn: z.boolean().default(false),
-  burnAuthority: z.string().optional(),
-
-  enableTransfer: z.boolean().default(false),
-  transferAuthority: z.string().optional(),
-
-  enableUpdateDelegate: z.boolean().default(false),
-  updateDelegateAuthority: z.string().optional(),
-
-  enableAttributes: z.boolean().default(false),
+  uri: z.string().refine((val) => {
+    if (val === '') return true;
+    try {
+      new URL(val);
+      return true;
+    } catch {
+      return false;
+    }
+  }, "Invalid URI format"),
+  collection: z.string(),
+  owner: z.string(),
+  updateAuthority: z.string(),
+  enableRoyalties: z.boolean(),
+  royaltyPercentage: z.number().min(0).max(100),
+  enableFreeze: z.boolean(),
+  freezeAuthority: z.string(),
+  enableBurn: z.boolean(),
+  burnAuthority: z.string(),
+  enableTransfer: z.boolean(),
+  transferAuthority: z.string(),
+  enableUpdateDelegate: z.boolean(),
+  updateDelegateAuthority: z.string(),
+  enableAttributes: z.boolean(),
   attributes: z.array(z.object({
-    key: z.string().min(1, "Key is required"),
-    value: z.string().min(1, "Value is required"),
-  })).default([]),
-
-  // Advanced
-  permanent: z.boolean().default(false),
+    key: z.string(),
+    value: z.string(),
+  })),
+  permanent: z.boolean(),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+type FormSchema = z.infer<typeof formSchema>;
+
 
 interface CoreAssetLaunchpadProps {
   className?: string;
@@ -155,31 +154,32 @@ export function CoreAssetLaunchpad({
   const [network, setNetwork] = useState<'devnet' | 'mainnet'>('devnet');
   const [activeFormTab, setActiveFormTab] = useState("basic");
 
-  // Form
-  const form = useForm<FormValues>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      assetType: defaultAssetType,
-      name: "",
-      uri: "",
-      collection: "",
-      owner: "",
-      updateAuthority: "",
+      assetType: 'asset',
+      name: '',
+      uri: '',
+      collection: '',
+      owner: '',
+      updateAuthority: '',
       enableRoyalties: false,
       royaltyPercentage: 5,
       enableFreeze: false,
-      freezeAuthority: "",
+      freezeAuthority: '',
       enableBurn: false,
-      burnAuthority: "",
+      burnAuthority: '',
       enableTransfer: false,
-      transferAuthority: "",
+      transferAuthority: '',
       enableUpdateDelegate: false,
-      updateDelegateAuthority: "",
+      updateDelegateAuthority: '',
       enableAttributes: false,
       attributes: [],
       permanent: false,
     },
   });
+
+
 
   // Effects
   useEffect(() => {
@@ -234,7 +234,7 @@ export function CoreAssetLaunchpad({
   };
 
   // Main submission handler
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: FormSchema) => {
     if (!connected || !publicKey || !wallet) {
       toast.error("Please connect your wallet");
       return;
@@ -264,8 +264,8 @@ export function CoreAssetLaunchpad({
           name: values.name,
           uri: values.uri || "",
           updateAuthority: values.updateAuthority ?
-            some(umiPublicKey(values.updateAuthority)) :
-            some(umi.identity.publicKey),
+            umiPublicKey(values.updateAuthority) :
+            umi.identity.publicKey,
         }).sendAndConfirm(umi);
 
         // Add plugins to collection if enabled
@@ -285,7 +285,7 @@ export function CoreAssetLaunchpad({
             }),
           }).sendAndConfirm(umi);
 
-          pluginSignatures.push(Buffer.from(royaltyResult.signature).toString('base64'));
+          pluginSignatures.push(formatSignature(royaltyResult.signature));
         }
 
         setResult({
@@ -304,16 +304,16 @@ export function CoreAssetLaunchpad({
           name: values.name,
           uri: values.uri || "",
           owner: values.owner ?
-            some(umiPublicKey(values.owner)) :
-            some(umi.identity.publicKey),
+            umiPublicKey(values.owner) :
+            umi.identity.publicKey,
           updateAuthority: values.updateAuthority ?
-            some(umiPublicKey(values.updateAuthority)) :
-            some(umi.identity.publicKey),
+            umiPublicKey(values.updateAuthority) :
+            umi.identity.publicKey,
         };
 
         // Add to collection if specified
         if (values.collection) {
-          createAssetParams.collection = some(umiPublicKey(values.collection));
+          createAssetParams.collection = umiPublicKey(values.collection);
         }
 
         createResult = await createV1(umi, createAssetParams).sendAndConfirm(umi);
@@ -335,7 +335,7 @@ export function CoreAssetLaunchpad({
             }),
           }).sendAndConfirm(umi);
 
-          pluginSignatures.push(Buffer.from(royaltyResult.signature).toString('base64'));
+          pluginSignatures.push(formatSignature(royaltyResult.signature));
         }
 
         if (values.enableFreeze && values.freezeAuthority) {
@@ -347,10 +347,13 @@ export function CoreAssetLaunchpad({
                 frozen: false,
               },
             }),
-            initAuthority: some(umiPublicKey(values.freezeAuthority)),
+            initAuthority: {
+              __kind: 'Address',
+              address: umiPublicKey(values.freezeAuthority),
+            },
           }).sendAndConfirm(umi);
 
-          pluginSignatures.push(Buffer.from(freezeResult.signature).toString('base64'));
+          pluginSignatures.push(formatSignature(freezeResult.signature));
         }
 
         if (values.enableBurn && values.burnAuthority) {
@@ -358,12 +361,14 @@ export function CoreAssetLaunchpad({
             asset: assetSigner.publicKey,
             plugin: createPlugin({
               type: 'BurnDelegate',
-              data: {},
             }),
-            initAuthority: some(umiPublicKey(values.burnAuthority)),
+            initAuthority: {
+              __kind: 'Address',
+              address: umiPublicKey(values.burnAuthority),
+            },
           }).sendAndConfirm(umi);
 
-          pluginSignatures.push(Buffer.from(burnResult.signature).toString('base64'));
+          pluginSignatures.push(formatSignature(burnResult.signature));
         }
 
         if (values.enableTransfer && values.transferAuthority) {
@@ -371,13 +376,17 @@ export function CoreAssetLaunchpad({
             asset: assetSigner.publicKey,
             plugin: createPlugin({
               type: 'TransferDelegate',
-              data: {},
             }),
-            initAuthority: some(umiPublicKey(values.transferAuthority)),
+            initAuthority: {
+              __kind: 'Address',
+              address: umiPublicKey(values.transferAuthority),
+            },
           }).sendAndConfirm(umi);
 
-          pluginSignatures.push(Buffer.from(transferResult.signature).toString('base64'));
+          pluginSignatures.push(formatSignature(transferResult.signature));
         }
+
+
 
         if (values.enableAttributes && values.attributes.length > 0) {
           const attributesResult = await addPluginV1(umi, {
@@ -393,7 +402,7 @@ export function CoreAssetLaunchpad({
             }),
           }).sendAndConfirm(umi);
 
-          pluginSignatures.push(Buffer.from(attributesResult.signature).toString('base64'));
+          pluginSignatures.push(formatSignature(attributesResult.signature));
         }
 
         setResult({
@@ -1066,5 +1075,3 @@ export function CoreAssetLaunchpad({
     </Card>
   );
 }
-
-export { CoreAssetLaunchpad };

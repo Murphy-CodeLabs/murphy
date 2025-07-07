@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { PublicKey, Keypair } from "@solana/web3.js";
 
 import {
   Card,
@@ -36,7 +37,22 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ConnectWalletButton } from "./connect-wallet-button";
-
+import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
+import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
+import {
+  mplTokenMetadata,
+  createV1,
+  createFungible, // Fix: use createFungible instead of createFungibleV1
+  fetchMetadata,
+  TokenStandard
+} from '@metaplex-foundation/mpl-token-metadata';
+import {
+  generateSigner,
+  percentAmount,
+  publicKey as umiPublicKey,
+  createGenericFile,
+  sol
+} from '@metaplex-foundation/umi';
 // Icons
 import { Coins, FileImage, Users, Settings, Plus, X, Loader2 } from "lucide-react";
 
@@ -50,39 +66,29 @@ interface TMLaunchpadResult {
   tokenType: string;
 }
 
-// Form Schema
 const formSchema = z.object({
-  // Token Type
   tokenType: z.enum(['fungible', 'nft', 'programmable-nft']),
-
-  // Basic Info
   name: z.string().min(1, "Name is required"),
   symbol: z.string().min(1, "Symbol is required"),
-  description: z.string().optional(),
-  image: z.string().url().optional(),
-  externalUrl: z.string().url().optional(),
-
-  // Fungible Token specific
-  decimals: z.number().min(0).max(9).optional(),
-  supply: z.number().min(1).optional(),
+  description: z.string(),
+  image: z.string(),
+  externalUrl: z.string(),
+  decimals: z.number().min(0).max(9),
+  supply: z.number().min(1),
 
   // NFT specific
   attributes: z.array(z.object({
     trait_type: z.string(),
     value: z.string(),
-  })).optional(),
-
-  // Creators
+  })),
   creators: z.array(z.object({
-    address: z.string().min(1, "Address is required"),
+    address: z.string(),
     share: z.number().min(0).max(100),
     verified: z.boolean(),
-  })).optional(),
-
-  // Advanced
-  sellerFeeBasisPoints: z.number().min(0).max(10000).default(500),
-  isMutable: z.boolean().default(true),
-  collection: z.string().optional(),
+  })),
+  sellerFeeBasisPoints: z.number().min(0).max(10000),
+  isMutable: z.boolean(),
+  collection: z.string(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -116,6 +122,8 @@ export function TMLaunchpadForm({
       name: "",
       symbol: "",
       description: "",
+      image: "",
+      externalUrl: "",
       decimals: 9,
       supply: 1000000,
       sellerFeeBasisPoints: 500,
@@ -128,6 +136,7 @@ export function TMLaunchpadForm({
         }
       ],
       attributes: [],
+      collection: "",
     },
   });
 
@@ -153,36 +162,144 @@ export function TMLaunchpadForm({
       return;
     }
 
+    // Validate creators share total
+    const totalShare = values.creators?.reduce((sum, creator) => sum + (creator.share || 0), 0) || 0;
+    if (values.creators && values.creators.length > 0 && totalShare !== 100) {
+      toast.error("Creator shares must total 100%");
+      return;
+    }
+
+    // Validate fungible token fields
+    if (values.tokenType === 'fungible') {
+      if (!values.decimals && values.decimals !== 0) {
+        toast.error("Decimals is required for fungible tokens");
+        return;
+      }
+      if (!values.supply) {
+        toast.error("Supply is required for fungible tokens");
+        return;
+      }
+    }
+
+    // Validate creator addresses
+    if (values.creators) {
+      for (let i = 0; i < values.creators.length; i++) {
+        const creator = values.creators[i];
+        if (!creator.address || creator.address.trim() === '') {
+          toast.error(`Creator ${i + 1} address is required`);
+          return;
+        }
+
+        // Simple Solana address validation (base58, length check)
+        const addressRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+        if (!addressRegex.test(creator.address)) {
+          toast.error(`Creator ${i + 1} has invalid address format`);
+          return;
+        }
+      }
+    }
+
     try {
       setIsSubmitting(true);
       setCurrentStage('confirming');
+      setError("");
 
-      // TODO: Implement token creation logic here
-      console.log("Creating token with values:", values);
+      toast.loading("Creating token...", { id: "token-create" });
 
-      // Simulate token creation
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Create UMI instance
+      const umi = createUmi(connection.rpcEndpoint)
+        .use(walletAdapterIdentity({
+          publicKey,
+          signTransaction: async (transaction) => {
+            // Fix: Use proper wallet adapter
+            const { signTransaction } = useWallet();
+            if (!signTransaction) throw new Error('Wallet does not support signing');
+            return signTransaction(transaction);
+          },
+          signAllTransactions: async (transactions) => {
+            const { signAllTransactions } = useWallet();
+            if (!signAllTransactions) throw new Error('Wallet does not support signing multiple transactions');
+            return signAllTransactions(transactions);
+          }
+        }))
+        .use(mplTokenMetadata());
 
-      const mockResult: TMLaunchpadResult = {
-        mint: "MockMintAddress123...",
-        signature: "MockSignature456...",
+      // Generate mint keypair
+      const mint = generateSigner(umi);
+
+      // Prepare metadata
+      const metadata = {
+        name: values.name,
+        symbol: values.symbol,
+        description: values.description,
+        image: values.image,
+        external_url: values.externalUrl,
+        attributes: values.attributes || [],
+      };
+
+      // Prepare creators
+      const creators = values.creators?.map(creator => ({
+        address: umiPublicKey(creator.address),
+        verified: creator.verified,
+        share: creator.share,
+      })) || [];
+
+      let signature: string;
+
+      if (values.tokenType === 'fungible') {
+        // Create fungible token - Fix: use createFungible instead of createFungibleV1
+        const createResult = await createFungible(umi, {
+          mint,
+          name: values.name,
+          symbol: values.symbol,
+          uri: values.image, // For demo, using image as URI
+          sellerFeeBasisPoints: percentAmount(values.sellerFeeBasisPoints / 100),
+          decimals: values.decimals,
+          creators: creators.length > 0 ? creators : undefined,
+          isMutable: values.isMutable,
+        }).sendAndConfirm(umi);
+
+        signature = createResult.signature.toString();
+      } else {
+        // Create NFT or Programmable NFT
+        const createResult = await createV1(umi, {
+          mint,
+          name: values.name,
+          symbol: values.symbol,
+          uri: values.image, // For demo, using image as URI
+          sellerFeeBasisPoints: percentAmount(values.sellerFeeBasisPoints / 100),
+          creators: creators.length > 0 ? creators : undefined,
+          isMutable: values.isMutable,
+          isCollection: false,
+          tokenStandard: values.tokenType === 'programmable-nft' ? TokenStandard.ProgrammableNonFungible : TokenStandard.NonFungible,
+        }).sendAndConfirm(umi);
+
+        signature = createResult.signature.toString();
+      }
+
+      const result: TMLaunchpadResult = {
+        mint: mint.publicKey.toString(),
+        signature,
         tokenType: values.tokenType
       };
 
-      setResult(mockResult);
+      setResult(result);
       setCurrentStage('success');
 
       if (onTokenCreated) {
-        onTokenCreated(mockResult);
+        onTokenCreated(result);
       }
 
-      toast.success("Token created successfully!");
+      toast.success("Token created successfully!", { id: "token-create" });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating token:", error);
-      setError("Failed to create token");
+      setError(error.message || "Failed to create token");
       setCurrentStage('error');
-      toast.error("Failed to create token");
+      toast.error("Failed to create token", {
+        id: "token-create",
+        description: error.message
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -648,8 +765,8 @@ export function TMLaunchpadForm({
                       <div className="flex justify-between items-center">
                         <span className="text-sm font-medium">Total Creator Shares:</span>
                         <span className={`text-sm font-medium ${(form.watch("creators")?.reduce((sum, creator) => sum + (creator.share || 0), 0) || 0) === 100
-                            ? 'text-green-600'
-                            : 'text-orange-600'
+                          ? 'text-green-600'
+                          : 'text-orange-600'
                           }`}>
                           {form.watch("creators")?.reduce((sum, creator) => sum + (creator.share || 0), 0) || 0}%
                         </span>

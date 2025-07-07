@@ -3,7 +3,7 @@
 import { useState, useEffect, useContext } from 'react';
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Loader2, ExternalLink, CheckCircle, Settings, Plus } from "lucide-react";
+import { Loader2, ExternalLink, CheckCircle, Settings, Plus, X } from "lucide-react";
 import { PublicKey, Keypair } from "@solana/web3.js";
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 
@@ -238,7 +238,7 @@ export default function CandyMachineForm({
       });
 
       // Initialize UMI
-      const umi = createUmi(endpoint)
+      const umi = createUmi(connection.rpcEndpoint)
         .use(walletAdapterIdentity(wallet.adapter))
         .use(mplCore())
         .use(mplCandyMachine());
@@ -276,9 +276,8 @@ export default function CandyMachineForm({
       }
 
       // Create candy machine
-      const createIx = create(umi, {
+      const createConfig: any = {
         candyMachine,
-        collection: values.collection ? umiPublicKey(values.collection) : undefined,
         collectionUpdateAuthority: umi.identity,
         itemsAvailable: values.itemsAvailable,
         sellerFeeBasisPoints: 500, // 5%
@@ -290,10 +289,13 @@ export default function CandyMachineForm({
           isSequential: false,
         }),
         guards,
-      });
+      };
 
-      // Send transaction
+      // Create instruction
+      const createIx = await create(umi, createConfig);
       const createResult = await createIx.sendAndConfirm(umi);
+
+
       const createSignature = Buffer.from(createResult.signature).toString('base64');
 
       // Add config lines if provided
