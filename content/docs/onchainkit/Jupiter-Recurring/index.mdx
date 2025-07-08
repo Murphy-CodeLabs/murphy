@@ -3,6 +3,8 @@ title: "Jupiter Recurring DCA"
 description: "Complete React components for Jupiter Recurring DCA orders on Solana - build automated trading UIs in minutes"
 ---
 
+import { Button } from "@/components/ui/button"
+
 # 📖 Jupiter Recurring DCA
 
 Transform your Solana dApp with **automated Dollar-Cost Averaging (DCA)** using Jupiter's Recurring API. This Murphy SDK extension provides production-ready React components that let users set up, monitor, and manage recurring token purchases with zero configuration.
@@ -81,7 +83,11 @@ export default function MyDCAApp() {
 
 ## 🔗 Live Demo
 
-**View the live demo on Vercel → [https://murphy-sdk.vercel.app/jupiter-dashboard](https://murphy-sdk.vercel.app/jupiter-dashboard)**
+<Button asChild className="mt-4 no-underline">
+  <a href="https://www.murphyai.dev/jupiter-dashboard" target="_blank" rel="noopener noreferrer">
+    Open Jupiter Dashboard
+  </a>
+</Button>
 
 Experience the full Jupiter Recurring DCA workflow with real Solana mainnet integration, including:
 - ✅ **Cluster Toggle**: Switch between mainnet and devnet
