@@ -12,7 +12,8 @@ import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDe
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../collapsible"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs"
-// ----- Label Constants -----
+
+// Constants
 const LABELS = {
   "change-wallet": "Change Wallet",
   connecting: "Connecting...",
@@ -23,9 +24,13 @@ const LABELS = {
   "no-wallet": "Select Wallet",
   "lazorkit-wallet": "Connect Passkey",
   "standard-wallet": "Standard Wallet",
+  "connection-error": "Connection Error",
+  "retry-connection": "Retry Connection",
+  "initializing": "Initializing Smart Wallet...",
+  "initialization-error": "Failed to initialize wallet",
 } as const
 
-// ----- Props -----
+// Types
 type WalletButtonProps = React.ComponentProps<"button"> & {
   labels?: Partial<typeof LABELS>
   asChild?: boolean
@@ -47,75 +52,161 @@ export interface WalletListItemProps {
   }
 }
 
-// ----- Wallet List Item -----
-export const WalletListItem: FC<WalletListItemProps> = ({ handleClick, tabIndex, wallet }) => (
-  <Button onClick={handleClick} tabIndex={tabIndex} variant="outline" className="justify-start w-full">
-    {wallet.adapter.icon && (
-      <img
-        src={wallet.adapter.icon || "/placeholder.svg"}
-        alt={`${wallet.adapter.name} icon`}
-        className="mr-2 h-5 w-5"
-      />
-    )}
-    {wallet.adapter.name}
-    {wallet.readyState === WalletReadyState.Installed && (
-      <span className="ml-auto text-xs text-green-500">Installed</span>
-    )}
-  </Button>
-)
+// Wallet List Item Component
+export const WalletListItem: FC<WalletListItemProps> = ({ handleClick, tabIndex, wallet }) => {
+  const isInstalled = wallet.readyState === WalletReadyState.Installed
+  
+  return (
+    <Button 
+      onClick={handleClick} 
+      tabIndex={tabIndex} 
+      variant="outline" 
+      className="justify-start w-full"
+      disabled={!isInstalled && wallet.adapter.name !== "Phantom"}
+    >
+      {wallet.adapter.icon && (
+        <img
+          src={wallet.adapter.icon}
+          alt={`${wallet.adapter.name} icon`}
+          className="mr-2 h-5 w-5"
+          onError={(e) => {
+            e.currentTarget.src = "/placeholder.svg"
+          }}
+        />
+      )}
+      {wallet.adapter.name}
+      {isInstalled && (
+        <span className="ml-auto text-xs text-green-500">Installed</span>
+      )}
+    </Button>
+  )
+}
 
-// ----- Enhanced Wallet Modal Component -----
+// Enhanced Wallet Modal Component
 export const EnhancedWalletModal: FC<{
   open: boolean
   onOpenChange: (open: boolean) => void
 }> = ({ open, onOpenChange }) => {
   const { wallets, select } = useWallet()
   const [expanded, setExpanded] = useState(false)
-  const { connect: connectLazorKit, disconnect: disconnectLazorKit, isLoading: isLoadingLazorKit, isConnected: isLazorKitConnected, smartWalletAuthorityPubkey } = useLazorKitWalletContext()
+  const [activeTab, setActiveTab] = useState<'standard' | 'lazorkit'>('standard')
+  const [isInitializing, setIsInitializing] = useState(false)
+  
+  const { 
+    connect: connectLazorKit, 
+    disconnect: disconnectLazorKit, 
+    isLoading: isLoadingLazorKit, 
+    isConnected: isLazorKitConnected,
+    smartWalletPubkey,
+    error: lazorKitError,
+    clearError
+  } = useLazorKitWalletContext()
 
-  // Access the modal context to get network information
   const modalContext = React.useContext(ModalContext)
   const isMainnet = modalContext?.isMainnet ?? true
   const { walletType, setWalletType } = modalContext || { walletType: 'standard', setWalletType: () => {} }
 
-  const [listedWallets, collapsedWallets] = useMemo(() => {
+  // Memoize wallet lists
+  const { listedWallets, collapsedWallets } = useMemo(() => {
     const installed = wallets.filter((w) => w.readyState === WalletReadyState.Installed)
     const notInstalled = wallets.filter((w) => w.readyState !== WalletReadyState.Installed)
-    return installed.length ? [installed, notInstalled] : [notInstalled, []]
+    return {
+      listedWallets: installed.length ? installed : notInstalled,
+      collapsedWallets: installed.length ? notInstalled : []
+    }
   }, [wallets])
 
   const handleWalletClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>, walletName: string) => {
+    async (event: React.MouseEvent<HTMLButtonElement>, walletName: string) => {
       event.preventDefault()
-      select(walletName as WalletName)
-      setWalletType('standard')
-      onOpenChange(false)
+      try {
+        await select(walletName as WalletName)
+        setWalletType('standard')
+        onOpenChange(false)
+      } catch (error) {
+        console.error('Failed to select wallet:', error)
+      }
     },
     [select, onOpenChange, setWalletType],
   )
 
   const handleLazorKitConnect = useCallback(async () => {
     try {
-      await connectLazorKit()
-      setWalletType('lazorkit')
-      onOpenChange(false)
+      clearError()
+      setIsInitializing(false)
+      console.log("Starting LazorKit connection...")
+      
+      try {
+        const account = await connectLazorKit()
+        console.log("LazorKit connected, account:", account)
+        
+        if (!account || !account.publicKey) {
+          throw new Error("Failed to get wallet account")
+        }
+
+        const walletAddress = account.publicKey.toString()
+        console.log('Connected with address:', walletAddress)
+        
+        window.localStorage.setItem('SMART_WALLET_ADDRESS', walletAddress)
+        setWalletType('lazorkit')
+        onOpenChange(false)
+      } catch (error) {
+        // Check if error indicates need for initialization
+        if (error instanceof Error && 
+            (error.message.includes('Account does not exist') || 
+             error.message.includes('needs to be initialized'))) {
+          setIsInitializing(true)
+          // Retry connection which should trigger initialization
+          const account = await connectLazorKit()
+          if (!account || !account.publicKey) {
+            throw new Error("Failed to initialize wallet")
+          }
+          const walletAddress = account.publicKey.toString()
+          window.localStorage.setItem('SMART_WALLET_ADDRESS', walletAddress)
+          setWalletType('lazorkit')
+          onOpenChange(false)
+        } else {
+          throw error
+        }
+      }
     } catch (error) {
       console.error("LazorKit connection error:", error)
+      setIsInitializing(false)
     }
-  }, [connectLazorKit, onOpenChange, setWalletType])
+  }, [connectLazorKit, setWalletType, onOpenChange, clearError])
+
+  // Effect to handle successful connection
+  useEffect(() => {
+    if (isLazorKitConnected && smartWalletPubkey) {
+      const walletAddress = smartWalletPubkey.toString()
+      window.localStorage.setItem('SMART_WALLET_ADDRESS', walletAddress)
+      setWalletType('lazorkit')
+      onOpenChange(false)
+    }
+  }, [isLazorKitConnected, smartWalletPubkey, setWalletType, onOpenChange])
+
+  // Effect to sync active tab with wallet type
+  useEffect(() => {
+    setActiveTab(walletType)
+  }, [walletType])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Connect wallet to continue</DialogTitle>
-          <div className="text-sm text-muted-foreground">
-            Network:{" "}
-            <span className={isMainnet ? "text-green-500" : "text-yellow-500"}>{isMainnet ? "Mainnet" : "Devnet"}</span>
+          <DialogDescription className="space-y-2">
+            Choose your preferred wallet to connect to this dApp.
+          </DialogDescription>
+          <div className="text-sm mt-2">
+            Network Status:{" "}
+            <span className={isMainnet ? "text-green-500" : "text-yellow-500"}>
+              {isMainnet ? "Mainnet" : "Devnet"}
+            </span>
           </div>
         </DialogHeader>
 
-        <Tabs defaultValue="standard" className="w-full mt-2">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'standard' | 'lazorkit')} className="w-full mt-2">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="standard">{LABELS["standard-wallet"]}</TabsTrigger>
             <TabsTrigger value="lazorkit">{LABELS["lazorkit-wallet"]}</TabsTrigger>
@@ -130,7 +221,6 @@ export const EnhancedWalletModal: FC<{
                   handleClick={(e) => handleWalletClick(e, wallet.adapter.name)}
                 />
               ))}
-
               {collapsedWallets.length > 0 && (
                 <Collapsible open={expanded} onOpenChange={setExpanded} className="w-full">
                   <CollapsibleTrigger asChild>
@@ -154,24 +244,69 @@ export const EnhancedWalletModal: FC<{
           
           <TabsContent value="lazorkit" className="mt-2">
             <div className="flex flex-col gap-4 py-2">
-              <DialogDescription>
+              <div className="text-sm text-muted-foreground">
                 LazorKit Wallet provides a way to integrate Solana smart wallet with Passkey support into your dApp.
-              </DialogDescription>
-              <Button 
-                onClick={handleLazorKitConnect} 
-                disabled={isLoadingLazorKit}
-                className="w-full"
-              >
-                {isLoadingLazorKit 
-                  ? "Connecting..." 
-                  : "Connect with Passkey"}
-              </Button>
+              </div>
               
-              {/* Display wallet information if connected */}
-              {isLazorKitConnected && (
-                <div className="mt-2 text-sm">
-                  <p className="text-green-500">Connected</p>
-                  <p className="font-mono break-all">{smartWalletAuthorityPubkey || "No address"}</p>
+              {lazorKitError && (
+                <div className="flex flex-col gap-2 text-sm text-red-500 mb-2">
+                  <span>Error: {lazorKitError.message}</span>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      clearError()
+                      handleLazorKitConnect()
+                    }}
+                  >
+                    {LABELS["retry-connection"]}
+                  </Button>
+                </div>
+              )}
+              
+              {!isLazorKitConnected ? (
+                <Button 
+                  onClick={handleLazorKitConnect} 
+                  disabled={isLoadingLazorKit || isInitializing}
+                  className="w-full"
+                >
+                  {isLoadingLazorKit || isInitializing ? (
+                    <div className="flex items-center gap-2">
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+                      <span>{isInitializing ? LABELS["initializing"] : LABELS["connecting"]}</span>
+                    </div>
+                  ) : (
+                    "Connect with Passkey"
+                  )}
+                </Button>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between p-3 bg-secondary rounded-lg">
+                    <div className="flex items-center gap-2">
+                      <img 
+                        src="/murphy/logo/murphy.svg" 
+                        alt="LazorKit Wallet" 
+                        className="h-5 w-5"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.svg"
+                        }}
+                      />
+                      <span className="font-medium">
+                        {smartWalletPubkey?.toString().slice(0, 8)}...{smartWalletPubkey?.toString().slice(-8)}
+                      </span>
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => {
+                        disconnectLazorKit()
+                        window.localStorage.removeItem('SMART_WALLET_ADDRESS')
+                        setWalletType('standard')
+                      }}
+                    >
+                      {LABELS["disconnect"]}
+                    </Button>
+                  </div>
                 </div>
               )}
             </div>
@@ -188,90 +323,122 @@ export const EnhancedWalletModal: FC<{
   )
 }
 
-// ----- Wallet Multi Button -----
+// Wallet Multi Button Component
 export function BaseWalletMultiButton({ children, labels = LABELS, ...props }: Props) {
-  // State hooks
   const [walletModalOpen, setWalletModalOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  // Context hooks
   const { buttonState, onConnect, onDisconnect, publicKey, walletIcon, walletName } = useWalletMultiButton({
     onSelectWallet() {
       setWalletModalOpen(true)
     },
   })
   
-  const { connect: connectLazorKit, disconnect: disconnectLazorKit, isLoading: isLoadingLazorKit, isConnected: isLazorKitConnected, smartWalletAuthorityPubkey } = useLazorKitWalletContext()
+  const { 
+    disconnect: disconnectLazorKit, 
+    isLoading: isLoadingLazorKit, 
+    isConnected: isLazorKitConnected,
+    smartWalletPubkey 
+  } = useLazorKitWalletContext()
   
   const modalContext = React.useContext(ModalContext)
   const { walletType, setWalletType } = modalContext || { walletType: 'standard', setWalletType: () => {} }
 
-  // All useMemo must be declared here
   const isAnyWalletConnected = useMemo(() => {
     if (walletType === 'standard') {
       return !!publicKey
     } else {
-      // Only check isConnected, not dependent on smartWalletAuthorityPubkey
-      return isLazorKitConnected
+      return isLazorKitConnected && !!smartWalletPubkey
     }
-  }, [publicKey, isLazorKitConnected, walletType])
-
-  const content = useMemo(() => {
-    // Before component is mounted, always use "Select Wallet" to match SSR
-    if (!mounted) {
-      return labels["no-wallet"]
-    }
-
-    // When connected to LazorKit, show LazorKit address or public key
-    if (walletType === 'lazorkit' && isLazorKitConnected) {
-      const address = smartWalletAuthorityPubkey || (publicKey ? publicKey.toBase58() : null)
-      return address ? address.slice(0, 4) + ".." + address.slice(-4) : "Connected"
-    }
-    
-    // When connected to standard wallet, show address
-    if (walletType === 'standard' && publicKey) {
-      const base58 = publicKey.toBase58()
-      return base58.slice(0, 4) + ".." + base58.slice(-4)
-    }
-
-    // When not connected, prioritize custom children text
-    if (children) {
-      return children
-    } else if (buttonState === "connecting") {
-      return labels["connecting"]
-    } else {
-      return labels["has-wallet"]
-    }
-  }, [buttonState, children, labels, publicKey, mounted, walletType, isLazorKitConnected, smartWalletAuthorityPubkey])
+  }, [publicKey, isLazorKitConnected, walletType, smartWalletPubkey])
 
   const currentWalletAddress = useMemo(() => {
-    if (walletType === 'lazorkit' && smartWalletAuthorityPubkey) {
-      return smartWalletAuthorityPubkey
+    if (walletType === 'lazorkit' && smartWalletPubkey) {
+      return smartWalletPubkey.toString()
     } else if (walletType === 'standard' && publicKey) {
       return publicKey.toBase58()
     }
-    return ""
-  }, [walletType, smartWalletAuthorityPubkey, publicKey])
+    return null
+  }, [walletType, smartWalletPubkey, publicKey])
 
-  // useEffect hooks
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const content = useMemo(() => {
+    if (!mounted) return labels["no-wallet"]
 
-  // Handler functions
-  const handleDisconnect = () => {
+    if (walletType === 'lazorkit' && isLazorKitConnected && smartWalletPubkey) {
+      const address = smartWalletPubkey.toString()
+      return (
+        <div className="flex items-center gap-2">
+          <img 
+            src="/murphy/logo/murphy.svg" 
+            alt="LazorKit Wallet" 
+            className="h-4 w-4"
+            onError={(e) => {
+              e.currentTarget.src = "/placeholder.svg"
+            }}
+          />
+          <span>{address.slice(0, 4)}...{address.slice(-4)}</span>
+        </div>
+      )
+    }
+    
+    if (walletType === 'standard' && publicKey) {
+      const base58 = publicKey.toBase58()
+      return (
+        <div className="flex items-center gap-2">
+          {walletIcon && (
+            <img 
+              src={walletIcon} 
+              alt={walletName || "Wallet"} 
+              className="h-4 w-4"
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.svg"
+              }}
+            />
+          )}
+          <span>{base58.slice(0, 4)}...{base58.slice(-4)}</span>
+        </div>
+      )
+    }
+
+    if (children) {
+      return children
+    } else if (isLoadingLazorKit) {
+      return (
+        <div className="flex items-center gap-2">
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+          <span>{labels["connecting"]}</span>
+        </div>
+      )
+    }
+    
+    return labels["has-wallet"]
+  }, [mounted, walletType, smartWalletPubkey, publicKey, children, isLoadingLazorKit, labels, walletIcon, walletName, isLazorKitConnected])
+
+  const handleDisconnect = useCallback(() => {
     if (walletType === 'lazorkit') {
       disconnectLazorKit()
-      console.log('LazorKit Wallet disconnected')
+      window.localStorage.removeItem('SMART_WALLET_ADDRESS')
+      setWalletType('standard')
     } else if (onDisconnect) {
       onDisconnect()
     }
     setMenuOpen(false)
-  }
+  }, [walletType, disconnectLazorKit, onDisconnect, setWalletType])
 
-  // Render logic after declaring all hooks
+  const handleCopyAddress = useCallback(async () => {
+    if (currentWalletAddress) {
+      await navigator.clipboard.writeText(currentWalletAddress)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 400)
+    }
+  }, [currentWalletAddress])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
   if (!isAnyWalletConnected) {
     return (
       <>
@@ -292,31 +459,18 @@ export function BaseWalletMultiButton({ children, labels = LABELS, ...props }: P
     )
   }
 
-  // If connected, show the dropdown menu
   return (
     <>
       <EnhancedWalletModal open={walletModalOpen} onOpenChange={setWalletModalOpen} />
       <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button {...props}>
-            {walletType === 'standard' && walletIcon && (
-              <img src={walletIcon || "/partner/solana-logo.svg"} alt="Wallet icon" className="mr-2 h-4 w-4" />
-            )}
-            {walletType === 'lazorkit' && (
-              <img src="/partner/solana-logo.svg" alt="LazorKit Wallet" className="mr-2 h-4 w-4" />
-            )}
             {content}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {currentWalletAddress && (
-            <DropdownMenuItem
-              onClick={async () => {
-                await navigator.clipboard.writeText(currentWalletAddress)
-                setCopied(true)
-                setTimeout(() => setCopied(false), 400)
-              }}
-            >
+            <DropdownMenuItem onClick={handleCopyAddress}>
               {copied ? labels["copied"] : labels["copy-address"]}
             </DropdownMenuItem>
           )}
@@ -337,7 +491,7 @@ export function BaseWalletMultiButton({ children, labels = LABELS, ...props }: P
   )
 }
 
-// ----- Public Exported Button -----
+// Public Exported Button
 export function ConnectWalletButton(props: WalletButtonProps) {
   return <BaseWalletMultiButton {...props} />
 }

@@ -5,13 +5,6 @@ import { StarIcon } from "lucide-react";
 // Testimonial data array
 const testimonials = [
   {
-    name: "Solomon",
-    role: "Head of product at SolanaFoundation",
-    avatarUrl:
-      "https://pbs.twimg.com/profile_images/1900239823253782528/cVjoQ-Rx_400x400.jpg",
-    quote: "This looks great, how can I help",
-  },
-  {
     name: "Zhe | Poll",
     role: "Developer at SolToolkit",
     avatarUrl: "https://pbs.twimg.com/profile_images/1633646870340722694/apYQ1Wku_400x400.jpg",
@@ -55,7 +48,7 @@ export function TestimonialsSection() {
           </h2>
         </div>
         <div className="from-muted/40 bg-gradient-to-b to-transparent to-50% ">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2">
             {testimonials.map((testimonial, index) => (
               <TestimonialCard
                 key={index}
