@@ -18,6 +18,33 @@ interface ExtendedWalletAccount extends WalletAccount {
   createSmartWallet?: () => Promise<void>
 }
 
+// Connect Response type for createPasskeyOnly
+interface ConnectResponse {
+  publicKey: string
+  credentialId: string
+  isCreated: boolean
+  connectionType: 'create' | 'get'
+  timestamp: number
+}
+
+// Extended LazorKit wallet interface
+interface ExtendedLazorKitWallet {
+  smartWalletPubkey: PublicKey | null
+  isConnected: boolean
+  isLoading: boolean
+  isConnecting: boolean
+  isSigning: boolean
+  error: Error | null
+  account: WalletAccount | null
+  connect: () => Promise<WalletAccount>
+  disconnect: () => Promise<void>
+  signTransaction: (instruction: TransactionInstruction) => Promise<Transaction>
+  signAndSendTransaction: (instruction: TransactionInstruction) => Promise<string>
+  createPasskeyOnly: () => Promise<ConnectResponse>
+  createSmartWalletOnly: (passkeyData: ConnectResponse) => Promise<{smartWalletAddress: string, account: WalletAccount}>
+  reconnect: () => Promise<WalletAccount>
+}
+
 interface LazorKitWalletContextState {
   smartWalletPubkey: PublicKey | null
   isConnected: boolean
@@ -28,8 +55,11 @@ interface LazorKitWalletContextState {
   account: ExtendedWalletAccount | null
   connect: () => Promise<ExtendedWalletAccount>
   disconnect: () => Promise<void>
+  reconnect: () => Promise<ExtendedWalletAccount>
   signTransaction: (instruction: TransactionInstruction) => Promise<Transaction>
   signAndSendTransaction: (instruction: TransactionInstruction) => Promise<string>
+  createPasskeyOnly: () => Promise<ConnectResponse>
+  createSmartWalletOnly: (passkeyData: ConnectResponse) => Promise<{smartWalletAddress: string, account: ExtendedWalletAccount}>
   clearError: () => void
 }
 
@@ -43,8 +73,11 @@ const defaultContext: LazorKitWalletContextState = {
   account: null,
   connect: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
   disconnect: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  reconnect: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
   signTransaction: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
   signAndSendTransaction: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  createPasskeyOnly: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  createSmartWalletOnly: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
   clearError: () => {}
 }
 
@@ -61,7 +94,7 @@ export const useLazorKitWalletContext = () => {
 // Utility function for error handling
 const handleError = (err: unknown): Error => {
   if (err instanceof Error) {
-    // Check for account not found error
+    // Check for specific error types
     if (err.message.includes('Account does not exist') || 
         err.message.includes('has no data')) {
       return new LazorKitError(
@@ -70,23 +103,19 @@ const handleError = (err: unknown): Error => {
         true
       )
     }
+    if (err.message.includes('NO_STORED_CREDENTIALS')) {
+      return new LazorKitError("No stored credentials found", 'NO_STORED_CREDENTIALS')
+    }
+    if (err.message.includes('INVALID_CREDENTIALS')) {
+      return new LazorKitError("Invalid credentials", 'INVALID_CREDENTIALS')
+    }
     return err
   }
   return new LazorKitError(err instanceof Object ? JSON.stringify(err) : String(err))
 }
 
 export function LazorKitWalletProvider({ children }: { children: React.ReactNode }) {
-  const {
-    smartWalletPubkey,
-    isConnected,
-    isLoading,
-    isSigning,
-    account,
-    connect: lazorKitConnect,
-    disconnect: lazorKitDisconnect,
-    signTransaction: lazorKitSignTransaction,
-    signAndSendTransaction: lazorKitSignAndSendTransaction,
-  } = useLazorKitWallet()
+  const wallet = useLazorKitWallet() as unknown as ExtendedLazorKitWallet
 
   const [isConnecting, setIsConnecting] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -109,41 +138,27 @@ export function LazorKitWalletProvider({ children }: { children: React.ReactNode
   }, [error, retryCount, isConnecting])
 
   const connect = useCallback(async () => {
-    if (isConnecting) return account as ExtendedWalletAccount
+    if (isConnecting) return wallet.account as ExtendedWalletAccount
     
     try {
       setIsConnecting(true)
       setError(null)
       
-      let result: ExtendedWalletAccount | null = null
+      // First try reconnecting with stored credentials
       try {
-        // First try normal connection
-        result = await lazorKitConnect() as ExtendedWalletAccount
-      } catch (err) {
-        const error = handleError(err)
-        
-        // If account doesn't exist, try to create it
-        if (error instanceof LazorKitError && error.isAccountNotFound && 'createSmartWallet' in (account || {})) {
-          console.log("Smart wallet not found, attempting to create...")
-          try {
-            // Create smart wallet
-            await (account as ExtendedWalletAccount).createSmartWallet?.()
-            // Try connecting again
-            result = await lazorKitConnect() as ExtendedWalletAccount
-          } catch (createErr) {
-            throw handleError(createErr)
-          }
-        } else {
-          throw error
+        const reconnectedAccount = await wallet.reconnect()
+        setRetryCount(0)
+        return reconnectedAccount as ExtendedWalletAccount
+      } catch (reconnectError) {
+        // If reconnect fails, try new connection
+        try {
+          const newAccount = await wallet.connect()
+          setRetryCount(0)
+          return newAccount as ExtendedWalletAccount
+        } catch (connectError) {
+          throw handleError(connectError)
         }
       }
-
-      if (!result) {
-        throw new LazorKitError("Failed to connect: No account returned")
-      }
-      
-      setRetryCount(0)
-      return result
     } catch (err) {
       const error = handleError(err)
       setError(error)
@@ -151,68 +166,107 @@ export function LazorKitWalletProvider({ children }: { children: React.ReactNode
     } finally {
       setIsConnecting(false)
     }
-  }, [lazorKitConnect, account, isConnecting])
+  }, [wallet.connect, wallet.reconnect, wallet.account, isConnecting])
 
   const disconnect = useCallback(async () => {
     try {
       setError(null)
-      await lazorKitDisconnect()
+      await wallet.disconnect()
       setRetryCount(0)
     } catch (err) {
       const error = handleError(err)
       setError(error)
       throw error
     }
-  }, [lazorKitDisconnect])
+  }, [wallet.disconnect])
+
+  const reconnect = useCallback(async () => {
+    try {
+      setError(null)
+      return await wallet.reconnect() as ExtendedWalletAccount
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.reconnect])
+
+  const createPasskeyOnly = useCallback(async () => {
+    try {
+      setError(null)
+      return await wallet.createPasskeyOnly()
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.createPasskeyOnly])
+
+  const createSmartWalletOnly = useCallback(async (passkeyData: ConnectResponse) => {
+    try {
+      setError(null)
+      return await wallet.createSmartWalletOnly(passkeyData)
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.createSmartWalletOnly])
 
   const signTransaction = useCallback(async (instruction: TransactionInstruction) => {
     try {
       setError(null)
-      return await lazorKitSignTransaction(instruction)
+      return await wallet.signTransaction(instruction)
     } catch (err) {
       const error = handleError(err)
       setError(error)
       throw error
     }
-  }, [lazorKitSignTransaction])
+  }, [wallet.signTransaction])
 
   const signAndSendTransaction = useCallback(async (instruction: TransactionInstruction) => {
     try {
       setError(null)
-      return await lazorKitSignAndSendTransaction(instruction)
+      return await wallet.signAndSendTransaction(instruction)
     } catch (err) {
       const error = handleError(err)
       setError(error)
       throw error
     }
-  }, [lazorKitSignAndSendTransaction])
+  }, [wallet.signAndSendTransaction])
 
   // Memoize the context value to prevent unnecessary re-renders
   const value = useMemo(() => ({
-    smartWalletPubkey,
-    isConnected,
-    isLoading,
+    smartWalletPubkey: wallet.smartWalletPubkey,
+    isConnected: wallet.isConnected,
+    isLoading: wallet.isLoading,
     isConnecting,
-    isSigning,
+    isSigning: wallet.isSigning,
     error,
-    account,
+    account: wallet.account as ExtendedWalletAccount,
     connect,
     disconnect,
+    reconnect,
     signTransaction,
     signAndSendTransaction,
+    createPasskeyOnly,
+    createSmartWalletOnly,
     clearError
   }), [
-    smartWalletPubkey,
-    isConnected,
-    isLoading,
+    wallet.smartWalletPubkey,
+    wallet.isConnected,
+    wallet.isLoading,
     isConnecting,
-    isSigning,
+    wallet.isSigning,
     error,
-    account,
+    wallet.account,
     connect,
     disconnect,
+    reconnect,
     signTransaction,
     signAndSendTransaction,
+    createPasskeyOnly,
+    createSmartWalletOnly,
     clearError
   ])
 

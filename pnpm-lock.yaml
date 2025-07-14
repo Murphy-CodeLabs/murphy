@@ -18,8 +18,8 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.55.0(react@19.1.0))
       '@lazorkit/wallet':
-        specifier: ^1.4.8
-        version: 1.4.8(@types/react@19.1.2)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)
+        specifier: ^1.4.9
+        version: 1.4.9(@types/react@19.1.2)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)
       '@lightprotocol/compressed-token':
         specifier: ^0.21.0
         version: 0.21.0(@lightprotocol/stateless.js@0.21.0(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)))(@solana/spl-token@0.4.13(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10))(bufferutil@4.0.9)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(utf-8-validate@5.0.10))(@solana/web3.js@1.98.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10))
@@ -1279,8 +1279,8 @@ packages:
   '@keystonehq/sol-keyring@0.20.0':
     resolution: {integrity: sha512-UBeMlecybTDQaFMI951LBEVRyZarqKHOcwWqqvphV+x7WquYz0SZ/wf/PhizV0MWoGTQwt2m5aqROzksi6svqw==}
 
-  '@lazorkit/wallet@1.4.8':
-    resolution: {integrity: sha512-PdnLGJJ6mZdaVh8hRSJ5MqFFOw6d+BOvtz/fsDu63odF/71gHIhtyAIg80oF/ePPU0wLuo4rOCKkL3mN0XcVfA==}
+  '@lazorkit/wallet@1.4.9':
+    resolution: {integrity: sha512-mOcSo3ovUtf0z7A0iOV32mxESLFkTcDEtUCCzUb13D3RAmub3tRVwN+U10xF562u8+igv/oUsDxNYlcKfVrsBQ==}
     peerDependencies:
       react: ^18.3.1 || ^19.0.0
       react-dom: ^18.3.1 || ^19.0.0
@@ -8840,7 +8840,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@lazorkit/wallet@1.4.8(@types/react@19.1.2)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)':
+  '@lazorkit/wallet@1.4.9(@types/react@19.1.2)(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)(use-sync-external-store@1.5.0(react@19.1.0))(utf-8-validate@5.0.10)':
     dependencies:
       '@coral-xyz/anchor': 0.31.1(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
       '@solana/web3.js': 1.98.2(bufferutil@4.0.9)(typescript@5.8.3)(utf-8-validate@5.0.10)
