@@ -57,10 +57,10 @@ export const ModalContext = createContext<ModalContextState>({
   switchToNextEndpoint: () => null,
   availableEndpoints: [],
   currentEndpointIndex: 0,
-  isMainnet: true,
+  isMainnet: false, // Changed default to false for devnet
   walletType: 'standard',
   setWalletType: () => null,
-  networkType: WalletAdapterNetwork.Mainnet,
+  networkType: WalletAdapterNetwork.Devnet, // Changed default to Devnet
 })
 
 export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
@@ -74,11 +74,12 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
     return 'standard'
   })
 
-  // Network detection
+  // Network detection - default to devnet for LazorKit beta
   const isMainnet = useMemo(() => {
+    if (walletType === 'lazorkit') return false // Force devnet for LazorKit
     const mainnetEnv = process.env.NEXT_PUBLIC_USE_MAINNET
-    return mainnetEnv === undefined ? true : mainnetEnv === "true"
-  }, [])
+    return mainnetEnv === undefined ? false : mainnetEnv === "true" // Default to devnet
+  }, [walletType])
 
   const networkType = useMemo(
     () => isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
@@ -121,6 +122,22 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
       localStorage.setItem('walletType', walletType)
     }
   }, [walletType])
+
+  // Auto-connect effect
+  useEffect(() => {
+    if (props.autoConnect && walletType === 'lazorkit') {
+      // Attempt to reconnect LazorKit wallet on mount
+      const reconnectLazorKit = async () => {
+        try {
+          // The actual reconnection will be handled by the LazorKitWalletProvider
+          console.log('Attempting to reconnect LazorKit wallet...')
+        } catch (error) {
+          console.error('Failed to reconnect LazorKit wallet:', error)
+        }
+      }
+      reconnectLazorKit()
+    }
+  }, [props.autoConnect, walletType])
 
   // Context value memoization
   const contextValue = useMemo(() => ({

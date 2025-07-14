@@ -28,6 +28,8 @@ const LABELS = {
   "retry-connection": "Retry Connection",
   "initializing": "Initializing Smart Wallet...",
   "initialization-error": "Failed to initialize wallet",
+  "creating-passkey": "Creating Passkey...",
+  "creating-smart-wallet": "Creating Smart Wallet...",
 } as const
 
 // Types
@@ -91,9 +93,13 @@ export const EnhancedWalletModal: FC<{
   const [expanded, setExpanded] = useState(false)
   const [activeTab, setActiveTab] = useState<'standard' | 'lazorkit'>('standard')
   const [isInitializing, setIsInitializing] = useState(false)
+  const [isCreatingPasskey, setIsCreatingPasskey] = useState(false)
+  const [isCreatingSmartWallet, setIsCreatingSmartWallet] = useState(false)
   
   const { 
-    connect: connectLazorKit, 
+    connect: connectLazorKit,
+    createPasskeyOnly,
+    createSmartWalletOnly,
     disconnect: disconnectLazorKit, 
     isLoading: isLoadingLazorKit, 
     isConnected: isLazorKitConnected,
@@ -103,7 +109,7 @@ export const EnhancedWalletModal: FC<{
   } = useLazorKitWalletContext()
 
   const modalContext = React.useContext(ModalContext)
-  const isMainnet = modalContext?.isMainnet ?? true
+  const isMainnet = modalContext?.isMainnet ?? false // Default to devnet
   const { walletType, setWalletType } = modalContext || { walletType: 'standard', setWalletType: () => {} }
 
   // Memoize wallet lists
@@ -134,9 +140,12 @@ export const EnhancedWalletModal: FC<{
     try {
       clearError()
       setIsInitializing(false)
+      setIsCreatingPasskey(false)
+      setIsCreatingSmartWallet(false)
       console.log("Starting LazorKit connection...")
       
       try {
+        // First try normal connection
         const account = await connectLazorKit()
         console.log("LazorKit connected, account:", account)
         
@@ -151,20 +160,33 @@ export const EnhancedWalletModal: FC<{
         setWalletType('lazorkit')
         onOpenChange(false)
       } catch (error) {
-        // Check if error indicates need for initialization
+        // If normal connection fails, try step-by-step creation
         if (error instanceof Error && 
             (error.message.includes('Account does not exist') || 
              error.message.includes('needs to be initialized'))) {
-          setIsInitializing(true)
-          // Retry connection which should trigger initialization
-          const account = await connectLazorKit()
-          if (!account || !account.publicKey) {
-            throw new Error("Failed to initialize wallet")
+          try {
+            // Step 1: Create passkey
+            setIsCreatingPasskey(true)
+            const passkeyData = await createPasskeyOnly()
+            console.log("Passkey created:", passkeyData)
+            
+            // Step 2: Create smart wallet
+            setIsCreatingPasskey(false)
+            setIsCreatingSmartWallet(true)
+            const { smartWalletAddress, account } = await createSmartWalletOnly(passkeyData)
+            console.log("Smart wallet created:", smartWalletAddress)
+
+            if (!account || !account.publicKey) {
+              throw new Error("Failed to initialize wallet")
+            }
+
+            window.localStorage.setItem('SMART_WALLET_ADDRESS', smartWalletAddress)
+            setWalletType('lazorkit')
+            onOpenChange(false)
+          } catch (createError) {
+            console.error("Failed to create wallet:", createError)
+            throw createError
           }
-          const walletAddress = account.publicKey.toString()
-          window.localStorage.setItem('SMART_WALLET_ADDRESS', walletAddress)
-          setWalletType('lazorkit')
-          onOpenChange(false)
         } else {
           throw error
         }
@@ -172,8 +194,10 @@ export const EnhancedWalletModal: FC<{
     } catch (error) {
       console.error("LazorKit connection error:", error)
       setIsInitializing(false)
+      setIsCreatingPasskey(false)
+      setIsCreatingSmartWallet(false)
     }
-  }, [connectLazorKit, setWalletType, onOpenChange, clearError])
+  }, [connectLazorKit, createPasskeyOnly, createSmartWalletOnly, setWalletType, onOpenChange, clearError])
 
   // Effect to handle successful connection
   useEffect(() => {
@@ -197,6 +221,11 @@ export const EnhancedWalletModal: FC<{
           <DialogTitle>Connect wallet to continue</DialogTitle>
           <DialogDescription className="space-y-2">
             Choose your preferred wallet to connect to this dApp.
+            {isMainnet && walletType === 'lazorkit' && (
+              <div className="text-yellow-500 mt-2">
+                Note: LazorKit is currently in beta and only supports Devnet
+              </div>
+            )}
           </DialogDescription>
           <div className="text-sm mt-2">
             Network Status:{" "}
@@ -209,7 +238,7 @@ export const EnhancedWalletModal: FC<{
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'standard' | 'lazorkit')} className="w-full mt-2">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="standard">{LABELS["standard-wallet"]}</TabsTrigger>
-            <TabsTrigger value="lazorkit">{LABELS["lazorkit-wallet"]}</TabsTrigger>
+            <TabsTrigger value="lazorkit" disabled={isMainnet}>{LABELS["lazorkit-wallet"]}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="standard" className="mt-2">
@@ -245,7 +274,12 @@ export const EnhancedWalletModal: FC<{
           <TabsContent value="lazorkit" className="mt-2">
             <div className="flex flex-col gap-4 py-2">
               <div className="text-sm text-muted-foreground">
-                LazorKit Wallet provides a way to integrate Solana smart wallet with Passkey support into your dApp.
+                LazorKit Wallet provides a secure, passwordless wallet using WebAuthn passkeys.
+                {isMainnet && (
+                  <div className="text-yellow-500 mt-2">
+                    Note: Currently only available on Devnet
+                  </div>
+                )}
               </div>
               
               {lazorKitError && (
@@ -267,16 +301,28 @@ export const EnhancedWalletModal: FC<{
               {!isLazorKitConnected ? (
                 <Button 
                   onClick={handleLazorKitConnect} 
-                  disabled={isLoadingLazorKit || isInitializing}
+                  disabled={isLoadingLazorKit || isInitializing || isCreatingPasskey || isCreatingSmartWallet || isMainnet}
                   className="w-full"
                 >
-                  {isLoadingLazorKit || isInitializing ? (
+                  {isLoadingLazorKit || isInitializing || isCreatingPasskey || isCreatingSmartWallet ? (
                     <div className="flex items-center gap-2">
                       <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
-                      <span>{isInitializing ? LABELS["initializing"] : LABELS["connecting"]}</span>
+                      <span>
+                        {isCreatingPasskey ? LABELS["creating-passkey"] :
+                         isCreatingSmartWallet ? LABELS["creating-smart-wallet"] :
+                         isInitializing ? LABELS["initializing"] :
+                         LABELS["connecting"]}
+                      </span>
                     </div>
                   ) : (
-                    "Connect with Passkey"
+                    <div className="flex items-center gap-2">
+                      <img 
+                        src="/brand-logos/passkey-logo.svg"
+                        alt="LazorKit Passkey"
+                        className="h-4 w-4"
+                      />
+                      <span>Connect with Passkey</span>
+                    </div>
                   )}
                 </Button>
               ) : (
@@ -284,11 +330,11 @@ export const EnhancedWalletModal: FC<{
                   <div className="flex items-center justify-between p-3 bg-secondary rounded-lg">
                     <div className="flex items-center gap-2">
                       <img 
-                        src="/murphy/logo/murphy.svg" 
-                        alt="LazorKit Wallet" 
+                        src="/brand-logos/passkey-logo.svg" 
+                        alt="LazorKit Passkey Wallet" 
                         className="h-5 w-5"
                         onError={(e) => {
-                          e.currentTarget.src = "/placeholder.svg"
+                          e.currentTarget.src = "/brand-logos/passkey-logo.svg"
                         }}
                       />
                       <span className="font-medium">
@@ -365,42 +411,6 @@ export function BaseWalletMultiButton({ children, labels = LABELS, ...props }: P
 
   const content = useMemo(() => {
     if (!mounted) return labels["no-wallet"]
-
-    if (walletType === 'lazorkit' && isLazorKitConnected && smartWalletPubkey) {
-      const address = smartWalletPubkey.toString()
-      return (
-        <div className="flex items-center gap-2">
-          <img 
-            src="/murphy/logo/murphy.svg" 
-            alt="LazorKit Wallet" 
-            className="h-4 w-4"
-            onError={(e) => {
-              e.currentTarget.src = "/placeholder.svg"
-            }}
-          />
-          <span>{address.slice(0, 4)}...{address.slice(-4)}</span>
-        </div>
-      )
-    }
-    
-    if (walletType === 'standard' && publicKey) {
-      const base58 = publicKey.toBase58()
-      return (
-        <div className="flex items-center gap-2">
-          {walletIcon && (
-            <img 
-              src={walletIcon} 
-              alt={walletName || "Wallet"} 
-              className="h-4 w-4"
-              onError={(e) => {
-                e.currentTarget.src = "/placeholder.svg"
-              }}
-            />
-          )}
-          <span>{base58.slice(0, 4)}...{base58.slice(-4)}</span>
-        </div>
-      )
-    }
 
     if (children) {
       return children
