@@ -57,10 +57,10 @@ export const ModalContext = createContext<ModalContextState>({
   switchToNextEndpoint: () => null,
   availableEndpoints: [],
   currentEndpointIndex: 0,
-  isMainnet: false, // Changed default to false for devnet
+  isMainnet: true, // Changed default to true for mainnet
   walletType: 'standard',
   setWalletType: () => null,
-  networkType: WalletAdapterNetwork.Devnet, // Changed default to Devnet
+  networkType: WalletAdapterNetwork.Mainnet, // Changed default to Mainnet
 })
 
 export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
@@ -74,22 +74,21 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
     return 'standard'
   })
 
-  // Network detection - default to devnet for LazorKit beta
+  // Network detection - only force devnet for LazorKit operations
   const isMainnet = useMemo(() => {
-    if (walletType === 'lazorkit') return false // Force devnet for LazorKit
     const mainnetEnv = process.env.NEXT_PUBLIC_USE_MAINNET
-    return mainnetEnv === undefined ? false : mainnetEnv === "true" // Default to devnet
-  }, [walletType])
+    return mainnetEnv === undefined ? true : mainnetEnv === "true" // Default to mainnet
+  }, [])
 
   const networkType = useMemo(
-    () => isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
-    [isMainnet]
+    () => walletType === 'lazorkit' ? WalletAdapterNetwork.Devnet : (isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet),
+    [isMainnet, walletType]
   )
 
-  // RPC endpoints management
+  // RPC endpoints management - use devnet RPC for LazorKit, otherwise use configured endpoint
   const publicRPCs = useMemo(
-    () => [isMainnet ? DEFAULT_MAINNET_RPC : DEFAULT_DEVNET_RPC],
-    [isMainnet]
+    () => [walletType === 'lazorkit' ? DEFAULT_DEVNET_RPC : (isMainnet ? DEFAULT_MAINNET_RPC : DEFAULT_DEVNET_RPC)],
+    [isMainnet, walletType]
   )
 
   const endpoint = useMemo(() => {
@@ -138,6 +137,16 @@ export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
       reconnectLazorKit()
     }
   }, [props.autoConnect, walletType])
+
+  // Effect to handle network switching for LazorKit
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const cluster = walletType === 'lazorkit' ? "devnet" : (isMainnet ? "mainnet" : "devnet")
+      window.localStorage.setItem("NEXT_PUBLIC_CLUSTER", cluster)
+      ;(window as any).NEXT_PUBLIC_CLUSTER = cluster
+      window.dispatchEvent(new CustomEvent("clusterChanged", { detail: { cluster } }))
+    }
+  }, [walletType, isMainnet])
 
   // Context value memoization
   const contextValue = useMemo(() => ({
