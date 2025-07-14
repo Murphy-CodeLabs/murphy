@@ -8,9 +8,9 @@ icon: Wallet
   name={"Connect Wallet Button"}
   v0JsonFileName={"connect-wallet-button"}
 >
-  <ConnectWalletButton className="inline-flex max-w-fit">
-    Connect Wallet
-  </ConnectWalletButton>
+  <div className="w-full flex justify-center">
+    <ConnectWalletButton className="inline-flex" />
+  </div>
 </PreviewComponent>
 
 ## Installation
@@ -32,6 +32,136 @@ icon: Wallet
   <InstallationCommands
     packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/txn-settings.json`}
   />
+  </Step>
+  <Step>
+    Create Network Toggle Component
+
+    Create a new file `components/layout/network-toggle.tsx`:
+
+    ```tsx
+    "use client"
+
+    import { useCluster } from "@/components/providers/cluster-provider"
+    import { Switch } from "@/components/ui/switch"
+
+    export function NetworkToggle() {
+      const { cluster, setCluster } = useCluster()
+      const isMainnet = cluster === "mainnet"
+
+      return (
+        <div className="flex items-center gap-2 ml-2">
+          <span className="text-xs text-muted-foreground">DEV</span>
+          <Switch
+            id="network-switch"
+            checked={isMainnet}
+            onCheckedChange={(checked) => setCluster(checked ? "mainnet" : "devnet")}
+            className="scale-75"
+          />
+          <span className="text-xs text-muted-foreground">MAIN</span>
+        </div>
+      )
+    }
+    ```
+
+  </Step>
+  <Step>
+    Create Cluster Provider
+
+    Create a new file `components/providers/cluster-provider.tsx`:
+
+    ```tsx
+    "use client";
+
+    import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+
+    type Cluster = "mainnet" | "devnet";
+
+    interface ClusterContextType {
+      cluster: Cluster;
+      setCluster: (cluster: Cluster) => void;
+      isMainnet: boolean;
+    }
+
+    const ClusterContext = createContext<ClusterContextType | undefined>(undefined);
+
+    interface ClusterProviderProps {
+      children: ReactNode;
+      defaultCluster?: Cluster;
+    }
+
+    export function ClusterProvider({ children, defaultCluster = "mainnet" }: ClusterProviderProps) {
+      const [cluster, setCluster] = useState<Cluster>(defaultCluster);
+
+      // Update environment variable when cluster changes
+      useEffect(() => {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("NEXT_PUBLIC_CLUSTER", cluster);
+          
+          // Update the global environment variable for components that read it
+          (window as any).NEXT_PUBLIC_CLUSTER = cluster;
+          
+          // Dispatch a custom event to notify components of cluster change
+          window.dispatchEvent(new CustomEvent("clusterChanged", { detail: { cluster } }));
+        }
+      }, [cluster]);
+
+      // Initialize cluster from localStorage on mount
+      useEffect(() => {
+        if (typeof window !== "undefined") {
+          const savedCluster = window.localStorage.getItem("NEXT_PUBLIC_CLUSTER") as Cluster;
+          if (savedCluster && (savedCluster === "mainnet" || savedCluster === "devnet")) {
+            setCluster(savedCluster);
+          }
+        }
+      }, []);
+
+      const value: ClusterContextType = {
+        cluster,
+        setCluster,
+        isMainnet: cluster === "mainnet",
+      };
+
+      return (
+        <ClusterContext.Provider value={value}>
+          {children}
+        </ClusterContext.Provider>
+      );
+    }
+
+    export function useCluster() {
+      const context = useContext(ClusterContext);
+      if (context === undefined) {
+        throw new Error("useCluster must be used within a ClusterProvider");
+      }
+      return context;
+    }
+    ```
+
+  </Step>
+  <Step>
+    Wrap Your App with ClusterProvider
+
+    Update your app's root layout or the specific page where you want to use the network toggle:
+
+    ```tsx
+    import { ClusterProvider } from "@/components/providers/cluster-provider"
+    import { NetworkToggle } from "@/components/layout/network-toggle"
+
+    export default function Layout({ children }) {
+      return (
+        <ClusterProvider defaultCluster="devnet">
+          <div>
+            <div className="flex items-center">
+              <span className="font-bold">Murphy</span>
+              <NetworkToggle />
+            </div>
+            {children}
+          </div>
+        </ClusterProvider>
+      )
+    }
+    ```
+
   </Step>
   <Step>
   Create Wallet Provider
@@ -636,9 +766,9 @@ import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-butto
 export default function MyPage() {
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="container mx-auto max-w-md p-8 text-center">
-        <h1 className="mb-6 text-2xl font-bold">Connect your Solana wallet</h1>
-        <ConnectWalletButton />
+      <div className="container mx-auto max-w-md p-8">
+        <h1 className="mb-6 text-2xl font-bold text-center">Connect your Solana wallet</h1>
+        <ConnectWalletButton className="w-full" />
       </div>
     </div>
   )
@@ -650,18 +780,42 @@ export default function MyPage() {
 You can customize the button appearance by passing props:
 
 ```tsx
-<ConnetWalletButton variant="outline" size="lg" className="my-custom-class" />
+// Basic customization
+<ConnectWalletButton 
+  variant="outline" 
+  size="lg" 
+  className="w-full md:w-auto" 
+/>
+
+// With custom labels
+<ConnectWalletButton 
+  variant="outline"
+  size="lg"
+  className="w-full md:w-auto"
+  labels={{
+    "has-wallet": "Connect Wallet",
+    "change-wallet": "Change Wallet",
+    "copy-address": "Copy Address",
+    "disconnect": "Disconnect",
+    "lazorkit-wallet": "Use Passkey",
+    "standard-wallet": "Use Wallet",
+    "connecting": "Connecting...",
+    "initializing": "Initializing...",
+    "creating-passkey": "Creating Passkey...",
+    "creating-smart-wallet": "Creating Smart Wallet..."
+  }}
+/>
 ```
 
 <TypeTable
   type={{
     variant: {
-      description: "The visual style of the button",
+      description: "The visual style of the button (default, outline, destructive, secondary, ghost, link)",
       type: "string",
       default: "default",
     },
     size: {
-      description: "The size of the button",
+      description: "The size of the button (default, sm, lg, icon)",
       type: "string",
       default: "default",
     },
@@ -676,7 +830,7 @@ You can customize the button appearance by passing props:
       default: "false",
     },
     labels: {
-      description: "Custom labels for button states",
+      description: "Custom labels for different button states and actions",
       type: "Partial<typeof LABELS>",
       default: "LABELS",
     }
@@ -685,19 +839,45 @@ You can customize the button appearance by passing props:
 
 ### LazorKit Passkey Integration
 
-The Connect Wallet Button now supports LazorKit Passkey wallet connections. When clicked, it opens a modal with two tabs:
-- Standard Wallet: For connecting traditional Solana wallets
-- Passkey: For connecting via LazorKit's passwordless authentication
+The Connect Wallet Button integrates both standard Solana wallets and LazorKit Passkey authentication:
 
-Note: LazorKit is currently in beta and only supports Devnet.
+#### Features
+- **Standard Wallets**: Supports Phantom, Solflare, and other Solana wallets
+- **Passkey Support**: Passwordless authentication via LazorKit
+- **Network Detection**: Automatic network switching between Mainnet and Devnet
+- **Wallet Address Display**: Shows truncated wallet address when connected
+- **Copy Address**: Easy wallet address copying
+- **Responsive Design**: Adapts to different screen sizes
+
+#### Modal Interface
+When clicked, opens a modal with two tabs:
+- **Standard Wallet**: For connecting traditional Solana wallets
+- **Passkey**: For connecting via LazorKit's passwordless authentication
+
+#### Network Support
+- Standard wallets work on both Mainnet and Devnet
+- LazorKit Passkey currently supports Devnet only (beta)
+
+#### Example with Full Configuration
 
 ```tsx
 <ConnectWalletButton 
   variant="outline"
   size="lg"
+  className="w-full md:w-auto"
   labels={{
     "lazorkit-wallet": "Use Passkey",
-    "standard-wallet": "Use Wallet"
+    "standard-wallet": "Use Wallet",
+    "has-wallet": "Connect Wallet",
+    "change-wallet": "Change Wallet",
+    "disconnect": "Disconnect",
+    "copy-address": "Copy Address",
+    "connecting": "Connecting...",
+    "initializing": "Initializing Smart Wallet...",
+    "creating-passkey": "Creating Passkey...",
+    "creating-smart-wallet": "Creating Smart Wallet..."
   }}
 />
 ```
+
+Note: When using LazorKit Passkey, make sure your environment is properly configured for Devnet during the beta period.

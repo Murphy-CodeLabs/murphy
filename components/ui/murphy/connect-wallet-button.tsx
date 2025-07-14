@@ -7,11 +7,14 @@ import { useWalletMultiButton } from "@/hook/murphy/use-walletMultiButton"
 import { Button } from "../button"
 import { ModalContext } from "@/components/providers/wallet-provider"
 import { useLazorKitWalletContext } from "@/components/providers/lazorkit-wallet-context"
+import { PublicKey } from "@solana/web3.js"
 
 import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../dialog"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../collapsible"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../tabs"
+import { Badge } from "../badge"
+import { Loader2, Key, ChevronDown } from "lucide-react"
 
 // Constants
 const LABELS = {
@@ -109,7 +112,7 @@ export const EnhancedWalletModal: FC<{
   } = useLazorKitWalletContext()
 
   const modalContext = React.useContext(ModalContext)
-  const isMainnet = modalContext?.isMainnet ?? false // Default to devnet
+  const isMainnet = modalContext?.isMainnet ?? false
   const { walletType, setWalletType } = modalContext || { walletType: 'standard', setWalletType: () => {} }
 
   // Memoize wallet lists
@@ -216,113 +219,132 @@ export const EnhancedWalletModal: FC<{
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Connect wallet to continue</DialogTitle>
-          <DialogDescription className="space-y-2">
+          <DialogDescription>
             Choose your preferred wallet to connect to this dApp.
-            {isMainnet && walletType === 'lazorkit' && (
-              <div className="text-yellow-500 mt-2">
-                Note: LazorKit is currently in beta and only supports Devnet
-              </div>
-            )}
           </DialogDescription>
-          <div className="text-sm mt-2">
-            Network Status:{" "}
-            <span className={isMainnet ? "text-green-500" : "text-yellow-500"}>
-              {isMainnet ? "Mainnet" : "Devnet"}
-            </span>
+          <div className="mt-3 space-y-3">
+            <div className="text-warning font-medium">
+              Note: LazorKit is currently in beta and only supports Devnet
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <span>Network Status:</span>
+              <Badge variant={activeTab === 'lazorkit' ? 'secondary' : (isMainnet ? 'default' : 'secondary')}>
+                {activeTab === 'lazorkit' ? 'Devnet' : (isMainnet ? 'Mainnet' : 'Devnet')}
+              </Badge>
+            </div>
           </div>
         </DialogHeader>
 
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'standard' | 'lazorkit')} className="w-full mt-2">
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'standard' | 'lazorkit')}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="standard">{LABELS["standard-wallet"]}</TabsTrigger>
-            <TabsTrigger value="lazorkit" disabled={isMainnet}>{LABELS["lazorkit-wallet"]}</TabsTrigger>
+            <TabsTrigger value="standard">
+              {LABELS["standard-wallet"]}
+            </TabsTrigger>
+            <TabsTrigger value="lazorkit">
+              {LABELS["lazorkit-wallet"]}
+            </TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="standard" className="mt-2">
-            <div className="flex flex-col gap-2 py-2">
+
+          <TabsContent value="standard">
+            <div className="space-y-4">
+              {/* Standard wallet list */}
               {listedWallets.map((wallet) => (
-                <WalletListItem
+                <button
                   key={wallet.adapter.name}
-                  wallet={wallet}
-                  handleClick={(e) => handleWalletClick(e, wallet.adapter.name)}
-                />
+                  onClick={(e) => handleWalletClick(e, wallet.adapter.name)}
+                  className="flex w-full items-center justify-between rounded-lg p-3 text-left transition-colors hover:bg-secondary"
+                >
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={wallet.adapter.icon}
+                      alt={`${wallet.adapter.name} icon`}
+                      className="h-5 w-5"
+                      onError={(e) => {
+                        e.currentTarget.src = "/placeholder.jpg"
+                      }}
+                    />
+                    <span className="font-medium">{wallet.adapter.name}</span>
+                  </div>
+                  <Badge variant="outline">
+                    {wallet.readyState === WalletReadyState.Installed
+                      ? "Installed"
+                      : "Not Installed"}
+                  </Badge>
+                </button>
               ))}
+
               {collapsedWallets.length > 0 && (
-                <Collapsible open={expanded} onOpenChange={setExpanded} className="w-full">
+                <Collapsible open={expanded} onOpenChange={setExpanded}>
                   <CollapsibleTrigger asChild>
                     <Button variant="ghost" className="w-full justify-between">
-                      {expanded ? "Hide options" : "Show more options"}
+                      <span>More wallet options</span>
+                      <ChevronDown className="h-4 w-4" />
                     </Button>
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="space-y-2 mt-2">
+                  <CollapsibleContent className="space-y-2">
                     {collapsedWallets.map((wallet) => (
-                      <WalletListItem
+                      <button
                         key={wallet.adapter.name}
-                        wallet={wallet}
-                        handleClick={(e) => handleWalletClick(e, wallet.adapter.name)}
-                      />
+                        onClick={(e) => handleWalletClick(e, wallet.adapter.name)}
+                        className="flex w-full items-center justify-between rounded-lg p-3 text-left transition-colors hover:bg-secondary"
+                      >
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={wallet.adapter.icon}
+                            alt={`${wallet.adapter.name} icon`}
+                            className="h-5 w-5"
+                            onError={(e) => {
+                              e.currentTarget.src = "/placeholder.jpg"
+                            }}
+                          />
+                          <span className="font-medium">
+                            {wallet.adapter.name}
+                          </span>
+                        </div>
+                        <Badge variant="outline">
+                          {wallet.readyState === WalletReadyState.Installed
+                            ? "Installed"
+                            : "Not Installed"}
+                        </Badge>
+                      </button>
                     ))}
                   </CollapsibleContent>
                 </Collapsible>
               )}
             </div>
           </TabsContent>
-          
-          <TabsContent value="lazorkit" className="mt-2">
-            <div className="flex flex-col gap-4 py-2">
-              <div className="text-sm text-muted-foreground">
-                LazorKit Wallet provides a secure, passwordless wallet using WebAuthn passkeys.
-                {isMainnet && (
-                  <div className="text-yellow-500 mt-2">
-                    Note: Currently only available on Devnet
-                  </div>
-                )}
-              </div>
-              
-              {lazorKitError && (
-                <div className="flex flex-col gap-2 text-sm text-red-500 mb-2">
-                  <span>Error: {lazorKitError.message}</span>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => {
-                      clearError()
-                      handleLazorKitConnect()
-                    }}
-                  >
-                    {LABELS["retry-connection"]}
-                  </Button>
-                </div>
-              )}
-              
+
+          <TabsContent value="lazorkit">
+            <div className="space-y-4">
               {!isLazorKitConnected ? (
-                <Button 
-                  onClick={handleLazorKitConnect} 
-                  disabled={isLoadingLazorKit || isInitializing || isCreatingPasskey || isCreatingSmartWallet || isMainnet}
+                <Button
                   className="w-full"
+                  onClick={handleLazorKitConnect}
+                  disabled={isLoadingLazorKit || isInitializing || isCreatingPasskey || isCreatingSmartWallet}
                 >
-                  {isLoadingLazorKit || isInitializing || isCreatingPasskey || isCreatingSmartWallet ? (
-                    <div className="flex items-center gap-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
-                      <span>
-                        {isCreatingPasskey ? LABELS["creating-passkey"] :
-                         isCreatingSmartWallet ? LABELS["creating-smart-wallet"] :
-                         isInitializing ? LABELS["initializing"] :
-                         LABELS["connecting"]}
-                      </span>
-                    </div>
+                  {isLoadingLazorKit || isInitializing ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {LABELS["connecting"]}
+                    </>
+                  ) : isCreatingPasskey ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {LABELS["creating-passkey"]}
+                    </>
+                  ) : isCreatingSmartWallet ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      {LABELS["creating-smart-wallet"]}
+                    </>
                   ) : (
-                    <div className="flex items-center gap-2">
-                      <img 
-                        src="/brand-logos/passkey-logo.svg"
-                        alt="LazorKit Passkey"
-                        className="h-4 w-4"
-                      />
-                      <span>Connect with Passkey</span>
-                    </div>
+                    <>
+                      <Key className="mr-2 h-4 w-4" />
+                      {LABELS["lazorkit-wallet"]}
+                    </>
                   )}
                 </Button>
               ) : (
@@ -402,29 +424,60 @@ export function BaseWalletMultiButton({ children, labels = LABELS, ...props }: P
 
   const currentWalletAddress = useMemo(() => {
     if (walletType === 'lazorkit' && smartWalletPubkey) {
-      return smartWalletPubkey.toString()
+      // For LazorKit, the address is already in the correct format
+      return smartWalletPubkey.toString();
     } else if (walletType === 'standard' && publicKey) {
-      return publicKey.toBase58()
+      return publicKey.toBase58();
     }
-    return null
-  }, [walletType, smartWalletPubkey, publicKey])
+    return null;
+  }, [walletType, smartWalletPubkey, publicKey]);
 
   const content = useMemo(() => {
-    if (!mounted) return labels["no-wallet"]
+    if (!mounted) return labels["no-wallet"];
 
     if (children) {
-      return children
+      return children;
     } else if (isLoadingLazorKit) {
       return (
         <div className="flex items-center gap-2">
           <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
           <span>{labels["connecting"]}</span>
         </div>
-      )
+      );
+    }
+
+    // Add wallet icon and address when connected
+    if (isAnyWalletConnected && currentWalletAddress) {
+      return (
+        <div className="flex items-center gap-2">
+          {walletType === 'lazorkit' ? (
+            <img 
+              src="/brand-logos/passkey-logo.svg"
+              alt="LazorKit Passkey"
+              className="h-5 w-5"
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.jpg"
+              }}
+            />
+          ) : walletIcon ? (
+            <img
+              src={walletIcon}
+              alt={`${walletName} icon`}
+              className="h-5 w-5"
+              onError={(e) => {
+                e.currentTarget.src = "/placeholder.jpg"
+              }}
+            />
+          ) : null}
+          <span>
+            {`${currentWalletAddress.slice(0, 6)}...${currentWalletAddress.slice(-4)}`}
+          </span>
+        </div>
+      );
     }
     
-    return labels["has-wallet"]
-  }, [mounted, walletType, smartWalletPubkey, publicKey, children, isLoadingLazorKit, labels, walletIcon, walletName, isLazorKitConnected])
+    return labels["has-wallet"];
+  }, [mounted, children, isLoadingLazorKit, isAnyWalletConnected, walletType, walletIcon, walletName, currentWalletAddress, labels]);
 
   const handleDisconnect = useCallback(() => {
     if (walletType === 'lazorkit') {
