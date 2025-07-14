@@ -342,7 +342,14 @@ export const EnhancedWalletModal: FC<{
                     </>
                   ) : (
                     <>
-                      <Key className="mr-2 h-4 w-4" />
+                      <img 
+                        src="/brand-logos/passkey-logo.svg"
+                        alt="LazorKit Passkey"
+                        className="h-4 w-4 mr-2"
+                        onError={(e) => {
+                          e.currentTarget.src = "/placeholder.jpg"
+                        }}
+                      />
                       {LABELS["lazorkit-wallet"]}
                     </>
                   )}
