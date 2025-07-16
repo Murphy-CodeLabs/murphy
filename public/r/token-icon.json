@@ -6,13 +6,13 @@
   "files": [
     {
       "path": "components/ui/murphy/token-icon.tsx",
-      "content": "\"use client\";\n\nimport React from \"react\";\n\nimport { SolAsset } from \"@/types/assets\";\n\ntype IconProps = {\n  asset: SolAsset | null;\n  size?: number;\n};\n\nconst TokenIcon = ({ asset, size = 24 }: IconProps) => {\n  return (\n    <div\n      className=\"relative shrink-0 rounded-full border border-border bg-background p-0\"\n      style={{\n        width: size + 2,\n        height: size + 2,\n      }}\n    >\n      <img\n        src={asset?.image ?? \"\"}\n        alt={asset?.symbol ?? asset?.mint.toBase58() ?? \"\"}\n        width={size}\n        height={size}\n        className=\"absolute inset-0 rounded-full mt-0\"\n        style={{\n          width: size,\n          height: size,\n        }}\n      />\n    </div>\n  );\n};\n\nexport { TokenIcon };",
+      "content": "\"use client\";\r\n\r\nimport React from \"react\";\r\n\r\nimport { SolAsset } from \"@/types/assets\";\r\n\r\ntype IconProps = {\r\n  asset: SolAsset | null;\r\n  size?: number;\r\n};\r\n\r\nconst TokenIcon = ({ asset, size = 24 }: IconProps) => {\r\n  return (\r\n    <div\r\n      className=\"relative shrink-0 rounded-full border border-border bg-background p-0\"\r\n      style={{\r\n        width: size + 2,\r\n        height: size + 2,\r\n      }}\r\n    >\r\n      <img\r\n        src={asset?.image ?? \"\"}\r\n        alt={asset?.symbol ?? asset?.mint.toBase58() ?? \"\"}\r\n        width={size}\r\n        height={size}\r\n        className=\"absolute inset-0 rounded-full mt-0\"\r\n        style={{\r\n          width: size,\r\n          height: size,\r\n        }}\r\n      />\r\n    </div>\r\n  );\r\n};\r\n\r\nexport { TokenIcon };",
       "type": "registry:file",
       "target": "components/ui/murphy/token-icon.tsx"
     },
     {
       "path": "types/assets/index.ts",
-      "content": "import { PublicKey,Connection } from \"@solana/web3.js\";\n\nexport type SolAsset = {\n  mint: PublicKey;\n  name: string;\n  symbol: string;\n  image: string;\n  decimals: number;\n  price: number;\n  userTokenAccount?: {\n    address: PublicKey;\n    amount: number;\n  };\n};\n\nexport type FetchWalletArgs = {\n  owner: PublicKey;\n  limit?: number;\n};",
+      "content": "import { PublicKey,Connection } from \"@solana/web3.js\";\r\n\r\nexport type SolAsset = {\r\n  mint: PublicKey;\r\n  name: string;\r\n  symbol: string;\r\n  image: string;\r\n  decimals: number;\r\n  price: number;\r\n  userTokenAccount?: {\r\n    address: PublicKey;\r\n    amount: number;\r\n  };\r\n};\r\n\r\nexport type FetchWalletArgs = {\r\n  owner: PublicKey;\r\n  limit?: number;\r\n};",
       "type": "registry:file",
       "target": "types/assets/index.ts"
     }

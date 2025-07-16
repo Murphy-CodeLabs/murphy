@@ -1,26 +1,20 @@
 {
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "RecurringActiveOrders",
-  "type": "component",
+  "type": "registry:block",
+  "author": "Murphy",
   "description": "Murphy component to view active Jupiter Recurring DCA Orders on Solana mainnet",
-  "files": [
-    "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx"
-  ],
   "dependencies": [
     "@solana/web3.js",
     "@solana/wallet-adapter-react",
     "sonner"
   ],
-  "category": "Jupiter Recurring",
-  "keywords": [
-    "jupiter",
-    "recurring",
-    "dca",
-    "active",
-    "orders",
-    "view",
-    "solana",
-    "wallet"
-  ],
-  "author": "Murphy",
-  "license": "MIT"
-} 
+  "files": [
+    {
+      "path": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx",
+      "content": "\"use client\";\r\nimport { useWallet } from \"@solana/wallet-adapter-react\";\r\nimport { Card, CardHeader, CardTitle, CardContent } from \"@/components/ui/card\";\r\nimport { Button } from \"@/components/ui/button\";\r\nimport { RefreshCw } from \"lucide-react\";\r\nimport { useEffect } from \"react\";\r\nimport useRecurringJupiter from \"./useRecurringJupiter\";\r\nimport { RecurringOrderCard } from \"./RecurringOrderCard\";\r\nimport { cn } from \"@/lib/utils\";\r\n\r\nexport function RecurringActiveOrders({ className }: { className?: string }) {\r\n  const { publicKey, connected } = useWallet();\r\n  const {\r\n    loading,\r\n    error,\r\n    data,\r\n    refetch,\r\n  } = useRecurringJupiter(\"all\", \"active\");\r\n\r\n  // Auto-fetch data when wallet connects\r\n  useEffect(() => {\r\n    if (connected && publicKey) {\r\n      refetch();\r\n    }\r\n  }, [connected, publicKey, refetch]);\r\n\r\n  if (!connected || !publicKey) {\r\n    return (\r\n      <Card className={cn(\"w-[400px] mx-auto px-6 py-4 rounded-xl shadow-sm\", className)}>\r\n        <CardHeader>\r\n          <CardTitle>Active Recurring Orders</CardTitle>\r\n        </CardHeader>\r\n        <CardContent>\r\n          <p className=\"text-muted-foreground\">Please connect your wallet to view active orders.</p>\r\n        </CardContent>\r\n      </Card>\r\n    );\r\n  }\r\n\r\n  return (\r\n    <Card className={cn(\"w-[400px] mx-auto px-6 py-4 rounded-xl shadow-sm\", className)}>\r\n      <CardHeader className=\"flex flex-row items-center justify-between mb-2 p-0 border-none bg-transparent gap-2\">\r\n        <CardTitle className=\"flex-1 truncate\">Active Recurring Orders</CardTitle>\r\n        <Button\r\n          size=\"sm\"\r\n          variant=\"outline\"\r\n          onClick={() => refetch()}\r\n          disabled={loading}\r\n          className=\"min-w-[40px] flex items-center justify-center\"\r\n          aria-label=\"Refresh\"\r\n        >\r\n          <RefreshCw className={loading ? \"animate-spin\" : \"\"} size={18} />\r\n        </Button>\r\n      </CardHeader>\r\n      <CardContent className=\"p-0 pt-4\">\r\n        {error && (\r\n          typeof error === \"string\" && error.trim().startsWith(\"{\") && error.trim().endsWith(\"}\")\r\n            ? <div className=\"text-red-600 text-sm mb-2\">No active recurring orders found.</div>\r\n            : <div className=\"text-red-600 text-sm mb-2\">{error}</div>\r\n        )}\r\n        {loading && <div className=\"text-muted-foreground\">Loading orders...</div>}\r\n        {!loading && (!data || data.length === 0) && (\r\n          <div className=\"text-muted-foreground\">No active recurring orders found.</div>\r\n        )}\r\n        <div className=\"flex flex-col gap-4\">\r\n          {data && data.map((order: any) => (\r\n            <RecurringOrderCard key={order.id} order={order} />\r\n          ))}\r\n        </div>\r\n      </CardContent>\r\n    </Card>\r\n  );\r\n}\r\n\r\nexport default RecurringActiveOrders; \r\n",
+      "type": "registry:component",
+      "target": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx"
+    }
+  ]
+}

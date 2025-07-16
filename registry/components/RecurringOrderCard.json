@@ -1,9 +1,13 @@
 {
   "name": "RecurringOrderCard",
-  "type": "component",
+  "type": "registry:block",
   "description": "Murphy component to display a single Jupiter Recurring DCA Order on Solana mainnet",
   "files": [
-    "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx"
+    {
+      "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx"
+    }
   ],
   "dependencies": [
     "@solana/web3.js",

@@ -1,9 +1,13 @@
 {
   "name": "CancelRecurringOrder",
-  "type": "component",
+  "type": "registry:block",
   "description": "Murphy component to cancel Jupiter Recurring DCA Orders on Solana mainnet",
   "files": [
-    "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx"
+    {
+      "path": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx"
+    }
   ],
   "dependencies": [
     "@solana/web3.js",
