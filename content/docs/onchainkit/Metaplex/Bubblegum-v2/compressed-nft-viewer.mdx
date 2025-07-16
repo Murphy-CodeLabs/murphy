@@ -1,0 +1,179 @@
+---
+title: Compressed NFT Viewer
+description: A Solana compressed NFT lookup component with shadcn UI styling
+icon: "Eye"
+---
+
+<PreviewComponent
+  name={"Compressed NFT Viewer"}
+  v0JsonFileName={"compressed-nft-viewer"}
+>
+  <CompressedNFTViewer className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Metaplex Bubblegum dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters @metaplex-foundation/mpl-bubblegum @metaplex-foundation/umi"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Compressed NFT Viewer
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/compressed-nft-viewer.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { CompressedNFTViewer } from "@/components/ui/murphy/compressed-nft-viewer";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">View Compressed NFT</h1>
+      <CompressedNFTViewer className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Dual Search Methods**: Search by Asset ID or Tree Address + Leaf Index
+- **Tabbed Interface**: Clean tabbed UI for different search methods
+- **Compressed NFT Details**: Display comprehensive compressed NFT information
+- **Metadata Loading**: Automatic metadata fetching and display
+- **Tree Information**: Show merkle tree details and leaf position
+- **Owner Information**: Display current owner and creator details
+- **Attributes Display**: Show NFT attributes and properties
+- **Explorer Links**: Direct links to view assets and trees on Solana explorers
+- **Copy to Clipboard**: Easy copying of addresses and IDs
+- **Network Detection**: Automatically detects devnet/mainnet
+- **Error Handling**: Comprehensive error handling with retry capability
+- **CORS Fallback**: Graceful handling of metadata CORS issues
+
+## Advanced Usage
+
+You can pre-populate the form with known values:
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">View Compressed NFT</h1>
+      <CompressedNFTViewer
+        className="max-w-md"
+        assetId="YourCompressedNFTAssetID"
+      />
+    </div>
+  );
+}
+```
+
+Or search by tree and leaf index:
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">View Compressed NFT</h1>
+      <CompressedNFTViewer
+        className="max-w-md"
+        treeAddress="YourMerkleTreeAddress"
+        leafIndex={0}
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `assetId` | `string` | `undefined` | Pre-populate asset ID field |
+| `treeAddress` | `string` | `undefined` | Pre-populate tree address field |
+| `leafIndex` | `number` | `undefined` | Pre-populate leaf index field |
+| `className` | `string` | `undefined` | Additional CSS classes |
+
+## Search Methods
+
+### By Asset ID
+- **Asset ID**: The unique identifier for the compressed NFT
+- Fastest lookup method when you have the asset ID
+- Single field required
+
+### By Tree & Leaf Index
+- **Tree Address**: The address of the merkle tree containing the NFT
+- **Leaf Index**: The position of the NFT in the merkle tree (0-based)
+- Useful when you know the tree structure
+
+## Displayed Information
+
+### Basic Details
+- **Asset ID**: Unique compressed NFT identifier
+- **Owner**: Current owner wallet address
+- **Merkle Tree**: Tree address containing the NFT
+- **Leaf Index**: Position in the merkle tree
+- **Compression Status**: Whether the NFT is compressed
+
+### Metadata
+- **Name**: NFT display name
+- **Description**: NFT description
+- **Image**: NFT artwork (if available)
+- **Attributes**: Trait types and values
+
+### Creators
+- **Address**: Creator wallet addresses
+- **Share**: Royalty percentage
+- **Verification**: Creator verification status
+
+## Technical Notes
+
+- Compressed NFTs are stored in Merkle Trees for efficient storage
+- Asset IDs are derived from tree address and leaf index
+- Requires either Asset ID OR both Tree Address and Leaf Index
+- Uses Metaplex Bubblegum protocol for compressed NFT operations
+- Supports both Bubblegum v1 and v2 compressed NFTs
+- Automatically handles CORS issues with metadata loading
+
+## Performance
+
+- **Fast Lookups**: Optimized for quick compressed NFT retrieval
+- **Efficient Rendering**: Lazy loading of metadata and images
+- **Memory Efficient**: Minimal memory footprint for tree operations
+- **Network Optimized**: Batched requests where possible
+
+## Notes
+
+- Compressed NFTs use significantly less storage than regular NFTs
+- Some metadata may not be available due to CORS restrictions
+- Tree information helps understand the NFT's storage structure
+- Creator verification status indicates on-chain verification
+
+## Related Components
+
+- [Mint CNFT Form](/docs/onchainkit/Metaplex/Bubblegum-v2/mint-cnft-form) - Create compressed NFTs
+- [Create Merkle Tree Form](/docs/onchainkit/Metaplex/Bubblegum-v2/create-merkleTree-form) - Create merkle trees
+- [View NFT Form](/docs/onchainkit/Metaplex/Token-Metadata/get-nft-form) - View regular NFTs
+- [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) - Wallet connection

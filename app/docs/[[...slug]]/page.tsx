@@ -9,9 +9,10 @@ import { notFound } from "next/navigation";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getMDXComponents } from "@/mdx-components";
 import { CallAction } from "@/components/docs/call-action";
+import { ViewOptions } from "./page.client";
 
 export default async function Page(props: {
-  params: Promise<{ slug?: string[] }>;
+  params: Promise<{ slug: string[] }>;
 }) {
   const params = await props.params;
   const page = source.getPage(params.slug);
@@ -39,7 +40,15 @@ export default async function Page(props: {
       }}
     >
       <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
+      <DocsDescription className="mb-2">
+        {page.data.description}
+      </DocsDescription>
+      <div className="flex flex-row gap-2 items-center border-b pb-6">
+        <ViewOptions
+          markdownUrl={`${page.url}.mdx`}
+          githubUrl={`https://github.com/murphy-codelabs/murphy/blob/main/content/docs/${page.file.path}`}
+        />
+      </div>
       <DocsBody>
         <MDXContent
           components={getMDXComponents({

@@ -10,7 +10,6 @@ import * as icons from "lucide-react";
 import * as docsComponents from "@/components/docs";
 import * as murphyComponents from "@/components/ui/murphy";
 
-// use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...(icons as unknown as MDXComponents),

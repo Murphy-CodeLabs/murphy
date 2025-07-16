@@ -1,0 +1,54 @@
+---
+title: Hydra Fanout Form
+description: Create and manage fanout wallets for multi-recipient distributions
+icon: GitBranch
+---
+
+<PreviewComponent
+  name={"Hydra Fanout Form"}
+  v0JsonFileName={"hydra-fanout-form"}
+>
+  <HydraFanoutForm className="max-w-4xl" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Metaplex Hydra dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/mpl-hydra react-hook-form @hookform/resolvers zod"} />
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Hydra Fanout Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/hydra-fanout-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { HydraFanoutForm } from "@/components/ui/murphy/hydra-fanout-form";
+
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Fanout Wallet</h1>
+      <HydraFanoutForm className="max-w-4xl" />
+    </div>
+  );
+}

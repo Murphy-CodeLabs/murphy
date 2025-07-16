@@ -1,0 +1,349 @@
+---
+title: Improved CNFT Manager
+description: A comprehensive compressed NFT management platform with multiple features and tabs
+icon: "TreePine"
+---
+
+<PreviewComponent
+  name={"Improved CNFT Manager"}
+  v0JsonFileName={"improved-cnft-manager"}
+>
+  <ImprovedCNFTManager className="max-w-4xl" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Metaplex Bubblegum dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/mpl-bubblegum @metaplex-foundation/mpl-token-metadata @metaplex-foundation/umi-signer-wallet-adapters react-hook-form"} />
+
+  </Step>
+
+  <Step>
+    Add the component
+
+    Copy and paste the following code into your project.
+
+    <ComponentSource name="improved-cnft-manager" />
+
+  </Step>
+</Steps>
+
+## Usage
+
+### Basic Usage
+
+```tsx
+import { ImprovedCNFTManager } from "@/components/ui/murphy";
+
+export default function CNFTPage() {
+  return (
+    <div className="container mx-auto p-4">
+      <ImprovedCNFTManager />
+    </div>
+  );
+}
+```
+
+### With Custom Tab
+
+```tsx
+import { ImprovedCNFTManager } from "@/components/ui/murphy";
+
+export default function MintCNFTPage() {
+  return (
+    <div className="container mx-auto p-4">
+      <ImprovedCNFTManager defaultTab="mint" />
+    </div>
+  );
+}
+```
+
+### With Custom Styling
+
+```tsx
+import { ImprovedCNFTManager } from "@/components/ui/murphy";
+
+export default function StyledCNFTPage() {
+  return (
+    <div className="container mx-auto p-4">
+      <ImprovedCNFTManager
+        className="max-w-6xl border-2 border-primary/20"
+        defaultTab="trees"
+      />
+    </div>
+  );
+}
+```
+
+## Features
+
+### 🔍 View CNFTs
+
+- **Asset ID Search**: Find CNFTs by their unique asset identifier
+- **Tree & Leaf Search**: Locate CNFTs using merkle tree address and leaf index
+- **Owner Search**: Display all CNFTs owned by a specific wallet
+- **Visual Gallery**: Grid layout with images and metadata
+- **Detailed View**: Modal with comprehensive CNFT information
+- **Explorer Links**: Direct links to Solana explorers
+
+### 🎨 Mint CNFTs
+
+- **Custom Metadata**: Name, symbol, description, and URI
+- **Tree Selection**: Choose existing merkle tree for storage
+- **Collection Support**: Create new or use existing collections
+- **Attributes System**: Add custom traits and properties
+- **Real-time Validation**: Form validation with error messages
+- **Network Detection**: Automatic network identification
+
+### 🌳 Merkle Trees
+
+- **Tree Creation**: Generate new merkle trees with custom parameters
+- **Capacity Planning**: Calculate storage capacity based on depth
+- **Cost Estimation**: Display SOL requirements for tree creation
+- **Tree Information**: View detailed tree statistics and usage
+- **Authority Management**: Track tree ownership and permissions
+
+### ⚙️ Management Tools
+
+- **Transfer CNFTs**: Move compressed NFTs between wallets
+- **Update Metadata**: Modify CNFT properties and attributes
+- **Burn CNFTs**: Permanently destroy compressed NFTs
+- **Batch Operations**: Perform bulk operations on multiple CNFTs
+
+### 📦 Collections
+
+- **Collection Creation**: Generate new CNFT collections
+- **Metadata Management**: Update collection information
+- **Analytics**: Track collection statistics and performance
+
+## API Reference
+
+### Props
+
+<ApiTable>
+  <ApiTableProperty name="className" type="string" optional>
+    Additional CSS classes for styling
+  </ApiTableProperty>
+  <ApiTableProperty
+    name="defaultTab"
+    type="'view' | 'mint' | 'manage' | 'trees' | 'collections'"
+    optional
+  >
+    Default active tab on component mount. Defaults to 'view'
+  </ApiTableProperty>
+</ApiTable>
+
+### Tab Types
+
+```tsx
+type ActiveTab = "view" | "mint" | "manage" | "trees" | "collections";
+```
+
+### Form Types
+
+```tsx
+// View form for searching CNFTs
+type ViewCNFTFormValues = {
+  searchType: "assetId" | "treeAndLeaf" | "owner";
+  assetId: string;
+  treeAddress: string;
+  leafIndex: number;
+  ownerAddress: string;
+};
+
+// Mint form for creating CNFTs
+type MintCNFTFormValues = {
+  name: string;
+  symbol: string;
+  uri: string;
+  description: string;
+  merkleTree: string;
+  collection: string;
+  useExistingCollection: boolean;
+  attributes: Array<{
+    trait_type: string;
+    value: string;
+  }>;
+};
+
+// Tree creation form
+type ManageTreeFormValues = {
+  maxDepth: number;
+  maxBufferSize: number;
+  canopyDepth: number;
+};
+```
+
+### Data Types
+
+```tsx
+// Compressed NFT representation
+interface CompressedNFT {
+  id: string;
+  name: string;
+  image?: string;
+  description?: string;
+  merkleTree: string;
+  leafIndex: number;
+  owner: string;
+  collection?: string;
+  creators?: Array<{
+    address: string;
+    verified: boolean;
+    share: number;
+  }>;
+  attributes?: Array<{
+    trait_type: string;
+    value: string | number;
+  }>;
+  uri: string;
+  compressed: boolean;
+}
+
+// Merkle tree information
+interface MerkleTreeInfo {
+  address: string;
+  maxDepth: number;
+  maxBufferSize: number;
+  canopyDepth: number;
+  authority: string;
+  creationSlot: number;
+  totalMinted: number;
+  totalCapacity: number;
+}
+
+// CNFT collection data
+interface CNFTCollection {
+  mint: string;
+  name: string;
+  symbol: string;
+  description?: string;
+  image?: string;
+  totalItems: number;
+  merkleTree: string;
+}
+```
+
+## Examples
+
+### View CNFTs by Owner
+
+```tsx
+import { ImprovedCNFTManager } from "@/components/ui/murphy";
+import { useWallet } from "@solana/wallet-adapter-react";
+
+export default function MyCNFTs() {
+  const { publicKey } = useWallet();
+
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold">My Compressed NFTs</h1>
+      <ImprovedCNFTManager defaultTab="view" className="w-full" />
+    </div>
+  );
+}
+```
+
+### Mint New CNFT
+
+```tsx
+import { ImprovedCNFTManager } from "@/components/ui/murphy";
+
+export default function MintPage() {
+  return (
+    <div className="container mx-auto p-6">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold">Mint Compressed NFT</h1>
+        <p className="text-muted-foreground mt-2">
+          Create a new compressed NFT with custom metadata
+        </p>
+      </div>
+
+      <ImprovedCNFTManager defaultTab="mint" className="max-w-4xl mx-auto" />
+    </div>
+  );
+}
+```
+
+### Create Merkle Tree
+
+```tsx
+import { ImprovedCNFTManager } from "@/components/ui/murphy";
+
+export default function TreeSetup() {
+  return (
+    <div className="space-y-6">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold">Setup Merkle Tree</h1>
+        <p className="text-muted-foreground">
+          Create a new merkle tree for compressed NFT storage
+        </p>
+      </div>
+
+      <ImprovedCNFTManager defaultTab="trees" className="max-w-3xl mx-auto" />
+    </div>
+  );
+}
+```
+
+## Integration with Wallet Providers
+
+The component requires proper wallet context setup:
+
+```tsx
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import {
+  ConnectionProvider,
+  WalletProvider,
+} from "@solana/wallet-adapter-react";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
+import { clusterApiUrl } from "@solana/web3.js";
+
+const network = WalletAdapterNetwork.Devnet;
+const endpoint = clusterApiUrl(network);
+const wallets = [new PhantomWalletAdapter()];
+
+export default function App() {
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <WalletModalProvider>
+          <ImprovedCNFTManager />
+        </WalletModalProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
+}
+```
+
+## Notes
+
+> 💡 **Development Status**  
+> this component includes mock data for demonstration. in production, integrate with:  
+> – **DAS API** for CNFT data fetching  
+> – **Indexer services** for comprehensive search  
+> – **Metaplex SDK** for real blockchain operations
+
+### Network Support
+
+- ✅ Devnet (full functionality)
+- ✅ Mainnet (requires API keys)
+- ⚠️ Testnet (limited support)
+
+### Required Services
+
+- **RPC Endpoint**: Solana RPC for blockchain access
+- **DAS API**: Digital Asset Standard API for CNFT data
+- **IPFS/Arweave**: Metadata storage for NFT assets
+
+### Performance Considerations
+
+- Large CNFT collections may require pagination
+- Tree operations can be expensive on mainnet
+- Consider implementing caching for frequently accessed data

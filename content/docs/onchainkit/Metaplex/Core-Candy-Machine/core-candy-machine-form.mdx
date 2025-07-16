@@ -1,0 +1,137 @@
+---
+title: Core Candy Machine Form
+description: A Metaplex Core Candy Machine creation component with shadcn UI styling
+---
+
+<PreviewComponent
+  name={"Core Candy Machine Form"}
+  v0JsonFileName={"core-candy-machine-form"}
+>
+  <CoreCandyMachineForm className="max-w-md" />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install dependencies
+
+    Start by installing required Metaplex Core Candy Machine dependencies
+
+    <DependenciesInstallCommands packageUrl={"@solana/web3.js @solana/wallet-adapter-react @metaplex-foundation/umi-bundle-defaults @metaplex-foundation/umi-signer-wallet-adapters @metaplex-foundation/mpl-core @metaplex-foundation/mpl-core-candy-machine @metaplex-foundation/umi"}/>
+
+  </Step>
+
+  <Step>
+    Add Wallet Provider
+
+    Make sure you have added the Wallet Provider to your application. If not, follow the steps in the [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) guide first.
+
+  </Step>
+
+  <Step>
+    Add Core Candy Machine Form
+
+    <InstallationCommands
+      packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/core-candy-machine-form.json`}
+    />
+
+  </Step>
+</Steps>
+
+## Basic Usage
+
+```tsx
+import { CoreCandyMachineForm } from "@/components/ui/murphy/core-candy-machine-form";
+```
+
+```tsx
+export default function MyPage() {
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Core Candy Machine</h1>
+      <CoreCandyMachineForm className="max-w-md" />
+    </div>
+  );
+}
+```
+
+## Features
+
+- **Core Standard**: Uses Metaplex Core for next-generation NFTs
+- **Configurable Guards**: SOL payment, bot tax, start/end dates
+- **Config Lines**: Multiple NFT metadata configurations
+- **Collection Support**: Optional collection integration
+- **Real-time Network Detection**: Automatically detects devnet/mainnet
+- **Multi-stage UI**: Input, confirmation, success, error states
+- **Transaction Links**: Direct links to view transactions on explorers
+- **Error Handling**: Comprehensive error handling with retry capability
+- **Wallet Integration**: Seamless integration with Solana wallet adapters
+
+## Advanced Usage
+
+You can specify a collection and handle creation callbacks:
+
+```tsx
+export default function MyPage() {
+  const handleCandyMachineCreated = (candyMachine: string, signature: string) => {
+    console.log(`Core Candy Machine created: ${candyMachine}`);
+    console.log(`Transaction: ${signature}`);
+  };
+
+  return (
+    <div>
+      <h1 className="text-xl font-bold mb-2">Create Core Candy Machine</h1>
+      <CoreCandyMachineForm
+        className="max-w-md"
+        collection="YourCoreCollectionMintAddress"
+        onCandyMachineCreated={handleCandyMachineCreated}
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `collection` | `string` | `undefined` | Pre-populate collection mint address |
+| `onCandyMachineCreated` | `(candyMachine: string, signature: string) => void` | `undefined` | Callback fired when Core Candy Machine is created |
+| `className` | `string` | `undefined` | Additional CSS classes |
+
+## Configuration Options
+
+### Basic Settings
+- **Items Available**: Total number of Core NFTs in the collection
+- **Price**: Price per NFT in SOL
+- **Symbol**: Collection symbol (max 10 characters)
+- **Royalty Fee**: Royalty fee in basis points (500 = 5%)
+- **Collection**: Optional existing Core collection to add NFTs to
+
+### Guards
+- **SOL Payment**: Require SOL payment for minting
+- **Bot Tax**: Add bot protection with customizable fee
+- **Start Date**: Set when minting begins
+- **End Date**: Set when minting ends
+
+### Config Lines
+Define metadata for each Core NFT:
+- **Name**: NFT name template
+- **URI**: Metadata JSON URI
+
+## Notes
+
+- Requires Solana wallet connection
+- Uses Metaplex Core standard (next-gen NFT standard)
+- Automatically handles transaction signing and confirmation
+- Config lines define the metadata for each NFT in the collection
+- Guards provide various access controls and payment mechanisms
+- Collection is optional but recommended for organized NFT series
+- Core NFTs are more efficient and have enhanced features compared to traditional Token Metadata NFTs
+
+## Related Components
+
+- [Create Collection Form](/docs/onchainkit/Metaplex/Token-Metadata/create-collection-form) - Create NFT collections
+- [Candy Machine Form](/docs/onchainkit/Metaplex/Candy-Machine/candy-machine-form) - Traditional Candy Machine
+- [Connect Wallet Button](/docs/onchainkit/connect-wallet-button) - Wallet connection
