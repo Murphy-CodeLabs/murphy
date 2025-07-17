@@ -98,7 +98,7 @@ export const baseOptions: BaseLayoutProps = {
           icon: <Code />,
           text: "Scanner",
           description: "Test onchain programs easily.",
-          url: "/docs/scanner",
+          url: "https://scanner.murphyai.dev",
           menu: {
             className: "lg:col-start-2",
           },
@@ -107,7 +107,7 @@ export const baseOptions: BaseLayoutProps = {
           icon: <Box />,
           text: "Wizard",
           description: "Solana program wizard quickly.",
-          url: "/docs/wizard",
+          url: "https://wizard.murphyai.dev",
           menu: {
             className: "lg:col-start-3 lg:row-start-1",
           },
