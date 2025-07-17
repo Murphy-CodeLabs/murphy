@@ -1,9 +1,13 @@
 {
   "name": "RecurringOrderWidget",
-  "type": "component",
+  "type": "registry:block",
   "description": "Murphy component to manage and filter Jupiter Recurring DCA Orders on Solana mainnet",
   "files": [
-    "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx"
+    {
+      "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx"
+    }
   ],
   "dependencies": [
     "@solana/web3.js",

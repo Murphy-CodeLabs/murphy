@@ -1,9 +1,13 @@
 {
   "name": "RecurringHistoryList",
-  "type": "component",
+  "type": "registry:block",
   "description": "Murphy component to view Jupiter Recurring DCA Order history on Solana mainnet",
   "files": [
-    "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx"
+    {
+      "path": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx"
+    }
   ],
   "dependencies": [
     "@solana/web3.js",

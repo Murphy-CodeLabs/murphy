@@ -167,6 +167,35 @@
       ]
     },
     {
+      "name": "CancelRecurringOrder",
+      "type": "registry:block",
+      "description": "Murphy component to cancel Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "cancel",
+        "order",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
       "name": "claim-cToken",
       "type": "registry:block",
       "title": "Claim cToken",
@@ -515,6 +544,7 @@
       ]
     },
     {
+      "name": "mint-cnft-form",
       "name": "hydra-fanout-form",
       "type": "registry:block",
       "title": "Hydra Fanout Form",
@@ -590,6 +620,34 @@
     {
       "name": "mint-cToken",
       "type": "registry:block",
+      "title": "Mint CNFT Form",
+      "description": "A simple mint CNFT form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/mint-cnft-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/mint-cnft-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mint-cToken",
+      "type": "registry:block",
       "title": "Mint cToken",
       "description": "A simple mint cToken form component.",
       "registryDependencies": [
@@ -614,34 +672,6 @@
           "path": "components/ui/murphy/mint-cToken.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/mint-cToken.tsx"
-        }
-      ]
-    },
-    {
-      "name": "mint-cnft-form",
-      "type": "registry:block",
-      "title": "Mint CNFT Form",
-      "description": "A simple mint CNFT form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/mint-cnft-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/mint-cnft-form.tsx"
         }
       ]
     },
@@ -788,6 +818,157 @@
           "target": "types/assets/index.ts"
         }
       ]
+    },
+    {
+      "name": "RecurringActiveOrders",
+      "type": "registry:block",
+      "description": "Murphy component to view active Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "active",
+        "orders",
+        "view",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringHistoryList",
+      "type": "registry:block",
+      "description": "Murphy component to view Jupiter Recurring DCA Order history on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "history",
+        "orders",
+        "view",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringOrderCard",
+      "type": "registry:block",
+      "description": "Murphy component to display a single Jupiter Recurring DCA Order on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "order",
+        "card",
+        "display",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringOrderWidget",
+      "type": "registry:block",
+      "description": "Murphy component to manage and filter Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "widget",
+        "manage",
+        "filter",
+        "orders",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringSetupForm",
+      "type": "registry:block",
+      "description": "Murphy component to create Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "setup",
+        "create",
+        "order",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
     },
     {
       "name": "send-token-form",
