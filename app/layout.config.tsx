@@ -82,13 +82,13 @@ export const baseOptions: BaseLayoutProps = {
           },
           icon: <Book />,
           text: "Getting Started",
-          description: "Learn to use Fumadocs on your docs site.",
+          description: "Learn and build with Murphy",
           url: "/docs/onchainkit",
         },
         {
           icon: <CpuIcon />,
           text: "OnchainKit",
-          description: "Build onchain applications with ease.",
+          description: "Build onchain components with ease.",
           url: "/docs/onchainkit",
           menu: {
             className: "lg:col-start-2",
@@ -96,27 +96,28 @@ export const baseOptions: BaseLayoutProps = {
         },
         {
           icon: <Code />,
-          text: "ProgramKit",
-          description: "Build onchain applications with ease.",
-          url: "/docs/programkit",
+          text: "Scanner",
+          description: "Test onchain programs easily.",
+          url: "/docs/scanner",
           menu: {
             className: "lg:col-start-2",
           },
         },
         {
           icon: <Box />,
-          text: "Sandbox",
-          description: "Build onchain applications with ease.",
-          url: "/docs/sandbox",
+          text: "Wizard",
+          description: "Solana program wizard quickly.",
+          url: "/docs/wizard",
           menu: {
             className: "lg:col-start-3 lg:row-start-1",
           },
         },
         {
           icon: <Globe />,
-          text: "Interstella",
-          description: "Build onchain applications with ease.",
-          url: "/docs/interstella",
+          text: "T-Rex",
+          description: "Easy and low-cost to deploy your program.",
+          url: "https://t-rex.murphyai.dev",
+          external: true,
           menu: {
             className: "lg:col-start-3",
           },
