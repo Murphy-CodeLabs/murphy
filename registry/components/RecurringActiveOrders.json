@@ -1,0 +1,30 @@
+{
+  "name": "RecurringActiveOrders",
+  "type": "registry:block",
+  "description": "Murphy component to view active Jupiter Recurring DCA Orders on Solana mainnet",
+  "files": [
+    {
+      "path": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx"
+    }
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react",
+    "sonner"
+  ],
+  "category": "Jupiter Recurring",
+  "keywords": [
+    "jupiter",
+    "recurring",
+    "dca",
+    "active",
+    "orders",
+    "view",
+    "solana",
+    "wallet"
+  ],
+  "author": "Murphy",
+  "license": "MIT"
+} 

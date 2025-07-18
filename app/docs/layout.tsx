@@ -17,16 +17,7 @@ const docsOptions: DocsLayoutProps = {
         return {
           ...option,
           icon: (
-            <div
-              className="rounded-md p-1 shadow-lg ring-2 [&_svg]:size-5"
-              style={
-                {
-                  color,
-                  border: `1px solid color-mix(in oklab, ${color} 50%, transparent)`,
-                  "--tw-ring-color": `color-mix(in oklab, ${color} 20%, transparent)`,
-                } as object
-              }
-            >
+            <div className="rounded-md shadow-lg [&_svg]:size-5">
               {node.icon}
             </div>
           ),

@@ -8,10 +8,9 @@ icon: Wallet
   name={"Connect Wallet Button"}
   v0JsonFileName={"connect-wallet-button"}
 >
-  <ConnectWalletButton className="inline-flex max-w-fit">
-    <Dumbbell className="size-4 mr-2" />
-    Connect Wallet
-  </ConnectWalletButton>
+  <div className="w-full flex justify-center">
+    <ConnectWalletButton className="inline-flex" />
+  </div>
 </PreviewComponent>
 
 ## Installation
@@ -22,7 +21,7 @@ icon: Wallet
 
     Start by installing `@solana/wallet-adapter-base`, `wallet-adapter-wallets`, and `@lazorkit/wallet` for Passkey
 
-    <DependenciesInstallCommands packageUrl={"@solana/wallet-adapter-base @solana/wallet-adapter-wallets @lazorkit/wallet next-themes"}/>
+    <DependenciesInstallCommands packageUrl={"@solana/wallet-adapter-base @solana/wallet-adapter-react @solana/wallet-adapter-react-ui @solana/wallet-adapter-wallets @lazorkit/wallet next-themes"}/>
 
   </Step>
   <Step>
@@ -35,51 +34,191 @@ icon: Wallet
   />
   </Step>
   <Step>
+    Create Network Toggle Component
+
+    Create a new file `components/layout/network-toggle.tsx`:
+
+    ```tsx
+    "use client"
+
+    import { useCluster } from "@/components/providers/cluster-provider"
+    import { Switch } from "@/components/ui/switch"
+
+    export function NetworkToggle() {
+      const { cluster, setCluster } = useCluster()
+      const isMainnet = cluster === "mainnet"
+
+      return (
+        <div className="flex items-center gap-2 ml-2">
+          <span className="text-xs text-muted-foreground">DEV</span>
+          <Switch
+            id="network-switch"
+            checked={isMainnet}
+            onCheckedChange={(checked) => setCluster(checked ? "mainnet" : "devnet")}
+            className="scale-75"
+          />
+          <span className="text-xs text-muted-foreground">MAIN</span>
+        </div>
+      )
+    }
+    ```
+
+  </Step>
+  <Step>
+    Create Cluster Provider
+
+    Create a new file `components/providers/cluster-provider.tsx`:
+
+    ```tsx
+    "use client";
+
+    import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+
+    type Cluster = "mainnet" | "devnet";
+
+    interface ClusterContextType {
+      cluster: Cluster;
+      setCluster: (cluster: Cluster) => void;
+      isMainnet: boolean;
+    }
+
+    const ClusterContext = createContext<ClusterContextType | undefined>(undefined);
+
+    interface ClusterProviderProps {
+      children: ReactNode;
+      defaultCluster?: Cluster;
+    }
+
+    export function ClusterProvider({ children, defaultCluster = "mainnet" }: ClusterProviderProps) {
+      const [cluster, setCluster] = useState<Cluster>(defaultCluster);
+
+      // Update environment variable when cluster changes
+      useEffect(() => {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("NEXT_PUBLIC_CLUSTER", cluster);
+          
+          // Update the global environment variable for components that read it
+          (window as any).NEXT_PUBLIC_CLUSTER = cluster;
+          
+          // Dispatch a custom event to notify components of cluster change
+          window.dispatchEvent(new CustomEvent("clusterChanged", { detail: { cluster } }));
+        }
+      }, [cluster]);
+
+      // Initialize cluster from localStorage on mount
+      useEffect(() => {
+        if (typeof window !== "undefined") {
+          const savedCluster = window.localStorage.getItem("NEXT_PUBLIC_CLUSTER") as Cluster;
+          if (savedCluster && (savedCluster === "mainnet" || savedCluster === "devnet")) {
+            setCluster(savedCluster);
+          }
+        }
+      }, []);
+
+      const value: ClusterContextType = {
+        cluster,
+        setCluster,
+        isMainnet: cluster === "mainnet",
+      };
+
+      return (
+        <ClusterContext.Provider value={value}>
+          {children}
+        </ClusterContext.Provider>
+      );
+    }
+
+    export function useCluster() {
+      const context = useContext(ClusterContext);
+      if (context === undefined) {
+        throw new Error("useCluster must be used within a ClusterProvider");
+      }
+      return context;
+    }
+    ```
+
+  </Step>
+  <Step>
+    Wrap Your App with ClusterProvider
+
+    Update your app's root layout or the specific page where you want to use the network toggle:
+
+    ```tsx
+    import { ClusterProvider } from "@/components/providers/cluster-provider"
+    import { NetworkToggle } from "@/components/layout/network-toggle"
+
+    export default function Layout({ children }) {
+      return (
+        <ClusterProvider defaultCluster="devnet">
+          <div>
+            <div className="flex items-center">
+              <span className="font-bold">Murphy</span>
+              <NetworkToggle />
+            </div>
+            {children}
+          </div>
+        </ClusterProvider>
+      )
+    }
+    ```
+
+  </Step>
+  <Step>
   Create Wallet Provider
 
 components/providers/wallet-provider.tsx
 
 ```tsx
 "use client"
-import React, { useState, useMemo, createContext, useCallback } from "react";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import type { Adapter } from "@solana/wallet-adapter-base";
+
+import React, { useState, useMemo, createContext, useCallback, useEffect } from "react"
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base"
+import type { Adapter } from "@solana/wallet-adapter-base"
 import {
   WalletProvider as SolanaWalletProvider,
   ConnectionProvider as SolanaConnectionProvider,
   ConnectionProviderProps,
-} from "@solana/wallet-adapter-react";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { TxnSettingsProvider } from "@/components/ui/murphy/txn-settings";
-import { LazorKitWalletProvider } from "./lazorkit-wallet-context";
+} from "@solana/wallet-adapter-react"
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets"
+import { TxnSettingsProvider } from "@/components/ui/murphy/txn-settings"
+import { ClientLazorKitProvider } from "./client-lazorkit-provider"
+import { LazorKitWalletProvider } from "./lazorkit-wallet-context"
+
+import "@solana/wallet-adapter-react-ui/styles.css"
+
+// Constants
+const DEFAULT_MAINNET_RPC = process.env.NEXT_PUBLIC_SOLANA_RPC_URL || "https://api.mainnet-beta.solana.com"
+const DEFAULT_DEVNET_RPC = process.env.NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET || "https://api.devnet.solana.com"
+
 // Create wrapper components
-// @ts-ignore - Ignore React 19 compatibility error
 const ConnectionProviderWrapper = (props: ConnectionProviderProps) => (
   <SolanaConnectionProvider {...props} />
-);
-// @ts-ignore - Ignore React 19 compatibility error
+)
+
 const WalletProviderWrapper = (props: any) => (
   <SolanaWalletProvider {...props} />
-);
+)
 
 interface WalletProviderProps {
-  children: React.ReactNode;
-  network?: WalletAdapterNetwork;
-  endpoint?: string;
-  wallets?: Adapter[];
-  autoConnect?: boolean;
+  children: React.ReactNode
+  network?: WalletAdapterNetwork
+  endpoint?: string
+  wallets?: Adapter[]
+  autoConnect?: boolean
 }
 
 interface ModalContextState {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  endpoint?: string;
-  switchToNextEndpoint: () => void;
-  availableEndpoints: string[];
-  currentEndpointIndex: number;
-  isMainnet: boolean;
-  walletType: 'standard' | 'lazorkit';
-  setWalletType: (type: 'standard' | 'lazorkit') => void;
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+  endpoint?: string
+  switchToNextEndpoint: () => void
+  availableEndpoints: string[]
+  currentEndpointIndex: number
+  isMainnet: boolean
+  walletType: 'standard' | 'lazorkit'
+  setWalletType: (type: 'standard' | 'lazorkit') => void
+  networkType: WalletAdapterNetwork
 }
 
 export const ModalContext = createContext<ModalContextState>({
@@ -89,93 +228,137 @@ export const ModalContext = createContext<ModalContextState>({
   switchToNextEndpoint: () => null,
   availableEndpoints: [],
   currentEndpointIndex: 0,
-  isMainnet: true,
+  isMainnet: false, // Changed default to false for devnet
   walletType: 'standard',
   setWalletType: () => null,
-});
+  networkType: WalletAdapterNetwork.Devnet, // Changed default to Devnet
+})
 
 export const WalletProvider = ({ children, ...props }: WalletProviderProps) => {
-  // Add state to store endpoints and current endpoint
-  const [currentEndpointIndex, setCurrentEndpointIndex] = useState(0);
+  const [currentEndpointIndex, setCurrentEndpointIndex] = useState(0)
+  const [isOpen, setIsOpen] = useState(false)
+  const [walletType, setWalletType] = useState<'standard' | 'lazorkit'>(() => {
+    if (typeof window !== 'undefined') {
+      const savedType = localStorage.getItem('walletType')
+      return (savedType as 'standard' | 'lazorkit') || 'standard'
+    }
+    return 'standard'
+  })
 
-  // Determine if we're using mainnet or devnet based on environment variable
+  // Network detection - default to devnet for LazorKit beta
   const isMainnet = useMemo(() => {
-    const mainnetEnv = process.env.NEXT_PUBLIC_USE_MAINNET;
-    return mainnetEnv === undefined ? true : mainnetEnv === "true";
-  }, []);
+    if (walletType === 'lazorkit') return false // Force devnet for LazorKit
+    const mainnetEnv = process.env.NEXT_PUBLIC_USE_MAINNET
+    return mainnetEnv === undefined ? false : mainnetEnv === "true" // Default to devnet
+  }, [walletType])
 
-  // Network type based on the environment variable
   const networkType = useMemo(
-    () =>
-      isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
+    () => isMainnet ? WalletAdapterNetwork.Mainnet : WalletAdapterNetwork.Devnet,
     [isMainnet]
-  );
+  )
 
-  // List of public RPC endpoints based on network type
+  // RPC endpoints management
   const publicRPCs = useMemo(
-    () => [
-      isMainnet
-        ? (process.env.NEXT_PUBLIC_SOLANA_RPC_URL as string)
-        : (process.env.NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET as string),
-    ],
+    () => [isMainnet ? DEFAULT_MAINNET_RPC : DEFAULT_DEVNET_RPC],
     [isMainnet]
-  );
+  )
 
-  const defaultNetwork = useMemo(
-    () => props.network || networkType,
-    [props.network, networkType]
-  );
-
-  // Provided endpoint will be prioritized, otherwise use the current endpoint from the list
   const endpoint = useMemo(() => {
     if (props.endpoint) {
-      return props.endpoint;
+      return props.endpoint
     }
-    return publicRPCs[currentEndpointIndex];
-  }, [props.endpoint, publicRPCs, currentEndpointIndex]);
+    return publicRPCs[currentEndpointIndex]
+  }, [props.endpoint, publicRPCs, currentEndpointIndex])
 
-  // Function to switch to the next endpoint when an error occurs
+  // Endpoint switching with error handling
   const switchToNextEndpoint = useCallback(() => {
     setCurrentEndpointIndex((prevIndex) => {
-      const nextIndex = (prevIndex + 1) % publicRPCs.length;
+      const nextIndex = (prevIndex + 1) % publicRPCs.length
       console.log(
         `Switching RPC endpoint from ${publicRPCs[prevIndex]} to ${publicRPCs[nextIndex]}`
-      );
-      return nextIndex;
-    });
-  }, [publicRPCs]);
+      )
+      return nextIndex
+    })
+  }, [publicRPCs])
 
+  // Wallet adapters
   const wallets = useMemo(
     () => props.wallets || [new PhantomWalletAdapter()],
     [props.wallets]
-  );
-  const [isOpen, setIsOpen] = useState(false);
-  const [walletType, setWalletType] = useState<'standard' | 'lazorkit'>('standard');
+  )
+
+  // Persist wallet type
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('walletType', walletType)
+    }
+  }, [walletType])
+
+  // Auto-connect effect
+  useEffect(() => {
+    if (props.autoConnect && walletType === 'lazorkit') {
+      // Attempt to reconnect LazorKit wallet on mount
+      const reconnectLazorKit = async () => {
+        try {
+          // The actual reconnection will be handled by the LazorKitWalletProvider
+          console.log('Attempting to reconnect LazorKit wallet...')
+        } catch (error) {
+          console.error('Failed to reconnect LazorKit wallet:', error)
+        }
+      }
+      reconnectLazorKit()
+    }
+  }, [props.autoConnect, walletType])
+
+  // Context value memoization
+  const contextValue = useMemo(() => ({
+    isOpen,
+    setIsOpen,
+    endpoint,
+    switchToNextEndpoint,
+    availableEndpoints: publicRPCs,
+    currentEndpointIndex,
+    isMainnet,
+    walletType,
+    setWalletType,
+    networkType,
+  }), [
+    isOpen,
+    endpoint,
+    switchToNextEndpoint,
+    publicRPCs,
+    currentEndpointIndex,
+    isMainnet,
+    walletType,
+    networkType,
+  ])
 
   return (
-    <ModalContext.Provider
-      value={{
-        isOpen,
-        setIsOpen,
-        endpoint,
-        switchToNextEndpoint,
-        availableEndpoints: publicRPCs,
-        currentEndpointIndex,
-        isMainnet,
-        walletType,
-        setWalletType,
-      }}
-    >
+    <ModalContext.Provider value={contextValue}>
       <ConnectionProviderWrapper endpoint={endpoint}>
-        <WalletProviderWrapper wallets={wallets} autoConnect>
-          <LazorKitWalletProvider>
-            <TxnSettingsProvider>{children}</TxnSettingsProvider>
-          </LazorKitWalletProvider>
+        <WalletProviderWrapper 
+          wallets={wallets} 
+          autoConnect={props.autoConnect}
+          onError={(error: Error) => {
+            console.error('Wallet error:', error)
+            // Attempt to switch endpoint on connection errors
+            if (error.message.includes('connection') || error.message.includes('network')) {
+              switchToNextEndpoint()
+            }
+          }}
+        >
+          <WalletModalProvider>
+            <ClientLazorKitProvider>
+              <LazorKitWalletProvider>
+                <TxnSettingsProvider>{children}</TxnSettingsProvider>
+              </LazorKitWalletProvider>
+            </ClientLazorKitProvider>
+          </WalletModalProvider>
         </WalletProviderWrapper>
       </ConnectionProviderWrapper>
     </ModalContext.Provider>
-  );
-};
+  )
+}
 ```
 
   </Step>
@@ -188,46 +371,280 @@ components/providers/lazorkit-wallet-context.tsx
 // components/providers/lazorkit-wallet-context.tsx
 "use client"
 
-import React, { createContext, useContext, useState, useEffect } from "react"
-import dynamic from "next/dynamic"
+import React, { createContext, useContext, useCallback, useState, useEffect, useMemo } from "react"
+import { useWallet as useLazorKitWallet, WalletAccount } from "@lazorkit/wallet"
+import { Transaction, PublicKey, TransactionInstruction } from "@solana/web3.js"
 
-// Interface for context
-interface LazorKitWalletContextState {
-  isConnected: boolean
-  isLoading: boolean
-  publicKey: string | null
-  smartWalletAuthorityPubkey: string | null
-  error: string | null
-  credentialId?: string | null
-  connect: () => Promise<void>
-  disconnect: () => void
-  signMessage: (instruction: any) => Promise<string>
+// Custom error class for LazorKit errors
+class LazorKitError extends Error {
+  constructor(message: string, public code?: string, public isAccountNotFound: boolean = false) {
+    super(message)
+    this.name = 'LazorKitError'
+  }
 }
 
-// Create context with default values
-export const LazorKitWalletContext = createContext<LazorKitWalletContextState>({
+// Extended WalletAccount to include createSmartWallet
+interface ExtendedWalletAccount extends WalletAccount {
+  createSmartWallet?: () => Promise<void>
+}
+
+// Connect Response type for createPasskeyOnly
+interface ConnectResponse {
+  publicKey: string
+  credentialId: string
+  isCreated: boolean
+  connectionType: 'create' | 'get'
+  timestamp: number
+}
+
+// Extended LazorKit wallet interface
+interface ExtendedLazorKitWallet {
+  smartWalletPubkey: PublicKey | null
+  isConnected: boolean
+  isLoading: boolean
+  isConnecting: boolean
+  isSigning: boolean
+  error: Error | null
+  account: WalletAccount | null
+  connect: () => Promise<WalletAccount>
+  disconnect: () => Promise<void>
+  signTransaction: (instruction: TransactionInstruction) => Promise<Transaction>
+  signAndSendTransaction: (instruction: TransactionInstruction) => Promise<string>
+  createPasskeyOnly: () => Promise<ConnectResponse>
+  createSmartWalletOnly: (passkeyData: ConnectResponse) => Promise<{smartWalletAddress: string, account: WalletAccount}>
+  reconnect: () => Promise<WalletAccount>
+}
+
+interface LazorKitWalletContextState {
+  smartWalletPubkey: PublicKey | null
+  isConnected: boolean
+  isLoading: boolean
+  isConnecting: boolean
+  isSigning: boolean
+  error: Error | null
+  account: ExtendedWalletAccount | null
+  connect: () => Promise<ExtendedWalletAccount>
+  disconnect: () => Promise<void>
+  reconnect: () => Promise<ExtendedWalletAccount>
+  signTransaction: (instruction: TransactionInstruction) => Promise<Transaction>
+  signAndSendTransaction: (instruction: TransactionInstruction) => Promise<string>
+  createPasskeyOnly: () => Promise<ConnectResponse>
+  createSmartWalletOnly: (passkeyData: ConnectResponse) => Promise<{smartWalletAddress: string, account: ExtendedWalletAccount}>
+  clearError: () => void
+}
+
+const defaultContext: LazorKitWalletContextState = {
+  smartWalletPubkey: null,
   isConnected: false,
   isLoading: false,
-  publicKey: null,
-  smartWalletAuthorityPubkey: null,
+  isConnecting: false,
+  isSigning: false,
   error: null,
-  credentialId: null,
-  connect: async () => {},
-  disconnect: () => {},
-  signMessage: async () => "",
-})
+  account: null,
+  connect: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  disconnect: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  reconnect: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  signTransaction: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  signAndSendTransaction: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  createPasskeyOnly: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  createSmartWalletOnly: async () => { throw new LazorKitError("LazorKitWalletContext not initialized") },
+  clearError: () => {}
+}
 
-// Export hook to use context
-export const useLazorKitWalletContext = () => useContext(LazorKitWalletContext)
+export const LazorKitWalletContext = createContext<LazorKitWalletContextState>(defaultContext)
 
-// Client-only component
-const LazorKitWalletProviderClient = dynamic(() => import('./client-lazorkit-provider').then(mod => mod.ClientLazorKitProvider), {
-  ssr: false
-})
+export const useLazorKitWalletContext = () => {
+  const context = useContext(LazorKitWalletContext)
+  if (!context) {
+    throw new LazorKitError("useLazorKitWalletContext must be used within a LazorKitWalletProvider")
+  }
+  return context
+}
 
-// Provider Component
+// Utility function for error handling
+const handleError = (err: unknown): Error => {
+  if (err instanceof Error) {
+    // Check for specific error types
+    if (err.message.includes('Account does not exist') || 
+        err.message.includes('has no data')) {
+      return new LazorKitError(
+        "Smart wallet needs to be initialized. Please try connecting again.", 
+        'ACCOUNT_NOT_FOUND',
+        true
+      )
+    }
+    if (err.message.includes('NO_STORED_CREDENTIALS')) {
+      return new LazorKitError("No stored credentials found", 'NO_STORED_CREDENTIALS')
+    }
+    if (err.message.includes('INVALID_CREDENTIALS')) {
+      return new LazorKitError("Invalid credentials", 'INVALID_CREDENTIALS')
+    }
+    return err
+  }
+  return new LazorKitError(err instanceof Object ? JSON.stringify(err) : String(err))
+}
+
 export function LazorKitWalletProvider({ children }: { children: React.ReactNode }) {
-  return <LazorKitWalletProviderClient>{children}</LazorKitWalletProviderClient>
+  const wallet = useLazorKitWallet() as unknown as ExtendedLazorKitWallet
+
+  const [isConnecting, setIsConnecting] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+  const [retryCount, setRetryCount] = useState(0)
+  const MAX_RETRIES = 3
+
+  const clearError = useCallback(() => setError(null), [])
+
+  // Auto-retry connection on certain errors
+  useEffect(() => {
+    if (error && retryCount < MAX_RETRIES && !isConnecting) {
+      const timer = setTimeout(() => {
+        console.log(`Retrying connection (attempt ${retryCount + 1}/${MAX_RETRIES})`)
+        setRetryCount(prev => prev + 1)
+        connect()
+      }, Math.min(1000 * Math.pow(2, retryCount), 8000)) // Exponential backoff
+
+      return () => clearTimeout(timer)
+    }
+  }, [error, retryCount, isConnecting])
+
+  const connect = useCallback(async () => {
+    if (isConnecting) return wallet.account as ExtendedWalletAccount
+    
+    try {
+      setIsConnecting(true)
+      setError(null)
+      
+      // First try reconnecting with stored credentials
+      try {
+        const reconnectedAccount = await wallet.reconnect()
+        setRetryCount(0)
+        return reconnectedAccount as ExtendedWalletAccount
+      } catch (reconnectError) {
+        // If reconnect fails, try new connection
+        try {
+          const newAccount = await wallet.connect()
+          setRetryCount(0)
+          return newAccount as ExtendedWalletAccount
+        } catch (connectError) {
+          throw handleError(connectError)
+        }
+      }
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    } finally {
+      setIsConnecting(false)
+    }
+  }, [wallet.connect, wallet.reconnect, wallet.account, isConnecting])
+
+  const disconnect = useCallback(async () => {
+    try {
+      setError(null)
+      await wallet.disconnect()
+      setRetryCount(0)
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.disconnect])
+
+  const reconnect = useCallback(async () => {
+    try {
+      setError(null)
+      return await wallet.reconnect() as ExtendedWalletAccount
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.reconnect])
+
+  const createPasskeyOnly = useCallback(async () => {
+    try {
+      setError(null)
+      return await wallet.createPasskeyOnly()
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.createPasskeyOnly])
+
+  const createSmartWalletOnly = useCallback(async (passkeyData: ConnectResponse) => {
+    try {
+      setError(null)
+      return await wallet.createSmartWalletOnly(passkeyData)
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.createSmartWalletOnly])
+
+  const signTransaction = useCallback(async (instruction: TransactionInstruction) => {
+    try {
+      setError(null)
+      return await wallet.signTransaction(instruction)
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.signTransaction])
+
+  const signAndSendTransaction = useCallback(async (instruction: TransactionInstruction) => {
+    try {
+      setError(null)
+      return await wallet.signAndSendTransaction(instruction)
+    } catch (err) {
+      const error = handleError(err)
+      setError(error)
+      throw error
+    }
+  }, [wallet.signAndSendTransaction])
+
+  // Memoize the context value to prevent unnecessary re-renders
+  const value = useMemo(() => ({
+    smartWalletPubkey: wallet.smartWalletPubkey,
+    isConnected: wallet.isConnected,
+    isLoading: wallet.isLoading,
+    isConnecting,
+    isSigning: wallet.isSigning,
+    error,
+    account: wallet.account as ExtendedWalletAccount,
+    connect,
+    disconnect,
+    reconnect,
+    signTransaction,
+    signAndSendTransaction,
+    createPasskeyOnly,
+    createSmartWalletOnly,
+    clearError
+  }), [
+    wallet.smartWalletPubkey,
+    wallet.isConnected,
+    wallet.isLoading,
+    isConnecting,
+    wallet.isSigning,
+    error,
+    wallet.account,
+    connect,
+    disconnect,
+    reconnect,
+    signTransaction,
+    signAndSendTransaction,
+    createPasskeyOnly,
+    createSmartWalletOnly,
+    clearError
+  ])
+
+  return (
+    <LazorKitWalletContext.Provider value={value}>
+      {children}
+    </LazorKitWalletContext.Provider>
+  )
 }
 ```
 
@@ -240,17 +657,40 @@ components/providers/client-lazorkit-provider.tsx
 ```tsx
 "use client"
 
-import React, { useEffect } from "react"
-import { useWallet } from "@lazorkit/wallet"
-import { LazorKitWalletContext } from "./lazorkit-wallet-context"
+import React from "react"
+import { LazorkitProvider } from "@lazorkit/wallet"
+
+const DEFAULT_RPC_URL = "https://api.devnet.solana.com" // Changed to devnet as per docs
+const DEFAULT_IPFS_URL = "https://portal.lazor.sh"
+const DEFAULT_PAYMASTER_URL = "https://lazorkit-paymaster.onrender.com"
 
 export function ClientLazorKitProvider({ children }: { children: React.ReactNode }) {
-  const walletState = useWallet()
-  
+  // Validate and use environment variables with fallbacks
+  const rpcUrl = process.env.LAZORKIT_RPC_URL || DEFAULT_RPC_URL
+  const ipfsUrl = process.env.LAZORKIT_PORTAL_URL || DEFAULT_IPFS_URL
+  const paymasterUrl = process.env.LAZORKIT_PAYMASTER_URL || DEFAULT_PAYMASTER_URL
+
+  // Enable debug mode in development
+  const debug = process.env.NODE_ENV === 'development'
+
+  // Log configuration in development
+  if (debug) {
+    console.debug('LazorKit Provider Configuration:', {
+      rpcUrl,
+      ipfsUrl,
+      paymasterUrl,
+      debug
+    })
+  }
+
   return (
-    <LazorKitWalletContext.Provider value={walletState}>
+    <LazorkitProvider
+      rpcUrl={rpcUrl}
+      ipfsUrl={ipfsUrl}
+      paymasterUrl={paymasterUrl}
+    >
       {children}
-    </LazorKitWalletContext.Provider>
+    </LazorkitProvider>
   )
 }
 ```
@@ -267,6 +707,9 @@ NEXT_PUBLIC_USE_MAINNET=false
 # Solana RPC URLs, from alchemy.com or providers
 NEXT_PUBLIC_SOLANA_RPC_URL="https://solana-mainnet.g.alchemy.com/v2/your-alchemy-api-key"
 NEXT_PUBLIC_SOLANA_RPC_URL_DEVNET="https://solana-devnet.g.alchemy.com/v2/your-alchemy-api-key"
+LAZORKIT_RPC_URL="https://api.devnet.solana.com"
+LAZORKIT_PORTAL_URL="https://portal.lazor.sh"
+LAZORKIT_PAYMASTER_URL="https://lazorkit-paymaster.onrender.com"
 ```
 
   </Step>
@@ -319,19 +762,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 "use client"
 
 import { ConnectWalletButton } from "@/components/ui/murphy/connect-wallet-button"
-import { Wallet } from "lucide-react"
-```
 
-```tsx
 export default function MyPage() {
   return (
     <div className="flex h-screen items-center justify-center">
-      <div className="container mx-auto max-w-md p-8 text-center">
-        <h1 className="mb-6 text-2xl font-bold">Connect your Solana wallet</h1>
-        <ConnectWalletButton>
-          <Wallet className="size-4 mr-2" />
-          Connect Wallet
-        </ConnectWalletButton>
+      <div className="container mx-auto max-w-md p-8">
+        <h1 className="mb-6 text-2xl font-bold text-center">Connect your Solana wallet</h1>
+        <ConnectWalletButton className="w-full" />
       </div>
     </div>
   )
@@ -343,18 +780,42 @@ export default function MyPage() {
 You can customize the button appearance by passing props:
 
 ```tsx
-<ConnetWalletButton variant="outline" size="lg" className="my-custom-class" />
+// Basic customization
+<ConnectWalletButton 
+  variant="outline" 
+  size="lg" 
+  className="w-full md:w-auto" 
+/>
+
+// With custom labels
+<ConnectWalletButton 
+  variant="outline"
+  size="lg"
+  className="w-full md:w-auto"
+  labels={{
+    "has-wallet": "Connect Wallet",
+    "change-wallet": "Change Wallet",
+    "copy-address": "Copy Address",
+    "disconnect": "Disconnect",
+    "lazorkit-wallet": "Use Passkey",
+    "standard-wallet": "Use Wallet",
+    "connecting": "Connecting...",
+    "initializing": "Initializing...",
+    "creating-passkey": "Creating Passkey...",
+    "creating-smart-wallet": "Creating Smart Wallet..."
+  }}
+/>
 ```
 
 <TypeTable
   type={{
     variant: {
-      description: "The visual style of the button",
+      description: "The visual style of the button (default, outline, destructive, secondary, ghost, link)",
       type: "string",
       default: "default",
     },
     size: {
-      description: "The size of the button",
+      description: "The size of the button (default, sm, lg, icon)",
       type: "string",
       default: "default",
     },
@@ -368,5 +829,55 @@ You can customize the button appearance by passing props:
       type: "boolean",
       default: "false",
     },
+    labels: {
+      description: "Custom labels for different button states and actions",
+      type: "Partial<typeof LABELS>",
+      default: "LABELS",
+    }
   }}
 />
+
+### LazorKit Passkey Integration
+
+The Connect Wallet Button integrates both standard Solana wallets and LazorKit Passkey authentication:
+
+#### Features
+- **Standard Wallets**: Supports Phantom, Solflare, and other Solana wallets
+- **Passkey Support**: Passwordless authentication via LazorKit
+- **Network Detection**: Automatic network switching between Mainnet and Devnet
+- **Wallet Address Display**: Shows truncated wallet address when connected
+- **Copy Address**: Easy wallet address copying
+- **Responsive Design**: Adapts to different screen sizes
+
+#### Modal Interface
+When clicked, opens a modal with two tabs:
+- **Standard Wallet**: For connecting traditional Solana wallets
+- **Passkey**: For connecting via LazorKit's passwordless authentication
+
+#### Network Support
+- Standard wallets work on both Mainnet and Devnet
+- LazorKit Passkey currently supports Devnet only (beta)
+
+#### Example with Full Configuration
+
+```tsx
+<ConnectWalletButton 
+  variant="outline"
+  size="lg"
+  className="w-full md:w-auto"
+  labels={{
+    "lazorkit-wallet": "Use Passkey",
+    "standard-wallet": "Use Wallet",
+    "has-wallet": "Connect Wallet",
+    "change-wallet": "Change Wallet",
+    "disconnect": "Disconnect",
+    "copy-address": "Copy Address",
+    "connecting": "Connecting...",
+    "initializing": "Initializing Smart Wallet...",
+    "creating-passkey": "Creating Passkey...",
+    "creating-smart-wallet": "Creating Smart Wallet..."
+  }}
+/>
+```
+
+Note: When using LazorKit Passkey, make sure your environment is properly configured for Devnet during the beta period.

@@ -1,0 +1,30 @@
+{
+  "name": "RecurringSetupForm",
+  "type": "registry:block",
+  "description": "Murphy component to create Jupiter Recurring DCA Orders on Solana mainnet",
+  "files": [
+    {
+      "path": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx"
+    }
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react",
+    "sonner"
+  ],
+  "category": "Jupiter Recurring",
+  "keywords": [
+    "jupiter",
+    "recurring",
+    "dca",
+    "setup",
+    "create",
+    "order",
+    "solana",
+    "wallet"
+  ],
+  "author": "Murphy",
+  "license": "MIT"
+} 
