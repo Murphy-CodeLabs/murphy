@@ -59,7 +59,6 @@ export const baseOptions: BaseLayoutProps = {
     {
       type: "menu",
       text: "Documentation",
-      url: "/docs/onchainkit",
       items: [
         {
           menu: {
