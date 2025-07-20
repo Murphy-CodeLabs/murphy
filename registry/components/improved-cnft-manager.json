@@ -1,0 +1,33 @@
+{
+    "name": "improved-cnft-manager",
+    "type": "registry:block",
+    "title": "Improved CNFT Manager",
+    "description": "A comprehensive compressed NFT management platform with multiple features and tabs.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "tabs"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-bubblegum",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/improved-cnft-manager.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/improved-cnft-manager.tsx"
+        }
+    ]
+}

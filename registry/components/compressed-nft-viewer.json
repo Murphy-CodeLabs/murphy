@@ -1,0 +1,27 @@
+{
+    "name": "compressed-nft-viewer",
+    "type": "registry:block",
+    "title": "Compressed NFT Viewer",
+    "description": "View and search compressed NFTs on Solana.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/compressed-nft-viewer.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/compressed-nft-viewer.tsx"
+        }
+    ]
+}
