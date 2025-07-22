@@ -1,0 +1,35 @@
+{
+    "name": "core-asset-launchpad",
+    "type": "registry:block",
+    "title": "Core Asset Launchpad",
+    "description": "Create next-generation Core Assets with advanced plugin system.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "tabs",
+        "switch",
+        "label",
+        "badge"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-core",
+        "@metaplex-foundation/umi"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/core-asset-launchpad.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/core-asset-launchpad.tsx"
+        }
+    ]
+}

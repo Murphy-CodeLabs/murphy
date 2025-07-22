@@ -1,0 +1,32 @@
+{
+    "name": "bubblegum-legacy-form",
+    "type": "registry:block",
+    "title": "Bubblegum Legacy Form",
+    "description": "Create compressed NFTs using Bubblegum v1 (legacy).",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-bubblegum",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/bubblegum-legacy-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/bubblegum-legacy-form.tsx"
+        }
+    ]
+}

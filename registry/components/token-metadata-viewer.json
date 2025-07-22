@@ -1,0 +1,32 @@
+{
+    "name": "token-metadata-viewer",
+    "type": "registry:block",
+    "title": "Token Metadata Viewer",
+    "description": "View and fetch token metadata using Metaplex Token Metadata standard.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "badge"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/token-metadata-viewer.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/token-metadata-viewer.tsx"
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "name": "transfer-nft-form",
+    "type": "registry:block",
+    "title": "Transfer NFT Form",
+    "description": "A Solana NFT transfer component with shadcn UI styling.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/transfer-nft-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/transfer-nft-form.tsx"
+        }
+    ]
+}

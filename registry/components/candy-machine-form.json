@@ -1,0 +1,32 @@
+{
+    "name": "candy-machine-form",
+    "type": "registry:block",
+    "title": "Candy Machine Form",
+    "description": "Create and manage Metaplex Candy Machines.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-core",
+        "@metaplex-foundation/mpl-core-candy-machine",
+        "@metaplex-foundation/umi"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/candy-machine-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/candy-machine-form.tsx"
+        }
+    ]
+}
