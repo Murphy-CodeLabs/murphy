@@ -4,186 +4,6 @@
   "homepage": "https://murphy.vercel.app/",
   "items": [
     {
-      "name": "CancelRecurringOrder",
-      "type": "registry:block",
-      "description": "Murphy component to cancel Jupiter Recurring DCA Orders on Solana mainnet",
-      "files": [
-        {
-          "path": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx"
-        }
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "sonner"
-      ],
-      "category": "Jupiter Recurring",
-      "keywords": [
-        "jupiter",
-        "recurring",
-        "dca",
-        "cancel",
-        "order",
-        "solana",
-        "wallet"
-      ],
-      "author": "Murphy",
-      "license": "MIT"
-    },
-    {
-      "name": "RecurringActiveOrders",
-      "type": "registry:block",
-      "description": "Murphy component to view active Jupiter Recurring DCA Orders on Solana mainnet",
-      "files": [
-        {
-          "path": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx"
-        }
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "sonner"
-      ],
-      "category": "Jupiter Recurring",
-      "keywords": [
-        "jupiter",
-        "recurring",
-        "dca",
-        "active",
-        "orders",
-        "view",
-        "solana",
-        "wallet"
-      ],
-      "author": "Murphy",
-      "license": "MIT"
-    },
-    {
-      "name": "RecurringHistoryList",
-      "type": "registry:block",
-      "description": "Murphy component to view Jupiter Recurring DCA Order history on Solana mainnet",
-      "files": [
-        {
-          "path": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx"
-        }
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "sonner"
-      ],
-      "category": "Jupiter Recurring",
-      "keywords": [
-        "jupiter",
-        "recurring",
-        "dca",
-        "history",
-        "orders",
-        "view",
-        "solana",
-        "wallet"
-      ],
-      "author": "Murphy",
-      "license": "MIT"
-    },
-    {
-      "name": "RecurringOrderCard",
-      "type": "registry:block",
-      "description": "Murphy component to display a single Jupiter Recurring DCA Order on Solana mainnet",
-      "files": [
-        {
-          "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx"
-        }
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "sonner"
-      ],
-      "category": "Jupiter Recurring",
-      "keywords": [
-        "jupiter",
-        "recurring",
-        "dca",
-        "order",
-        "card",
-        "display",
-        "solana",
-        "wallet"
-      ],
-      "author": "Murphy",
-      "license": "MIT"
-    },
-    {
-      "name": "RecurringOrderWidget",
-      "type": "registry:block",
-      "description": "Murphy component to manage and filter Jupiter Recurring DCA Orders on Solana mainnet",
-      "files": [
-        {
-          "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx"
-        }
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "sonner"
-      ],
-      "category": "Jupiter Recurring",
-      "keywords": [
-        "jupiter",
-        "recurring",
-        "dca",
-        "widget",
-        "manage",
-        "filter",
-        "orders",
-        "solana",
-        "wallet"
-      ],
-      "author": "Murphy",
-      "license": "MIT"
-    },
-    {
-      "name": "RecurringSetupForm",
-      "type": "registry:block",
-      "description": "Murphy component to create Jupiter Recurring DCA Orders on Solana mainnet",
-      "files": [
-        {
-          "path": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx"
-        }
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "sonner"
-      ],
-      "category": "Jupiter Recurring",
-      "keywords": [
-        "jupiter",
-        "recurring",
-        "dca",
-        "setup",
-        "create",
-        "order",
-        "solana",
-        "wallet"
-      ],
-      "author": "Murphy",
-      "license": "MIT"
-    },
-    {
       "name": "avatar",
       "description": "A simple avatar icon",
       "type": "registry:block",
@@ -281,6 +101,35 @@
           "target": "hook/murphis/use-walletModal.ts"
         }
       ]
+    },
+    {
+      "name": "CancelRecurringOrder",
+      "type": "registry:block",
+      "description": "Murphy component to cancel Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/CancelRecurringOrder.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "cancel",
+        "order",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
     },
     {
       "name": "claim-cToken",
@@ -528,32 +377,18 @@
       ]
     },
     {
-      "name": "mint-cToken",
+      "name": "inline-txn-status",
       "type": "registry:block",
-      "title": "Mint cToken",
-      "description": "A simple mint cToken form component.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
+      "title": "Inline icon or badge to show transaction status (loading, success, error).",
+      "registryDependencies": [],
       "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react",
-        "@lightprotocol/stateless.js",
-        "@lightprotocol/compressed-token"
+        "lucide-react"
       ],
       "files": [
         {
-          "path": "components/ui/murphy/mint-cToken.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/mint-cToken.tsx"
+          "path": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx"
         }
       ]
     },
@@ -582,6 +417,36 @@
           "path": "components/ui/murphy/mint-cnft-form.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/mint-cnft-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "mint-cToken",
+      "type": "registry:block",
+      "title": "Mint cToken",
+      "description": "A simple mint cToken form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@lightprotocol/stateless.js",
+        "@lightprotocol/compressed-token"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/mint-cToken.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/mint-cToken.tsx"
         }
       ]
     },
@@ -692,6 +557,157 @@
       ]
     },
     {
+      "name": "RecurringActiveOrders",
+      "type": "registry:block",
+      "description": "Murphy component to view active Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringActiveOrders.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "active",
+        "orders",
+        "view",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringHistoryList",
+      "type": "registry:block",
+      "description": "Murphy component to view Jupiter Recurring DCA Order history on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringHistoryList.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "history",
+        "orders",
+        "view",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringOrderCard",
+      "type": "registry:block",
+      "description": "Murphy component to display a single Jupiter Recurring DCA Order on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderCard.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "order",
+        "card",
+        "display",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringOrderWidget",
+      "type": "registry:block",
+      "description": "Murphy component to manage and filter Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringOrderWidget.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "widget",
+        "manage",
+        "filter",
+        "orders",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
+      "name": "RecurringSetupForm",
+      "type": "registry:block",
+      "description": "Murphy component to create Jupiter Recurring DCA Orders on Solana mainnet",
+      "files": [
+        {
+          "path": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/Jupiter-Recurring/RecurringSetupForm.tsx"
+        }
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "sonner"
+      ],
+      "category": "Jupiter Recurring",
+      "keywords": [
+        "jupiter",
+        "recurring",
+        "dca",
+        "setup",
+        "create",
+        "order",
+        "solana",
+        "wallet"
+      ],
+      "author": "Murphy",
+      "license": "MIT"
+    },
+    {
       "name": "send-token-form",
       "type": "registry:block",
       "title": "Send Token Form",
@@ -774,6 +790,41 @@
           "path": "app/api/murphy/solayer/stake/route.ts",
           "type": "registry:file",
           "target": "app/api/murphy/solayer/stake/route.ts"
+        }
+      ]
+    },
+    {
+      "name": "step-flow-dialog",
+      "type": "registry:block",
+      "title": "Modal for guiding users through multi-step flows (e.g. Mint → Verify → Confirm).",
+      "registryDependencies": [
+        "dialog",
+        "button",
+        "txn-progress-steps"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/step-flow-dialog.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/step-flow-dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "success-dialog",
+      "type": "registry:block",
+      "title": "Modal shown when a transaction completes successfully.",
+      "registryDependencies": [
+        "dialog",
+        "button"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/success-dialog.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/success-dialog.tsx"
         }
       ]
     },
@@ -1037,6 +1088,54 @@
       ]
     },
     {
+      "name": "txn-error-fallback",
+      "type": "registry:block",
+      "title": "Fallback UI for failed transactions with retry and log support.",
+      "registryDependencies": [
+        "button"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-explorer-link",
+      "type": "registry:block",
+      "title": "A link to open a transaction on Solana Explorer.",
+      "registryDependencies": [],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-feedback-toast",
+      "type": "registry:block",
+      "title": "Toast component to display transaction status (loading, success, error).",
+      "registryDependencies": [
+        "toast"
+      ],
+      "dependencies": [
+        "sonner"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx"
+        }
+      ]
+    },
+    {
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",
@@ -1059,6 +1158,50 @@
           "path": "lib/utils.ts",
           "type": "registry:file",
           "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "txn-pending-indicator",
+      "type": "registry:block",
+      "title": "Global indicator showing pending transactions in the UI.",
+      "registryDependencies": [],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-pending-indicator.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-pending-indicator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-progress-steps",
+      "type": "registry:block",
+      "title": "A visual step tracker for multi-step transaction workflows.",
+      "registryDependencies": [],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-retry-button",
+      "type": "registry:block",
+      "title": "A button component with built-in retry handling for transactions.",
+      "registryDependencies": [
+        "button"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx"
         }
       ]
     },

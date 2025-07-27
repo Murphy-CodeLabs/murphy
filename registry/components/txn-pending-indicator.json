@@ -1,0 +1,14 @@
+{
+  "name": "txn-pending-indicator",
+  "type": "registry:block",
+  "title": "Global indicator showing pending transactions in the UI.",
+  "registryDependencies": [],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-pending-indicator.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-pending-indicator.tsx"
+    }
+  ]
+}

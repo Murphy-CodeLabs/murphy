@@ -1,0 +1,14 @@
+{
+  "name": "step-flow-dialog",
+  "type": "registry:block",
+  "title": "Modal for guiding users through multi-step flows (e.g. Mint → Verify → Confirm).",
+  "registryDependencies": ["dialog", "button", "txn-progress-steps"],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/step-flow-dialog.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/step-flow-dialog.tsx"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "txn-progress-steps",
+  "type": "registry:block",
+  "title": "A visual step tracker for multi-step transaction workflows.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx",
+      "content": "\"use client\"\r\n\r\nimport { Check, Loader2, X } from \"lucide-react\"\r\nimport { cn } from \"@/lib/utils\"\r\nimport type { TxnStep } from \"@/types/transaction\"\r\n\r\ninterface TxnProgressStepsProps {\r\n  steps: TxnStep[]\r\n  orientation?: \"horizontal\" | \"vertical\"\r\n  className?: string\r\n}\r\n\r\nexport function TxnProgressSteps({ steps, orientation = \"horizontal\", className }: TxnProgressStepsProps) {\r\n  const isVertical = orientation === \"vertical\"\r\n\r\n  return (\r\n    <div className={cn(\"flex\", isVertical ? \"flex-col space-y-4\" : \"items-center space-x-4\", className)}>\r\n      {steps.map((step, index) => (\r\n        <div key={step.id} className={cn(\"flex items-center\", isVertical ? \"w-full\" : \"flex-col text-center\")}>\r\n          <div\r\n            className={cn(\r\n              \"flex items-center justify-center w-8 h-8 rounded-full border-2 transition-all\",\r\n              step.status === \"completed\" && \"bg-green-500 border-green-500 text-white\",\r\n              step.status === \"active\" && \"bg-blue-500 border-blue-500 text-white\",\r\n              step.status === \"error\" && \"bg-red-500 border-red-500 text-white\",\r\n              step.status === \"pending\" && \"border-gray-300 text-gray-400\",\r\n            )}\r\n          >\r\n            {step.status === \"completed\" && <Check className=\"w-4 h-4\" />}\r\n            {step.status === \"active\" && <Loader2 className=\"w-4 h-4 animate-spin\" />}\r\n            {step.status === \"error\" && <X className=\"w-4 h-4\" />}\r\n            {step.status === \"pending\" && <span className=\"text-sm font-medium\">{index + 1}</span>}\r\n          </div>\r\n\r\n          <div className={cn(\"ml-3\", !isVertical && \"ml-0 mt-2\")}>\r\n            <div\r\n              className={cn(\r\n                \"text-sm font-medium\",\r\n                step.status === \"completed\" && \"text-green-600\",\r\n                step.status === \"active\" && \"text-blue-600\",\r\n                step.status === \"error\" && \"text-red-600\",\r\n                step.status === \"pending\" && \"text-gray-500\",\r\n              )}\r\n            >\r\n              {step.title}\r\n            </div>\r\n            {step.description && <div className=\"text-xs text-gray-500 mt-1\">{step.description}</div>}\r\n          </div>\r\n\r\n          {!isVertical && index < steps.length - 1 && <div className=\"flex-1 h-px bg-gray-200 mx-4\" />}\r\n        </div>\r\n      ))}\r\n    </div>\r\n  )\r\n}\r\n",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx"
+    }
+  ]
+}

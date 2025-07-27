@@ -1,0 +1,209 @@
+---
+title: Step Flow Dialog
+description: Modal for complex multi-step transaction workflows
+icon: Workflow
+---
+import StepFlowDialogPreview from "@/components/step-flow-dialog-preview"
+
+<PreviewComponent name="Step Flow Dialog Preview" v0JsonFileName="step-flow-dialog-preview">
+  <StepFlowDialogPreview />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  <Step>
+    Install Step Flow Dialog
+    
+    <InstallationCommands packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/step-flow-dialog.json`} />
+  </Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client"
+
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { StepFlowDialog } from "@/components/ui/murphy/step-flow-dialog"
+
+export default function StepFlowDemo() {
+  const [open, setOpen] = useState(false)
+  const [step, setStep] = useState(0)
+
+  const steps = [
+    { id: "1", title: "Step One", description: "Do something", status: "pending" },
+    { id: "2", title: "Step Two", description: "Do next thing", status: "pending" },
+    { id: "3", title: "Step Three", description: "Finish it", status: "pending" },
+  ]
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Start</Button>
+
+      <StepFlowDialog
+        open={open}
+        onOpenChange={setOpen}
+        title="Step Flow"
+        steps={steps}
+        currentStep={step}
+        onNext={() => setStep((prev) => prev + 1)}
+        onPrevious={() => setStep((prev) => prev - 1)}
+        onCancel={() => setOpen(false)}
+        canGoPrevious={step > 0}
+        canGoNext={step < steps.length - 1}
+      />
+    </>
+  )
+}
+
+```
+
+## Props
+
+<TypeTable type={{
+  open: {
+    description: "Whether the dialog is open",
+    type: "boolean",
+    default: "required",
+  },
+  onOpenChange: {
+    description: "Callback when dialog open state changes",
+    type: "(open: boolean) => void",
+    default: "required",
+  },
+  title: {
+    description: "Dialog title",
+    type: "string",
+    default: "required",
+  },
+  description: {
+    description: "Dialog description",
+    type: "string",
+    default: "undefined",
+  },
+  steps: {
+    description: "Array of steps in the workflow",
+    type: "TxnStep[]",
+    default: "required",
+  },
+  currentStep: {
+    description: "Index of the current active step",
+    type: "number",
+    default: "required",
+  },
+  onNext: {
+    description: "Callback when next button is clicked",
+    type: "() => Promise<void> | void",
+    default: "undefined",
+  },
+  onPrevious: {
+    description: "Callback when previous button is clicked",
+    type: "() => void",
+    default: "undefined",
+  },
+  onCancel: {
+    description: "Callback when cancel button is clicked",
+    type: "() => void",
+    default: "undefined",
+  },
+  nextButtonText: {
+    description: "Text for the next button",
+    type: "string",
+    default: "'Next'",
+  },
+  previousButtonText: {
+    description: "Text for the previous button",
+    type: "string",
+    default: "'Previous'",
+  },
+  cancelButtonText: {
+    description: "Text for the cancel button",
+    type: "string",
+    default: "'Cancel'",
+  },
+  isLoading: {
+    description: "Whether the dialog is in loading state",
+    type: "boolean",
+    default: "false",
+  },
+  canGoNext: {
+    description: "Whether the next button should be enabled",
+    type: "boolean",
+    default: "true",
+  },
+  canGoPrevious: {
+    description: "Whether the previous button should be enabled",
+    type: "boolean",
+    default: "true",
+  },
+  showCancel: {
+    description: "Whether to show the cancel button",
+    type: "boolean",
+    default: "true",
+  }
+}} />
+
+
+
+## Dialog Features
+
+### Visual Progress Tracking
+- Step-by-step progress visualization
+- Current step highlighting
+- Completed step indicators
+- Error state visualization
+
+### Navigation Controls
+- Next/Previous button navigation
+- Cancel functionality
+- Conditional button states
+- Loading state management
+
+### Step Information
+- Step titles and descriptions
+- Current step details
+- Progress indicators
+- Status-based styling
+
+### Async Operation Support
+- Loading states during processing
+- Error handling and retry
+- Step validation
+- Progress persistence
+
+## Customization
+
+### Custom Button Labels
+
+```tsx
+<StepFlowDialog
+  nextButtonText="Continue"
+  previousButtonText="Go Back"
+  cancelButtonText="Exit Process"
+  // ... other props
+/>
+```
+
+### Custom Styling
+
+```tsx
+<StepFlowDialog
+  className="max-w-2xl"
+  // ... other props
+/>
+```
+
+### Conditional Navigation
+
+```tsx
+<StepFlowDialog
+  canGoNext={isCurrentStepValid && !isLoading}
+  canGoPrevious={currentStep > 0 && !isLoading}
+  showCancel={!isProcessing}
+  // ... other props
+/>
+```
+

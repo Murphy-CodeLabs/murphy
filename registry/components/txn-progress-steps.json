@@ -1,0 +1,14 @@
+{
+  "name": "txn-progress-steps",
+  "type": "registry:block",
+  "title": "A visual step tracker for multi-step transaction workflows.",
+  "registryDependencies": [],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx"
+    }
+  ]
+}

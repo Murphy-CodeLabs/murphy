@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "txn-retry-button",
+  "type": "registry:block",
+  "title": "A button component with built-in retry handling for transactions.",
+  "dependencies": [],
+  "registryDependencies": [
+    "button"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx",
+      "content": "\"use client\"\r\n\r\nimport type React from \"react\"\r\nimport { useState } from \"react\"\r\nimport { RefreshCw } from \"lucide-react\"\r\nimport { Button } from \"@/components/ui/button\"\r\nimport { cn } from \"@/lib/utils\"\r\n\r\ninterface TxnRetryButtonProps {\r\n  onRetry: () => Promise<void> | void\r\n  disabled?: boolean\r\n  maxRetries?: number\r\n  retryDelay?: number\r\n  children?: React.ReactNode\r\n  className?: string\r\n  variant?: \"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\" | \"link\"\r\n  size?: \"default\" | \"sm\" | \"lg\" | \"icon\"\r\n}\r\n\r\nexport function TxnRetryButton({\r\n  onRetry,\r\n  disabled = false,\r\n  maxRetries = 3,\r\n  retryDelay = 1000,\r\n  children = \"Retry\",\r\n  className,\r\n  variant = \"default\",\r\n  size = \"default\",\r\n}: TxnRetryButtonProps) {\r\n  const [isRetrying, setIsRetrying] = useState(false)\r\n  const [retryCount, setRetryCount] = useState(0)\r\n\r\n  const handleRetry = async () => {\r\n    if (retryCount >= maxRetries || isRetrying) return\r\n\r\n    setIsRetrying(true)\r\n\r\n    try {\r\n      await new Promise((resolve) => setTimeout(resolve, retryDelay))\r\n      await onRetry()\r\n      setRetryCount(0)\r\n    } catch (error) {\r\n      setRetryCount((prev) => prev + 1)\r\n      console.error(\"Retry failed:\", error)\r\n    } finally {\r\n      setIsRetrying(false)\r\n    }\r\n  }\r\n\r\n  const isDisabled = disabled || isRetrying || retryCount >= maxRetries\r\n\r\n  return (\r\n    <Button onClick={handleRetry} disabled={isDisabled} variant={variant} size={size} className={cn(className)}>\r\n      <RefreshCw className={cn(\"w-4 h-4 mr-2\", isRetrying && \"animate-spin\")} />\r\n      {isRetrying ? \"Retrying...\" : children}\r\n      {retryCount > 0 && (\r\n        <span className=\"ml-1 text-xs opacity-70\">\r\n          ({retryCount}/{maxRetries})\r\n        </span>\r\n      )}\r\n    </Button>\r\n  )\r\n}\r\n",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx"
+    }
+  ]
+}

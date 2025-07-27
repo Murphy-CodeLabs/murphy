@@ -1,0 +1,14 @@
+{
+  "name": "txn-retry-button",
+  "type": "registry:block",
+  "title": "A button component with built-in retry handling for transactions.",
+  "registryDependencies": ["button"],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx"
+    }
+  ]
+}

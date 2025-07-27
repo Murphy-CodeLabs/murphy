@@ -1,0 +1,598 @@
+---
+title: Inline Transaction Status
+description: Small status indicators for transaction states in lists and UIs
+icon: Activity
+---
+
+<PreviewComponent name={"Inline Transaction Status"} v0JsonFileName={"inline-txn-status"}>
+  <div className="w-full space-y-6 bg-white text-black dark:bg-black dark:text-white p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+    
+    <div className="space-y-3">
+      <h4 className="font-medium">Different Status States</h4>
+      <div className="flex flex-wrap gap-3">
+        <InlineTxnStatus status="success" />
+        <InlineTxnStatus status="error" />
+        <InlineTxnStatus status="confirming" />
+        <InlineTxnStatus status="idle" />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      <h4 className="font-medium">Different Sizes</h4>
+      <div className="flex flex-wrap items-center gap-3">
+        <InlineTxnStatus status="success" size="sm" />
+        <InlineTxnStatus status="success" size="md" />
+        <InlineTxnStatus status="success" size="lg" />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      <h4 className="font-medium">Icon Only</h4>
+      <div className="flex flex-wrap gap-3">
+        <InlineTxnStatus status="success" showText={false} />
+        <InlineTxnStatus status="error" showText={false} />
+        <InlineTxnStatus status="confirming" showText={false} />
+      </div>
+    </div>
+
+  </div>
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+<Step>
+  Install Inline Transaction Status
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/inline-txn-status.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client"
+import { InlineTxnStatus } from "@/components/ui/murphy/Txn-Feedback/inline-txn-status"
+
+export default function MyPage() {
+  return (
+    <div className="space-y-4 p-6">
+      <InlineTxnStatus status="success" size="sm" />
+      <InlineTxnStatus status="confirming" size="sm" />
+      <InlineTxnStatus status="error" size="sm" />
+    </div>
+  )
+}
+
+```
+
+## Props
+
+<TypeTable
+  type={{
+    status: {
+      description: "Current transaction status",
+      type: "'idle' | 'preparing' | 'signing' | 'sending' | 'confirming' | 'success' | 'error'",
+      default: "required",
+    },
+    size: {
+      description: "Size of the status indicator",
+      type: "'sm' | 'md' | 'lg'",
+      default: "'md'",
+    },
+    showText: {
+      description: "Whether to show status text alongside icon",
+      type: "boolean",
+      default: "true",
+    },
+    className: {
+      description: "Additional CSS classes",
+      type: "string",
+      default: "undefined",
+    },
+  }}
+/>
+
+## Examples
+
+### Transaction History List
+
+import { InlineTxnStatus } from "@/components/ui/murphy/Txn-Feedback/inline-txn-status";
+
+<PreviewComponent
+  name="Transaction History"
+  v0JsonFileName="transaction-history"
+>
+  <div className="space-y-2">
+    {[
+      { hash: "0x123abcdef123456789", status: "success", timestamp: "2024-01-01" },
+      { hash: "0x456fedcba987654321", status: "pending", timestamp: "2024-01-02" },
+      { hash: "0x789112233445566778", status: "error", timestamp: "2024-01-03" },
+      { hash: "0xabc999888777666555", status: "signing", timestamp: "2024-01-04" },
+    ].map((txn) => (
+      <div
+        key={txn.hash}
+        className="flex items-center justify-between rounded-lg border p-3 text-sm bg-white dark:bg-black text-black dark:text-white"
+      >
+        <div className="w-[80px] truncate font-mono text-muted-foreground">
+          {txn.hash.slice(0, 10)}
+        </div>
+        <div className="w-[120px] truncate text-xs">{txn.timestamp}</div>
+        <InlineTxnStatus status={txn.status} />
+      </div>
+    ))}
+  </div>
+</PreviewComponent>
+
+```tsx
+export const TransactionHistory = ({
+  transactions,
+}: {
+  transactions: Transaction[];
+}) => {
+  return (
+    <div className="space-y-2">
+      {transactions.map((txn) => (
+        <div
+          key={txn.hash}
+          className="flex items-center justify-between rounded-lg border p-3 text-sm"
+        >
+          <div className="w-[80px] truncate font-mono text-muted-foreground">
+            {txn.hash.slice(0, 10)}
+          </div>
+          <div className="w-[120px] truncate text-xs">{txn.timestamp}</div>
+          <InlineTxnStatus status={txn.status} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+type Transaction = {
+  hash: string;
+  status: "pending" | "success" | "failed";
+  timestamp: string;
+};
+```
+
+### Dashboard Cards
+
+<PreviewComponent name="Dashboard Cards" v0JsonFileName="dashboard-cards">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 bg-white dark:bg-black text-black dark:text-white p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+    {[
+      {
+        title: "Staking Rewards",
+        value: "12.5 SOL",
+        status: "success",
+        note: "Last claim successful",
+      },
+      {
+        title: "Liquidity Pool",
+        value: "$1,250",
+        status: "confirming",
+        note: "Adding liquidity...",
+      },
+      {
+        title: "NFT Collection",
+        value: "24 NFTs",
+        status: "error",
+        note: "Mint failed",
+      },
+    ].map((card, idx) => (
+      <div
+        key={idx}
+        className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-black p-4 shadow-sm space-y-2"
+      >
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-medium">{card.title}</h4>
+          <InlineTxnStatus status={card.status} size="sm" showText={false} />
+        </div>
+        <div className="text-2xl font-bold">{card.value}</div>
+        <p className="text-xs text-muted-foreground">{card.note}</p>
+      </div>
+    ))}
+  </div>
+</PreviewComponent>
+
+```tsx
+"use client";
+
+import { InlineTxnStatus } from "@/components/ui/murphy/Txn-Feedback/inline-txn-status";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export default function DashboardCards() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Staking Rewards */}
+      <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            Staking Rewards
+          </CardTitle>
+          <InlineTxnStatus status="success" size="sm" showText={false} />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            12.5 SOL
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Last claim successful
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Liquidity Pool */}
+      <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            Liquidity Pool
+          </CardTitle>
+          <InlineTxnStatus status="confirming" size="sm" showText={false} />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            $1,250
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Adding liquidity...
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* NFT Collection */}
+      <Card className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            NFT Collection
+          </CardTitle>
+          <InlineTxnStatus status="error" size="sm" showText={false} />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+            24 NFTs
+          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            Mint failed
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+```
+
+### Data Table
+
+<PreviewComponent name="Transaction Table" v0JsonFileName="transaction-table">
+  <div className="w-full space-y-6 bg-white dark:bg-black text-black dark:text-white p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+    <div className="space-y-3">
+      <h4 className="font-medium">Transaction Table Example</h4>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse border border-gray-200 dark:border-gray-700">
+          <thead>
+            <tr className="bg-gray-50 dark:bg-gray-800">
+              <th className="border border-gray-200 dark:border-gray-700 p-3 text-left font-medium">
+                Transaction
+              </th>
+              <th className="border border-gray-200 dark:border-gray-700 p-3 text-left font-medium">
+                Amount
+              </th>
+              <th className="border border-gray-200 dark:border-gray-700 p-3 text-left font-medium">
+                Time
+              </th>
+              <th className="border border-gray-200 dark:border-gray-700 p-3 text-left font-medium">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              {
+                id: "1",
+                transaction: "0x1234...abcd",
+                amount: "100 USDC",
+                time: "2024-01-01",
+                status: "success",
+              },
+              {
+                id: "2",
+                transaction: "0x5678...efgh",
+                amount: "50 USDC",
+                time: "2024-01-02",
+                status: "confirming",
+              },
+              {
+                id: "3",
+                transaction: "0x9876...ijkl",
+                amount: "20 USDC",
+                time: "2024-01-03",
+                status: "error",
+              },
+            ].map((row) => (
+              <tr
+                key={row.id}
+                className="hover:bg-gray-50 dark:hover:bg-gray-800"
+              >
+                <td className="border border-gray-200 dark:border-gray-700 p-3">
+                  {row.transaction}
+                </td>
+                <td className="border border-gray-200 dark:border-gray-700 p-3 font-mono">
+                  {row.amount}
+                </td>
+                <td className="border border-gray-200 dark:border-gray-700 p-3 text-sm text-gray-600 dark:text-gray-400">
+                  {row.time}
+                </td>
+                <td className="border border-gray-200 dark:border-gray-700 p-3">
+                  <InlineTxnStatus status={row.status} size="sm" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</PreviewComponent>
+
+```tsx
+"use client";
+
+import { InlineTxnStatus } from "@/components/ui/murphy/Txn-Feedback/inline-txn-status";
+
+interface TableTransaction {
+  id: string;
+  transaction: string;
+  amount: string;
+  time: string;
+  status: "success" | "confirming" | "error" | "idle";
+}
+
+export default function TransactionTable({
+  data,
+}: {
+  data: TableTransaction[];
+}) {
+  return (
+    <div className="space-y-3">
+      <h2 className="text-xl font-bold">Transaction History</h2>
+
+      <div className="overflow-x-auto rounded-lg border bg-white shadow-sm">
+        <table className="w-full border-collapse text-sm">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="p-3 text-left font-medium text-gray-700 border-b">
+                Transaction
+              </th>
+              <th className="p-3 text-left font-medium text-gray-700 border-b">
+                Amount
+              </th>
+              <th className="p-3 text-left font-medium text-gray-700 border-b">
+                Time
+              </th>
+              <th className="p-3 text-left font-medium text-gray-700 border-b">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((row) => (
+              <tr key={row.id} className="hover:bg-gray-50">
+                <td className="p-3 border-b">{row.transaction}</td>
+                <td className="p-3 border-b font-mono">{row.amount}</td>
+                <td className="p-3 border-b text-gray-600">{row.time}</td>
+                <td className="p-3 border-b">
+                  <InlineTxnStatus status={row.status} size="sm" />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+```
+
+### Portfolio Overview
+
+<PreviewComponent name="Portfolio Overview" v0JsonFileName="portfolio-overview">
+  <div className="space-y-3 bg-white dark:bg-black text-black dark:text-white p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+    <h2 className="text-xl font-bold">Portfolio</h2>
+
+    {[
+      {
+        symbol: "SOL",
+        name: "Solana",
+        balance: "12.5",
+        value: "$400",
+        lastTransaction: "success",
+      },
+      {
+        symbol: "USDC",
+        name: "USD Coin",
+        balance: "200",
+        value: "$200",
+        lastTransaction: "confirming",
+      },
+    ].map((item) => (
+      <div
+        key={item.symbol}
+        className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+            {item.symbol.slice(0, 2)}
+          </div>
+          <div>
+            <p className="font-medium">{item.name}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {item.balance} {item.symbol}
+            </p>
+          </div>
+        </div>
+
+        <div className="text-right">
+          <p className="font-medium">{item.value}</p>
+          <div className="flex items-center gap-2 mt-1">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              Last txn:
+            </span>
+            <InlineTxnStatus
+              status={item.lastTransaction}
+              size="sm"
+              showText={false}
+            />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</PreviewComponent>
+
+```tsx
+"use client";
+
+import { InlineTxnStatus } from "@/components/ui/murphy/Txn-Feedback/inline-txn-status";
+
+("use client");
+
+import { InlineTxnStatus } from "@/components/ui/murphy/Txn-Feedback/inline-txn-status";
+
+interface PortfolioItem {
+  symbol: string;
+  name: string;
+  balance: string;
+  value: string;
+  lastTransaction: "success" | "confirming" | "error" | "idle";
+}
+
+export default function PortfolioOverview({
+  items,
+}: {
+  items: PortfolioItem[];
+}) {
+  return (
+    <div className="space-y-3">
+      <h2 className="text-xl font-bold">Portfolio</h2>
+
+      <div className="space-y-2">
+        {items.map((item) => (
+          <div
+            key={item.symbol}
+            className="flex items-center justify-between rounded-lg border bg-white p-4 shadow-sm"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold">
+                {item.symbol.slice(0, 2)}
+              </div>
+              <div>
+                <p className="font-medium">{item.name}</p>
+                <p className="text-sm text-gray-500">
+                  {item.balance} {item.symbol}
+                </p>
+              </div>
+            </div>
+
+            <div className="text-right">
+              <p className="font-medium">{item.value}</p>
+              <div className="mt-1 flex items-center gap-2">
+                <span className="text-xs text-gray-500">Last txn:</span>
+                <InlineTxnStatus
+                  status={item.lastTransaction}
+                  size="sm"
+                  showText={false}
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## Status States
+
+### Success State
+
+- **Icon**: CheckCircle (green)
+- **Text**: "Success"
+- **Use**: Completed transactions
+- **Color**: Green theme
+
+### Error State
+
+- **Icon**: XCircle (red)
+- **Text**: "Failed"
+- **Use**: Failed transactions
+- **Color**: Red theme
+
+### Processing States
+
+- **Icon**: Loader2 (blue, animated)
+- **Text**: "Processing"
+- **Use**: preparing, signing, sending, confirming
+- **Color**: Blue theme
+- **Animation**: Spinning loader
+
+### Idle State
+
+- **Icon**: Clock (gray)
+- **Text**: "Pending"
+- **Use**: Queued or idle transactions
+- **Color**: Gray theme
+
+## Size Variations
+
+### Small (sm)
+
+- Icon: 12px (w-3 h-3)
+- Text: text-xs
+- Use: Table cells, compact lists
+
+### Medium (md) - Default
+
+- Icon: 16px (w-4 h-4)
+- Text: text-sm
+- Use: General purpose, cards
+
+### Large (lg)
+
+- Icon: 20px (w-5 h-5)
+- Text: text-base
+- Use: Prominent displays, headers
+
+## Customization
+
+### Custom Colors
+
+```tsx
+// Custom status colors via CSS classes
+<InlineTxnStatus
+  status="success"
+  className="bg-emerald-100 text-emerald-800 border-emerald-200"
+/>
+```
+
+### Custom Icons
+
+```tsx
+// You can extend the component to use custom icons
+const CustomInlineStatus = ({ status, customIcon }) => {
+  return (
+    <Badge className="inline-flex items-center gap-1.5">
+      {customIcon || <DefaultIcon />}
+      <span>Custom Status</span>
+    </Badge>
+  );
+};
+```
+
+### Responsive Sizing
+
+```tsx
+<InlineTxnStatus status="success" className="text-xs md:text-sm" size="sm" />
+```

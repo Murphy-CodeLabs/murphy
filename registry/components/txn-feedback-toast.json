@@ -1,0 +1,14 @@
+{
+  "name": "txn-feedback-toast",
+  "type": "registry:block",
+  "title": "Toast component to display transaction status (loading, success, error).",
+  "registryDependencies": ["toast"],
+  "dependencies": ["sonner"],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx"
+    }
+  ]
+}
