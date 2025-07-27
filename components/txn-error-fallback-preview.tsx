@@ -90,14 +90,6 @@ export default function TxnErrorFallbackPreview() {
         >
           Error with Logs
         </Button>
-
-        <Button
-          onClick={() => setShowError(false)}
-          variant="outline"
-          className="w-full dark:bg-neutral-800 dark:text-white"
-        >
-          Close Error
-        </Button>
       </div>
 
       {showError && (
