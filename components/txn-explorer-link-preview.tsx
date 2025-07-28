@@ -24,13 +24,6 @@ export default function TxnExplorerLinkPreview() {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl bg-background text-foreground">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">Transaction Explorer Link</h1>
-        <p className="text-muted-foreground">
-          Direct links to Solana Explorer for transaction details
-        </p>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Different Clusters */}
         <Card className="bg-background text-foreground">

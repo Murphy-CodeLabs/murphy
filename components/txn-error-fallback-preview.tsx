@@ -49,9 +49,6 @@ export default function TxnErrorFallbackPreview() {
   return (
     <div className="p-6 max-w-2xl mx-auto space-y-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold dark:text-white">
-          Transaction Error Example
-        </h2>
         <p className="text-gray-600 dark:text-gray-300">
           Simulate different transaction error scenarios
         </p>

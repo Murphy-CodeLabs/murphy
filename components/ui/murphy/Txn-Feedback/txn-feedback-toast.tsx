@@ -1,117 +1,185 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { CheckCircle, XCircle, Loader2, AlertCircle } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import type { TxnFeedbackProps } from "@/types/transaction"
+import { useEffect, useState } from "react";
+import {
+  X,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  Send,
+  Clock,
+  FileSignature,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import type { TransactionStatus } from "@/types/transaction";
 
-export function TxnFeedbackToast({ status, onRetry, onClose }: TxnFeedbackProps) {
-  const [isVisible, setIsVisible] = useState(false)
+interface TxnFeedbackToastProps {
+  status: TransactionStatus;
+  onRetry?: () => void;
+  onClose: () => void;
+}
+
+export function TxnFeedbackToast({
+  status,
+  onRetry,
+  onClose,
+}: TxnFeedbackToastProps) {
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (status.status !== "idle") {
-      setIsVisible(true)
+      setIsVisible(true);
+    } else {
+      setIsVisible(false);
     }
-  }, [status.status])
+  }, [status.status]);
 
-  useEffect(() => {
-    if (status.status === "success") {
-      const timer = setTimeout(() => {
-        setIsVisible(false)
-        onClose?.()
-      }, 5000)
-      return () => clearTimeout(timer)
-    }
-  }, [status.status, onClose])
-
-  if (!isVisible || status.status === "idle") return null
-
-  const getIcon = () => {
-    switch (status.status) {
-      case "success":
-        return <CheckCircle className="w-5 h-5 text-green-500" />
-      case "error":
-        return <XCircle className="w-5 h-5 text-red-500" />
-      case "preparing":
-      case "signing":
-      case "sending":
-      case "confirming":
-        return <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />
-      default:
-        return <AlertCircle className="w-5 h-5 text-yellow-500" />
-    }
+  if (!isVisible || status.status === "idle") {
+    return null;
   }
 
-  const getMessage = () => {
+  const getStatusConfig = () => {
     switch (status.status) {
       case "preparing":
-        return "Preparing transaction..."
+        return {
+          icon: <Loader2 className="h-4 w-4 animate-spin flex-shrink-0" />,
+          title: "Preparing Transaction",
+          description: "Setting up your transaction...",
+          bgColor: "bg-blue-50 dark:bg-blue-950",
+          borderColor: "border-blue-200 dark:border-blue-800",
+          textColor: "text-blue-900 dark:text-blue-100",
+        };
       case "signing":
-        return "Please sign the transaction"
+        return {
+          icon: <FileSignature className="h-4 w-4 flex-shrink-0" />,
+          title: "Signing Transaction",
+          description: "Please sign the transaction in your wallet...",
+          bgColor: "bg-yellow-50 dark:bg-yellow-950",
+          borderColor: "border-yellow-200 dark:border-yellow-800",
+          textColor: "text-yellow-900 dark:text-yellow-100",
+        };
       case "sending":
-        return "Sending transaction..."
+        return {
+          icon: <Send className="h-4 w-4 flex-shrink-0" />,
+          title: "Sending Transaction",
+          description: "Broadcasting to the network...",
+          bgColor: "bg-purple-50 dark:bg-purple-950",
+          borderColor: "border-purple-200 dark:border-purple-800",
+          textColor: "text-purple-900 dark:text-purple-100",
+        };
       case "confirming":
-        return "Confirming transaction..."
+        return {
+          icon: <Clock className="h-4 w-4 flex-shrink-0" />,
+          title: "Confirming Transaction",
+          description: "Waiting for network confirmation...",
+          bgColor: "bg-orange-50 dark:bg-orange-950",
+          borderColor: "border-orange-200 dark:border-orange-800",
+          textColor: "text-orange-900 dark:text-orange-100",
+        };
       case "success":
-        return "Transaction successful!"
+        return {
+          icon: (
+            <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+          ),
+          title: "Transaction Successful",
+          description: status.signature
+            ? `Signature: ${status.signature.slice(
+                0,
+                8
+              )}...${status.signature.slice(-8)}`
+            : "Your transaction has been completed successfully.",
+          bgColor: "bg-green-50 dark:bg-green-950",
+          borderColor: "border-green-200 dark:border-green-800",
+          textColor: "text-green-900 dark:text-green-100",
+        };
       case "error":
-        return status.error || "Transaction failed"
+        return {
+          icon: <AlertCircle className="h-4 w-4 text-red-600 flex-shrink-0" />,
+          title: "Transaction Failed",
+          description:
+            status.error ||
+            "An error occurred while processing your transaction.",
+          bgColor: "bg-red-50 dark:bg-red-950",
+          borderColor: "border-red-200 dark:border-red-800",
+          textColor: "text-red-900 dark:text-red-100",
+        };
       default:
-        return "Processing..."
+        return null;
     }
-  }
+  };
 
-  const getBgColor = () => {
-    switch (status.status) {
-      case "success":
-        return "bg-green-50 border-green-200"
-      case "error":
-        return "bg-red-50 border-red-200"
-      default:
-        return "bg-blue-50 border-blue-200"
-    }
-  }
+  const config = getStatusConfig();
+  if (!config) return null;
 
   return (
-    <div
-      className={cn(
-        "fixed top-4 right-4 z-50 max-w-sm w-full",
-        "transform transition-all duration-300 ease-in-out",
-        isVisible ? "translate-x-0 opacity-100" : "translate-x-full opacity-0",
-      )}
-    >
-      <div className={cn("rounded-lg border p-4 shadow-lg", getBgColor())}>
-        <div className="flex items-start space-x-3">
-          {getIcon()}
+    <div className="fixed top-4 right-4 z-50 animate-in slide-in-from-top-2 duration-300">
+      <div
+        className={`
+        max-w-sm w-full rounded-lg border p-4 shadow-lg
+        ${config.bgColor} ${config.borderColor}
+      `}
+      >
+        <div className="flex items-start gap-3">
+          {/* Icon container with proper alignment */}
+          <div className="flex items-center justify-center mt-0.5">
+            {config.icon}
+          </div>
+
+          {/* Content container */}
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900">{getMessage()}</p>
-            {status.signature && (
-              <p className="text-xs text-gray-500 mt-1 truncate">
-                Signature: {status.signature.slice(0, 8)}...{status.signature.slice(-8)}
-              </p>
+            <div className={`font-medium text-sm ${config.textColor}`}>
+              {config.title}
+            </div>
+            <div
+              className={`text-xs mt-1 ${config.textColor} opacity-80 break-words`}
+            >
+              {config.description}
+            </div>
+
+            {/* Action buttons */}
+            {status.status === "error" && onRetry && (
+              <div className="mt-3 flex gap-2">
+                <Button
+                  onClick={onRetry}
+                  size="sm"
+                  variant="outline"
+                  className="h-7 px-2 text-xs bg-transparent"
+                >
+                  Retry
+                </Button>
+              </div>
+            )}
+
+            {status.status === "success" && status.signature && (
+              <div className="mt-3">
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(status.signature!);
+                  }}
+                  size="sm"
+                  variant="outline"
+                  className="h-7 px-2 text-xs"
+                >
+                  Copy Signature
+                </Button>
+              </div>
             )}
           </div>
-          <div className="flex space-x-2">
-            {status.status === "error" && onRetry && (
-              <Button size="sm" variant="outline" onClick={onRetry} className="text-xs bg-transparent">
-                Retry
-              </Button>
-            )}
+
+          {/* Close button with proper alignment */}
+          <div className="flex items-center justify-center">
             <Button
-              size="sm"
+              onClick={onClose}
               variant="ghost"
-              onClick={() => {
-                setIsVisible(false)
-                onClose?.()
-              }}
-              className="text-xs"
+              size="sm"
+              className="h-6 w-6 p-0 hover:bg-black/10 dark:hover:bg-white/10"
             >
-              ×
+              <X className="h-3 w-3" />
+              <span className="sr-only">Close</span>
             </Button>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

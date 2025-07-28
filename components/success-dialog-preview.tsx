@@ -51,8 +51,6 @@ export default function SuccessDialogPreview() {
 
   return (
     <div className="flex flex-col items-center justify-center py-10 px-4  text-black dark:text-white space-y-4">
-      <h1 className="text-3xl font-bold mb-10">Success Dialog Examples</h1>
-
       <Button
         onClick={() => openDialog("basic")}
         className="w-64 bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600"
