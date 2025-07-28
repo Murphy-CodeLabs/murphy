@@ -1,0 +1,31 @@
+{
+    "name": "update-collection-form",
+    "type": "registry:block",
+    "title": "Update Collection Form",
+    "description": "Update metadata and settings for an existing NFT collection.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/update-collection-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/update-collection-form.tsx"
+        }
+    ]
+}

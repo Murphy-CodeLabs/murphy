@@ -1,0 +1,36 @@
+{
+    "name": "mpl-hybrid-form",
+    "type": "registry:block",
+    "title": "MPL Hybrid Form",
+    "description": "Create hybrid assets (escrow, token, capture, release) using Metaplex.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "tabs",
+        "switch",
+        "label",
+        "badge"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/mpl-hybrid-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/mpl-hybrid-form.tsx"
+        }
+    ]
+}

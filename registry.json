@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+ "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "murphy",
   "homepage": "https://murphy.vercel.app/",
   "items": [
@@ -24,6 +24,73 @@
         }
       ]
     },
+    {
+      "name": "bubblegum-legacy-form",
+      "type": "registry:block",
+      "title": "Bubblegum Legacy Form",
+      "description": "Create compressed NFTs using Bubblegum v1 (legacy).",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-bubblegum",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/bubblegum-legacy-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/bubblegum-legacy-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "buildCurveAndCreateConfig-form",
+      "type": "registry:block",
+      "title": "Build Curve and Create Config Form",
+      "description": "A simple build curve and create config form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "meteora-dbc"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/buildCurveAndCreateConfig-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/buildCurveAndCreateConfig-form.tsx"
+        },
+        {
+          "path": "hook/murphy/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-walletModal.ts"
+        }
+      ]
+    }
+  ],
     {
       "name": "buildCurveAndCreateConfig-form",
       "type": "registry:block",
@@ -132,6 +199,38 @@
       "license": "MIT"
     },
     {
+      "name": "candy-machine-form",
+      "type": "registry:block",
+      "title": "Candy Machine Form",
+      "description": "Create and manage Metaplex Candy Machines.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-core",
+        "@metaplex-foundation/mpl-core-candy-machine",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/candy-machine-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/candy-machine-form.tsx"
+        }
+      ]
+    },
+    {
       "name": "claim-cToken",
       "type": "registry:block",
       "title": "Claim cToken",
@@ -163,6 +262,33 @@
           "path": "components/ui/murphy/QrScannerComponent.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/QrScannerComponent.tsx"
+        }
+      ]
+    },
+    {
+      "name": "compressed-nft-viewer",
+      "type": "registry:block",
+      "title": "Compressed NFT Viewer",
+      "description": "View and search compressed NFTs on Solana.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/compressed-nft-viewer.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/compressed-nft-viewer.tsx"
         }
       ]
     },
@@ -213,6 +339,73 @@
           "path": "components/providers/client-lazorkit-provider.tsx",
           "type": "registry:component",
           "target": "components/providers/client-lazorkit-provider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "core-asset-launchpad",
+      "type": "registry:block",
+      "title": "Core Asset Launchpad",
+      "description": "Create next-generation Core Assets with advanced plugin system.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "tabs",
+        "switch",
+        "label",
+        "badge"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-core",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/core-asset-launchpad.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/core-asset-launchpad.tsx"
+        }
+      ]
+    },
+    {
+      "name": "core-candy-machine-form",
+      "type": "registry:block",
+      "title": "Core Candy Machine Form",
+      "description": "Create and manage Metaplex Core Candy Machines.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-core",
+        "@metaplex-foundation/mpl-core-candy-machine",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/core-candy-machine-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/core-candy-machine-form.tsx"
         }
       ]
     },
@@ -376,27 +569,124 @@
         }
       ]
     },
+   {
+    "name": "inline-txn-status",
+    "type": "registry:block",
+    "title": "Inline icon or badge to show transaction status (loading, success, error).",
+    "registryDependencies": [],
+    "dependencies": [
+      "lucide-react"
+    ],
+  "files": [
     {
-      "name": "inline-txn-status",
-      "type": "registry:block",
-      "title": "Inline icon or badge to show transaction status (loading, success, error).",
-      "registryDependencies": [],
-      "dependencies": [
-        "lucide-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx"
+      "path": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx"
+    }
+  ]
+},
+{
+  "name": "mint-cnft-form",
+  "type": "registry:block",
+  "title": "Mint CNFT Form",
+  "description": "A simple mint CNFT form component.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "tabs",
+    "switch",
+    "label",
+    "badge"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/spl-token",
+    "@solana/wallet-adapter-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/mint-cnft-form.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/mint-cnft-form.tsx"
+    }
+  ]
+},
+{
+  "name": "hydra-fanout-form",
+  "type": "registry:block",
+  "title": "Hydra Fanout Form",
+  "description": "Distribute SOL or SPL tokens to multiple recipients with advanced options.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "tabs",
+    "switch",
+    "label",
+    "badge"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/spl-token",
+    "@solana/wallet-adapter-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/hydra-fanout-form.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/hydra-fanout-form.tsx"
+    }
+  ]
+},
+{
+  "name": "improved-cnft-manager",
+  "type": "registry:block",
+  "title": "Improved CNFT Manager",
+  "description": "A comprehensive compressed NFT management platform with multiple features and tabs.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "tabs"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react",
+    "@metaplex-foundation/umi-bundle-defaults",
+    "@metaplex-foundation/umi-signer-wallet-adapters",
+    "@metaplex-foundation/mpl-bubblegum",
+    "@metaplex-foundation/mpl-token-metadata",
+    "@metaplex-foundation/umi"
+  ],
+  "files": [
+       {
+        "path": "components/ui/murphy/improved-cnft-manager.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/improved-cnft-manager.tsx"
         }
       ]
     },
     {
-      "name": "mint-cnft-form",
+      "name": "mint-cToken",
       "type": "registry:block",
-      "title": "Mint CNFT Form",
-      "description": "A simple mint CNFT form component.",
+      "title": "Mint cToken",
+      "description": "A simple mint cToken form component.",
       "registryDependencies": [
         "input",
         "button",
@@ -410,13 +700,15 @@
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
-        "@solana/wallet-adapter-react"
+        "@solana/wallet-adapter-react",
+        "@lightprotocol/stateless.js",
+        "@lightprotocol/compressed-token"
       ],
       "files": [
         {
-          "path": "components/ui/murphy/mint-cnft-form.tsx",
+          "path": "components/ui/murphy/mint-cToken.tsx",
           "type": "registry:component",
-          "target": "components/ui/murphy/mint-cnft-form.tsx"
+          "target": "components/ui/murphy/mint-cToken.tsx"
         }
       ]
     },
@@ -480,6 +772,42 @@
           "path": "hook/murphy/use-walletModal.ts",
           "type": "registry:hook",
           "target": "hook/murphy/use-walletModal.ts"
+        }
+      ]
+    },
+    {
+      "name": "mpl-hybrid-form",
+      "type": "registry:block",
+      "title": "MPL Hybrid Form",
+      "description": "Create hybrid assets (escrow, token, capture, release) using Metaplex.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "tabs",
+        "switch",
+        "label",
+        "badge"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/mpl-hybrid-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/mpl-hybrid-form.tsx"
         }
       ]
     },
@@ -894,6 +1222,37 @@
       ]
     },
     {
+      "name": "tm-launchpad-form",
+      "type": "registry:block",
+      "title": "Token Metadata Launchpad Form",
+      "description": "Launchpad for minting tokens with metadata.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/tm-launchpad-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/tm-launchpad-form.tsx"
+        }
+      ]
+    },
+    {
       "name": "token-card",
       "type": "registry:block",
       "description": "The TokenCard component is a card that shows a token's metatda, price, and price history.",
@@ -1087,55 +1446,109 @@
         }
       ]
     },
+{
+  "name": "txn-error-fallback",
+  "type": "registry:block",
+  "title": "Fallback UI for failed transactions with retry and log support.",
+  "registryDependencies": ["button"],
+  "dependencies": [],
+  "files": [
     {
-      "name": "txn-error-fallback",
-      "type": "registry:block",
-      "title": "Fallback UI for failed transactions with retry and log support.",
-      "registryDependencies": [
-        "button"
-      ],
-      "dependencies": [],
-      "files": [
-        {
-          "path": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx"
-        }
-      ]
-    },
+      "path": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx"
+    }
+  ]
+},
+{
+  "name": "txn-explorer-link",
+  "type": "registry:block",
+  "title": "A link to open a transaction on Solana Explorer.",
+  "registryDependencies": [],
+  "dependencies": [],
+  "files": [
     {
-      "name": "txn-explorer-link",
-      "type": "registry:block",
-      "title": "A link to open a transaction on Solana Explorer.",
-      "registryDependencies": [],
-      "dependencies": [],
-      "files": [
-        {
-          "path": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx"
-        }
-      ]
-    },
+      "path": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx"
+    }
+  ]
+},
+{
+  "name": "txn-feedback-toast",
+  "type": "registry:block",
+  "title": "Toast component to display transaction status (loading, success, error).",
+  "registryDependencies": ["toast"],
+  "dependencies": ["sonner"],
+  "files": [
     {
-      "name": "txn-feedback-toast",
-      "type": "registry:block",
-      "title": "Toast component to display transaction status (loading, success, error).",
-      "registryDependencies": [
-        "toast"
-      ],
-      "dependencies": [
-        "sonner"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx",
-          "type": "registry:file",
-          "target": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx"
-        }
-      ]
-    },
+      "path": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx"
+    }
+  ]
+},
+{
+  "name": "token-metadata-viewer",
+  "type": "registry:block",
+  "title": "Token Metadata Viewer",
+  "description": "View and fetch token metadata using Metaplex Token Metadata standard.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "badge"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react",
+    "@metaplex-foundation/umi-bundle-defaults",
+    "@metaplex-foundation/umi-signer-wallet-adapters",
+    "@metaplex-foundation/mpl-token-metadata",
+    "@metaplex-foundation/umi"
+  ],
+  "files": [
     {
+      "path": "components/ui/murphy/token-metadata-viewer.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/token-metadata-viewer.tsx"
+    }
+  ]
+},
+{
+  "name": "transfer-nft-form",
+  "type": "registry:block",
+  "title": "Transfer NFT Form",
+  "description": "A Solana NFT transfer component with shadcn UI styling.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/spl-token",
+    "@solana/wallet-adapter-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/transfer-nft-form.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/transfer-nft-form.tsx"
+    }
+  ]
+},
+  {
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",
@@ -1223,6 +1636,37 @@
           "path": "components/ui/murphy/txn-settings.tsx",
           "type": "registry:component",
           "target": "components/ui/murphy/txn-settings.tsx"
+        }
+      ]
+    },
+    {
+      "name": "update-collection-form",
+      "type": "registry:block",
+      "title": "Update Collection Form",
+      "description": "Update metadata and settings for an existing NFT collection.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/wallet-adapter-react",
+        "@metaplex-foundation/umi-bundle-defaults",
+        "@metaplex-foundation/umi-signer-wallet-adapters",
+        "@metaplex-foundation/mpl-token-metadata",
+        "@metaplex-foundation/umi"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/update-collection-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/update-collection-form.tsx"
         }
       ]
     }

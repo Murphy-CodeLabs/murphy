@@ -61,10 +61,7 @@ export default function HeroSection() {
                   potential of the Solana ecosystem.
                 </p>
                 <div className="flex flex-col xl:flex-row gap-4 items-start xl:items-center justify-start">
-                  <LinkButton
-                    href="/docs/onchainkit"
-                    className="rounded-none h-10"
-                  >
+                  <LinkButton href="/docs/onchainkit" className="h-10">
                     Get Started
                   </LinkButton>
                   <EmailSubscribe />
@@ -122,7 +119,7 @@ const EmailSubscribe = () => {
 
   return (
     <form onSubmit={handleSubmit} className="">
-      <div className="bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] items-center border pr-2 ">
+      <div className="rounded-md bg-background has-[input:focus]:ring-muted relative grid grid-cols-[1fr_auto] items-center border pr-2 ">
         <Mail className="text-caption pointer-events-none absolute inset-y-0 left-5 my-auto size-5" />
 
         <input
@@ -137,7 +134,7 @@ const EmailSubscribe = () => {
         <div className="md:pr-1.5 lg:pr-0">
           <Button
             aria-label="submit"
-            className="rounded-none h-7"
+            className="rounded-sm h-7"
             type="submit"
             disabled={isLoading || isSubmitted}
           >

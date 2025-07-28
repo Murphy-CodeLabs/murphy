@@ -1,0 +1,32 @@
+{
+    "name": "hydra-fanout-form",
+    "type": "registry:block",
+    "title": "Hydra Fanout Form",
+    "description": "Distribute SOL or SPL tokens to multiple recipients with advanced options.",
+    "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu",
+        "tabs",
+        "switch",
+        "label",
+        "badge"
+    ],
+    "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react"
+    ],
+    "files": [
+        {
+            "path": "components/ui/murphy/hydra-fanout-form.tsx",
+            "type": "registry:component",
+            "target": "components/ui/murphy/hydra-fanout-form.tsx"
+        }
+    ]
+}
