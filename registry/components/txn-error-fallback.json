@@ -1,0 +1,14 @@
+{
+  "name": "txn-error-fallback",
+  "type": "registry:block",
+  "title": "Fallback UI for failed transactions with retry and log support.",
+  "registryDependencies": ["button"],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx"
+    }
+  ]
+}

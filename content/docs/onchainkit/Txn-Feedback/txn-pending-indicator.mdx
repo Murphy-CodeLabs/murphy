@@ -1,0 +1,199 @@
+---
+title: Pending Transactions Indicator
+description: Global indicator showing pending transactions with elapsed time
+icon: Clock
+---
+
+import TxnPendingIndicatorPreview from "@/components/txn-pending-indication-preview";
+
+<PreviewComponent
+  name={"Pending Transactions Indicator"}
+  v0JsonFileName={"txn-pending-indicator"}
+>
+  <TxnPendingIndicatorPreview />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+  
+<Step>
+  Install Pending Transactions Indicator
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/txn-pending-indicator.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { TxnPendingIndicator } from "@/components/ui/murphy/Txn-Feedback/txn-pending-indicator";
+import { Button } from "@/components/ui/button";
+
+interface PendingTransaction {
+  id: string;
+  description: string;
+  startTime: number;
+}
+
+export default function MyPage() {
+  const [pendingTxns, setPendingTxns] = useState<PendingTransaction[]>([]);
+
+  const addTxn = () => {
+    const id = Date.now().toString();
+    const newTxn: PendingTransaction = {
+      id,
+      description: "Simulated Transaction",
+      startTime: Date.now(),
+    };
+
+    setPendingTxns((prev) => [...prev, newTxn]);
+  };
+
+  const cancelTxn = (id: string) => {
+    setPendingTxns((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <Button onClick={addTxn}>Start Transaction</Button>
+
+      <TxnPendingIndicator
+        transactions={pendingTxns}
+        onCancel={cancelTxn}
+        position="bottom-right"
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    transactions: {
+      description: "Array of pending transactions to display",
+      type: "PendingTransaction[]",
+      default: "required",
+    },
+    onCancel: {
+      description: "Callback when a transaction is cancelled",
+      type: "(id: string) => void",
+      default: "undefined",
+    },
+    position: {
+      description: "Position of the indicator on screen",
+      type: "'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'",
+      default: "'bottom-right'",
+    },
+    className: {
+      description: "Additional CSS classes",
+      type: "string",
+      default: "undefined",
+    },
+  }}
+/>
+
+### PendingTransaction Interface
+
+<TypeTable
+  type={{
+    id: {
+      description: "Unique identifier for the transaction",
+      type: "string",
+      default: "required",
+    },
+    signature: {
+      description: "Transaction signature when available",
+      type: "string",
+      default: "undefined",
+    },
+    description: {
+      description: "Human-readable description of the transaction",
+      type: "string",
+      default: "required",
+    },
+    startTime: {
+      description: "Timestamp when transaction started (in milliseconds)",
+      type: "number",
+      default: "required",
+    },
+  }}
+/>
+
+## Indicator Features
+
+### Collapsible Interface
+
+- Collapsed: Shows count badge with pending transactions
+- Expanded: Shows detailed list of all pending transactions
+- Click to toggle between states
+
+### Elapsed Time Tracking
+
+- Real-time elapsed time display
+- Format: seconds (30s), minutes (2m 30s)
+- Updates automatically every second
+
+### Individual Transaction Management
+
+- Cancel individual transactions
+- Transaction descriptions
+- Unique transaction IDs
+
+### Positioning Options
+
+- **top-left**: Upper left corner
+- **top-right**: Upper right corner
+- **bottom-left**: Lower left corner
+- **bottom-right**: Lower right corner (default)
+
+### Auto-hide Behavior
+
+- Automatically hides when no pending transactions
+- Smooth fade in/out animations
+- Responsive design for mobile devices
+
+## Customization
+
+### Custom Positioning
+
+```tsx
+<TxnPendingIndicator
+  transactions={pendingTransactions}
+  position="top-left"
+  className="z-50"
+/>
+```
+
+### Custom Styling
+
+```tsx
+<TxnPendingIndicator
+  transactions={pendingTransactions}
+  className="shadow-2xl border-2 border-blue-300"
+/>
+```
+
+### Custom Transaction Display
+
+```tsx
+// Extend the component for custom transaction rendering
+const CustomPendingIndicator = ({ transactions, onCancel }) => {
+  return (
+    <TxnPendingIndicator
+      transactions={transactions.map((txn) => ({
+        ...txn,
+        description: `🔄 ${txn.description} (${txn.type})`,
+      }))}
+      onCancel={onCancel}
+    />
+  );
+};
+```

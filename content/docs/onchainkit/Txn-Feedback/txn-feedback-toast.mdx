@@ -1,0 +1,145 @@
+---
+title: Transaction Feedback Toast
+description: Real-time toast notifications for transaction status updates
+icon: Bell
+---
+
+import TxnFeedbackToastPreview from "@/components/txn-feedback-toast-preview";
+
+<PreviewComponent
+  name={"Transaction Feedback Toast"}
+  v0JsonFileName={"tx-feedback-toast"}
+>
+  <div className="w-full space-y-4">
+    <TxnFeedbackToastPreview />
+    <p className="text-sm text-gray-600 text-center">
+      Click buttons above to see toast notifications in the top-right corner
+    </p>
+  </div>
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+
+<Step>
+  Install Transaction Feedback Toast
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/txn-feedback-toast.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { TxnFeedbackToast } from "@/components/ui/murphy/Txn-Feedback/txn-feedback-toast";
+import type { TransactionStatus } from "@/types/transaction";
+
+export default function MyPage() {
+  const [txnStatus, setTxnStatus] = useState<TransactionStatus>({
+    status: "idle",
+  });
+
+  const simulateTransaction = async () => {
+    const statuses: TransactionStatus["status"][] = [
+      "preparing",
+      "signing",
+      "sending",
+      "confirming",
+    ];
+
+    for (const status of statuses) {
+      setTxnStatus({ status });
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
+
+    // Simulate success or error
+    if (Math.random() > 0.3) {
+      setTxnStatus({
+        status: "success",
+        signature:
+          "5VfYmGC9L8ty3D4HutfxndoKXGBwXJWKKvxgF7qQzqK8xMjU9v7Rw2sP3nT6hL4jK9mN8bC1dF2eG3hI5jK6lM7n",
+      });
+    } else {
+      setTxnStatus({
+        status: "error",
+        error: "Transaction failed: Insufficient funds for transaction fees",
+      });
+    }
+  };
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Transaction Demo</h1>
+
+      <Button onClick={simulateTransaction}>Start Transaction</Button>
+
+      <TxnFeedbackToast
+        status={txnStatus}
+        onRetry={() => simulateTransaction()}
+        onClose={() => setTxnStatus({ status: "idle" })}
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    status: {
+      description: "Current transaction status object",
+      type: "TransactionStatus",
+      default: "required",
+    },
+    onRetry: {
+      description: "Callback function when retry button is clicked",
+      type: "() => void",
+      default: "undefined",
+    },
+    onClose: {
+      description: "Callback function when toast is closed",
+      type: "() => void",
+      default: "undefined",
+    },
+  }}
+/>
+
+### TransactionStatus Interface
+
+<TypeTable
+  type={{
+    status: {
+      description: "Current status of the transaction",
+      type: "'idle' | 'preparing' | 'signing' | 'sending' | 'confirming' | 'success' | 'error'",
+      default: "'idle'",
+    },
+    signature: {
+      description: "Transaction signature when available",
+      type: "string",
+      default: "undefined",
+    },
+    error: {
+      description: "Error message when status is 'error'",
+      type: "string",
+      default: "undefined",
+    },
+    step: {
+      description: "Current step number (optional)",
+      type: "number",
+      default: "undefined",
+    },
+    totalSteps: {
+      description: "Total number of steps (optional)",
+      type: "number",
+      default: "undefined",
+    },
+  }}
+/>

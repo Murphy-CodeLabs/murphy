@@ -1,5 +1,5 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
+ "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "murphy",
   "homepage": "https://murphy.vercel.app/",
   "items": [
@@ -56,6 +56,41 @@
         }
       ]
     },
+    {
+      "name": "buildCurveAndCreateConfig-form",
+      "type": "registry:block",
+      "title": "Build Curve and Create Config Form",
+      "description": "A simple build curve and create config form component.",
+      "registryDependencies": [
+        "input",
+        "button",
+        "form",
+        "card",
+        "sonner",
+        "select",
+        "dialog",
+        "dropdown-menu"
+      ],
+      "dependencies": [
+        "@solana/web3.js",
+        "@solana/spl-token",
+        "@solana/wallet-adapter-react",
+        "meteora-dbc"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/buildCurveAndCreateConfig-form.tsx",
+          "type": "registry:component",
+          "target": "components/ui/murphy/buildCurveAndCreateConfig-form.tsx"
+        },
+        {
+          "path": "hook/murphy/use-walletModal.ts",
+          "type": "registry:hook",
+          "target": "hook/murphy/use-walletModal.ts"
+        }
+      ]
+    }
+  ],
     {
       "name": "buildCurveAndCreateConfig-form",
       "type": "registry:block",
@@ -534,76 +569,124 @@
         }
       ]
     },
+   {
+    "name": "inline-txn-status",
+    "type": "registry:block",
+    "title": "Inline icon or badge to show transaction status (loading, success, error).",
+    "registryDependencies": [],
+    "dependencies": [
+      "lucide-react"
+    ],
+  "files": [
     {
-      "name": "hydra-fanout-form",
-      "type": "registry:block",
-      "title": "Hydra Fanout Form",
-      "description": "Distribute SOL or SPL tokens to multiple recipients with advanced options.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu",
-        "tabs",
-        "switch",
-        "label",
-        "badge"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/hydra-fanout-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/hydra-fanout-form.tsx"
+      "path": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx"
+    }
+  ]
+},
+{
+  "name": "mint-cnft-form",
+  "type": "registry:block",
+  "title": "Mint CNFT Form",
+  "description": "A simple mint CNFT form component.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "tabs",
+    "switch",
+    "label",
+    "badge"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/spl-token",
+    "@solana/wallet-adapter-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/mint-cnft-form.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/mint-cnft-form.tsx"
+    }
+  ]
+},
+{
+  "name": "hydra-fanout-form",
+  "type": "registry:block",
+  "title": "Hydra Fanout Form",
+  "description": "Distribute SOL or SPL tokens to multiple recipients with advanced options.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "tabs",
+    "switch",
+    "label",
+    "badge"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/spl-token",
+    "@solana/wallet-adapter-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/hydra-fanout-form.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/hydra-fanout-form.tsx"
+    }
+  ]
+},
+{
+  "name": "improved-cnft-manager",
+  "type": "registry:block",
+  "title": "Improved CNFT Manager",
+  "description": "A comprehensive compressed NFT management platform with multiple features and tabs.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "tabs"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react",
+    "@metaplex-foundation/umi-bundle-defaults",
+    "@metaplex-foundation/umi-signer-wallet-adapters",
+    "@metaplex-foundation/mpl-bubblegum",
+    "@metaplex-foundation/mpl-token-metadata",
+    "@metaplex-foundation/umi"
+  ],
+  "files": [
+       {
+        "path": "components/ui/murphy/improved-cnft-manager.tsx",
+        "type": "registry:component",
+        "target": "components/ui/murphy/improved-cnft-manager.tsx"
         }
       ]
     },
     {
-      "name": "improved-cnft-manager",
+      "name": "mint-cToken",
       "type": "registry:block",
-      "title": "Improved CNFT Manager",
-      "description": "A comprehensive compressed NFT management platform with multiple features and tabs.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu",
-        "tabs"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "@metaplex-foundation/umi-bundle-defaults",
-        "@metaplex-foundation/umi-signer-wallet-adapters",
-        "@metaplex-foundation/mpl-bubblegum",
-        "@metaplex-foundation/mpl-token-metadata",
-        "@metaplex-foundation/umi"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/improved-cnft-manager.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/improved-cnft-manager.tsx"
-        }
-      ]
-    },
-    {
-      "name": "mint-cnft-form",
-      "type": "registry:block",
-      "title": "Mint CNFT Form",
-      "description": "A simple mint CNFT form component.",
+      "title": "Mint cToken",
+      "description": "A simple mint cToken form component.",
       "registryDependencies": [
         "input",
         "button",
@@ -617,13 +700,15 @@
       "dependencies": [
         "@solana/web3.js",
         "@solana/spl-token",
-        "@solana/wallet-adapter-react"
+        "@solana/wallet-adapter-react",
+        "@lightprotocol/stateless.js",
+        "@lightprotocol/compressed-token"
       ],
       "files": [
         {
-          "path": "components/ui/murphy/mint-cnft-form.tsx",
+          "path": "components/ui/murphy/mint-cToken.tsx",
           "type": "registry:component",
-          "target": "components/ui/murphy/mint-cnft-form.tsx"
+          "target": "components/ui/murphy/mint-cToken.tsx"
         }
       ]
     },
@@ -1037,6 +1122,41 @@
       ]
     },
     {
+      "name": "step-flow-dialog",
+      "type": "registry:block",
+      "title": "Modal for guiding users through multi-step flows (e.g. Mint → Verify → Confirm).",
+      "registryDependencies": [
+        "dialog",
+        "button",
+        "txn-progress-steps"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/step-flow-dialog.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/step-flow-dialog.tsx"
+        }
+      ]
+    },
+    {
+      "name": "success-dialog",
+      "type": "registry:block",
+      "title": "Modal shown when a transaction completes successfully.",
+      "registryDependencies": [
+        "dialog",
+        "button"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/success-dialog.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/success-dialog.tsx"
+        }
+      ]
+    },
+    {
       "name": "swap-token-form",
       "type": "registry:block",
       "title": "Swap Token Form",
@@ -1326,67 +1446,109 @@
         }
       ]
     },
+{
+  "name": "txn-error-fallback",
+  "type": "registry:block",
+  "title": "Fallback UI for failed transactions with retry and log support.",
+  "registryDependencies": ["button"],
+  "dependencies": [],
+  "files": [
     {
-      "name": "token-metadata-viewer",
-      "type": "registry:block",
-      "title": "Token Metadata Viewer",
-      "description": "View and fetch token metadata using Metaplex Token Metadata standard.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu",
-        "badge"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/wallet-adapter-react",
-        "@metaplex-foundation/umi-bundle-defaults",
-        "@metaplex-foundation/umi-signer-wallet-adapters",
-        "@metaplex-foundation/mpl-token-metadata",
-        "@metaplex-foundation/umi"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/token-metadata-viewer.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/token-metadata-viewer.tsx"
-        }
-      ]
-    },
+      "path": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-error-fallback.tsx"
+    }
+  ]
+},
+{
+  "name": "txn-explorer-link",
+  "type": "registry:block",
+  "title": "A link to open a transaction on Solana Explorer.",
+  "registryDependencies": [],
+  "dependencies": [],
+  "files": [
     {
-      "name": "transfer-nft-form",
-      "type": "registry:block",
-      "title": "Transfer NFT Form",
-      "description": "A Solana NFT transfer component with shadcn UI styling.",
-      "registryDependencies": [
-        "input",
-        "button",
-        "form",
-        "card",
-        "sonner",
-        "select",
-        "dialog",
-        "dropdown-menu"
-      ],
-      "dependencies": [
-        "@solana/web3.js",
-        "@solana/spl-token",
-        "@solana/wallet-adapter-react"
-      ],
-      "files": [
-        {
-          "path": "components/ui/murphy/transfer-nft-form.tsx",
-          "type": "registry:component",
-          "target": "components/ui/murphy/transfer-nft-form.tsx"
-        }
-      ]
-    },
+      "path": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx"
+    }
+  ]
+},
+{
+  "name": "txn-feedback-toast",
+  "type": "registry:block",
+  "title": "Toast component to display transaction status (loading, success, error).",
+  "registryDependencies": ["toast"],
+  "dependencies": ["sonner"],
+  "files": [
     {
+      "path": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-feedback-toast.tsx"
+    }
+  ]
+},
+{
+  "name": "token-metadata-viewer",
+  "type": "registry:block",
+  "title": "Token Metadata Viewer",
+  "description": "View and fetch token metadata using Metaplex Token Metadata standard.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu",
+    "badge"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/wallet-adapter-react",
+    "@metaplex-foundation/umi-bundle-defaults",
+    "@metaplex-foundation/umi-signer-wallet-adapters",
+    "@metaplex-foundation/mpl-token-metadata",
+    "@metaplex-foundation/umi"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/token-metadata-viewer.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/token-metadata-viewer.tsx"
+    }
+  ]
+},
+{
+  "name": "transfer-nft-form",
+  "type": "registry:block",
+  "title": "Transfer NFT Form",
+  "description": "A Solana NFT transfer component with shadcn UI styling.",
+  "registryDependencies": [
+    "input",
+    "button",
+    "form",
+    "card",
+    "sonner",
+    "select",
+    "dialog",
+    "dropdown-menu"
+  ],
+  "dependencies": [
+    "@solana/web3.js",
+    "@solana/spl-token",
+    "@solana/wallet-adapter-react"
+  ],
+  "files": [
+    {
+      "path": "components/ui/murphy/transfer-nft-form.tsx",
+      "type": "registry:component",
+      "target": "components/ui/murphy/transfer-nft-form.tsx"
+    }
+  ]
+},
+  {
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",
@@ -1409,6 +1571,50 @@
           "path": "lib/utils.ts",
           "type": "registry:file",
           "target": "lib/utils.ts"
+        }
+      ]
+    },
+    {
+      "name": "txn-pending-indicator",
+      "type": "registry:block",
+      "title": "Global indicator showing pending transactions in the UI.",
+      "registryDependencies": [],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-pending-indicator.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-pending-indicator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-progress-steps",
+      "type": "registry:block",
+      "title": "A visual step tracker for multi-step transaction workflows.",
+      "registryDependencies": [],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-progress-steps.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-retry-button",
+      "type": "registry:block",
+      "title": "A button component with built-in retry handling for transactions.",
+      "registryDependencies": [
+        "button"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-retry-button.tsx"
         }
       ]
     },

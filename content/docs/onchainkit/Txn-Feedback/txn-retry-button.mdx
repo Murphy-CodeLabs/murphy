@@ -1,0 +1,190 @@
+---
+title: Transaction Retry Button
+description: Smart retry functionality with configurable limits and delays
+icon: RefreshCw
+---
+
+import TxnRetryButtonPreview from "@/components/txn-retry-button-preview";
+
+<PreviewComponent
+  name={"Transaction Retry Button"}
+  v0JsonFileName={"txn-retry-button"}
+>
+  <div className="w-full space-y-4">
+    <TxnRetryButtonPreview />
+  </div>
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+
+<Step>
+  Install Transaction Retry Button
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/txn-retry-button.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { TxnRetryButton } from "@/components/ui/murphy/Txn-Feedback/txn-retry-button";
+
+export default function MyPage() {
+  const executeTransaction = async () => {
+    // Simulate network delay
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // 60% chance of failure to demonstrate retry logic
+    if (Math.random() < 0.6) {
+      throw new Error("Transaction failed: Network timeout");
+    }
+
+    console.log("Transaction successful!");
+  };
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Retry Button Demo</h1>
+
+      <TxnRetryButton
+        onRetry={executeTransaction}
+        maxRetries={3}
+        retryDelay={1000}
+        className="w-full md:w-auto"
+      >
+        Execute Transaction
+      </TxnRetryButton>
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    onRetry: {
+      description: "Async function to execute when retry is triggered",
+      type: "() => Promise<void> | void",
+      default: "required",
+    },
+    disabled: {
+      description: "Whether the button is disabled",
+      type: "boolean",
+      default: "false",
+    },
+    maxRetries: {
+      description: "Maximum number of retry attempts",
+      type: "number",
+      default: "3",
+    },
+    retryDelay: {
+      description: "Delay between retries in milliseconds",
+      type: "number",
+      default: "1000",
+    },
+    children: {
+      description: "Button content/label",
+      type: "React.ReactNode",
+      default: "'Retry'",
+    },
+    className: {
+      description: "Additional CSS classes",
+      type: "string",
+      default: "undefined",
+    },
+    variant: {
+      description: "Button variant style",
+      type: "'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'",
+      default: "'default'",
+    },
+    size: {
+      description: "Button size",
+      type: "'default' | 'sm' | 'lg' | 'icon'",
+      default: "'default'",
+    },
+  }}
+/>
+
+## Retry Strategies
+
+### Network Errors
+
+For network-related failures, use longer delays and more retries:
+
+```tsx
+<TxnRetryButton onRetry={networkTransaction} maxRetries={5} retryDelay={2000}>
+  Network Transaction
+</TxnRetryButton>
+```
+
+### Program Errors
+
+For smart contract errors, use fewer retries:
+
+```tsx
+<TxnRetryButton onRetry={programTransaction} maxRetries={1} retryDelay={1000}>
+  Program Transaction
+</TxnRetryButton>
+```
+
+### Timeout Errors
+
+For timeout errors, use moderate retries with increasing delays:
+
+```tsx
+<TxnRetryButton
+  onRetry={timeoutProneTransaction}
+  maxRetries={3}
+  retryDelay={3000}
+>
+  Timeout-Prone Transaction
+</TxnRetryButton>
+```
+
+## Button States
+
+### Loading State
+
+Shows spinning icon and "Retrying..." text during retry attempts.
+
+### Disabled State
+
+Button becomes disabled after reaching maximum retry attempts.
+
+### Retry Counter
+
+Displays current retry attempt count: "(2/3)"
+
+### Success Reset
+
+Retry counter resets to 0 after successful execution.
+
+## Customization
+
+### Custom Labels
+
+```tsx
+<TxnRetryButton onRetry={executeTransaction} maxRetries={3}>
+  {(isRetrying) => (isRetrying ? "Processing..." : "Try Again")}
+</TxnRetryButton>
+```
+
+### Custom Styling
+
+```tsx
+<TxnRetryButton
+  onRetry={executeTransaction}
+  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+  variant="default"
+  size="lg"
+>
+  Custom Styled Retry
+</TxnRetryButton>
+```

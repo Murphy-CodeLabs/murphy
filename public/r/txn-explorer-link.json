@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "txn-explorer-link",
+  "type": "registry:block",
+  "title": "A link to open a transaction on Solana Explorer.",
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx",
+      "content": "\"use client\"\r\n\r\nimport type React from \"react\"\r\nimport { ExternalLink } from \"lucide-react\"\r\nimport { Button } from \"@/components/ui/button\"\r\nimport { cn } from \"@/lib/utils\"\r\n\r\ninterface TxnExplorerLinkProps {\r\n  signature: string\r\n  cluster?: \"mainnet-beta\" | \"testnet\" | \"devnet\"\r\n  children?: React.ReactNode\r\n  className?: string\r\n  variant?: \"default\" | \"destructive\" | \"outline\" | \"secondary\" | \"ghost\" | \"link\"\r\n  size?: \"default\" | \"sm\" | \"lg\" | \"icon\"\r\n  showIcon?: boolean\r\n}\r\n\r\nexport function TxnExplorerLink({\r\n  signature,\r\n  cluster = \"mainnet-beta\",\r\n  children,\r\n  className,\r\n  variant = \"outline\",\r\n  size = \"sm\",\r\n  showIcon = true,\r\n}: TxnExplorerLinkProps) {\r\n  const getExplorerUrl = () => {\r\n    const baseUrl = \"https://explorer.solana.com/tx\"\r\n    const clusterParam = cluster !== \"mainnet-beta\" ? `?cluster=${cluster}` : \"\"\r\n    return `${baseUrl}/${signature}${clusterParam}`\r\n  }\r\n\r\n  const handleClick = () => {\r\n    window.open(getExplorerUrl(), \"_blank\", \"noopener,noreferrer\")\r\n  }\r\n\r\n  return (\r\n    <Button onClick={handleClick} variant={variant} size={size} className={cn(className)}>\r\n      {children || (\r\n        <>\r\n          View on Explorer\r\n          {showIcon && <ExternalLink className=\"w-4 h-4 ml-2\" />}\r\n        </>\r\n      )}\r\n    </Button>\r\n  )\r\n}\r\n",
+      "type": "registry:file",
+      "target": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx"
+    }
+  ]
+}

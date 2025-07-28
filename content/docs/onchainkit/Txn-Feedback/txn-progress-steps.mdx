@@ -1,0 +1,159 @@
+---
+title: Transaction Progress Steps
+description: Visual progress indicator for multi-step transaction workflows
+icon: Activity
+---
+
+import TxnProgressStepsPreview from "@/components/txn-progress-steps-preview";
+
+<PreviewComponent
+  name={"Transaction Progress Steps"}
+  v0JsonFileName={"txn-progress-steps"}
+>
+  <div className="w-full space-y-6">
+    <div className="p-4 border rounded-lg">
+      <TxnProgressStepsPreview />
+    </div>
+  </div>
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+
+<Step>
+  Install Transaction Progress Steps
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/txn-progress-steps.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { TxProgressSteps } from "@/components/ui/murphy/Txn-Feedback/txn-progress-steps";
+import type { TxStep } from "@/types/transaction";
+
+export default function MyPage() {
+  const steps: TxStep[] = [
+    {
+      id: "1",
+      title: "Connect Wallet",
+      description: "Connect your Solana wallet",
+      status: "completed",
+    },
+    {
+      id: "2",
+      title: "Prepare Transaction",
+      description: "Preparing transaction data",
+      status: "completed",
+    },
+    {
+      id: "3",
+      title: "Sign Transaction",
+      description: "Sign with your wallet",
+      status: "active",
+    },
+    {
+      id: "4",
+      title: "Submit to Network",
+      description: "Broadcasting to Solana",
+      status: "pending",
+    },
+    {
+      id: "5",
+      title: "Confirmation",
+      description: "Waiting for confirmation",
+      status: "pending",
+    },
+  ];
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Transaction Progress</h1>
+      <TxProgressSteps steps={steps} orientation="horizontal" />
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    steps: {
+      description: "Array of transaction steps to display",
+      type: "TxStep[]",
+      default: "[]",
+    },
+    orientation: {
+      description: "Layout orientation of the steps",
+      type: "'horizontal' | 'vertical'",
+      default: "'horizontal'",
+    },
+    className: {
+      description: "Additional CSS classes to apply",
+      type: "string",
+      default: "undefined",
+    },
+  }}
+/>
+
+### TxStep Interface
+
+<TypeTable
+  type={{
+    id: {
+      description: "Unique identifier for the step",
+      type: "string",
+      default: "required",
+    },
+    title: {
+      description: "Display title for the step",
+      type: "string",
+      default: "required",
+    },
+    description: {
+      description: "Optional description text",
+      type: "string",
+      default: "undefined",
+    },
+    status: {
+      description: "Current status of the step",
+      type: "'pending' | 'active' | 'completed' | 'error'",
+      default: "'pending'",
+    },
+  }}
+/>
+
+## Customization
+
+### Custom Styling
+
+```tsx
+<TxProgressSteps
+  steps={steps}
+  className="bg-gray-50 p-4 rounded-lg"
+  orientation="vertical"
+/>
+```
+
+### Responsive Design
+
+```tsx
+
+<TxProgressSteps
+  steps={steps}
+  orientation="horizontal"
+  className="hidden md:flex"
+/>
+<TxProgressSteps
+  steps={steps}
+  orientation="vertical"
+  className="flex md:hidden"
+/>
+```
