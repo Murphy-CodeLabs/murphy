@@ -600,6 +600,22 @@
       ]
     },
     {
+      "name": "inline-txn-status",
+      "type": "registry:block",
+      "title": "Inline icon or badge to show transaction status (loading, success, error).",
+      "registryDependencies": [],
+      "dependencies": [
+        "lucide-react"
+      ],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/inline-txn-status.tsx"
+        }
+      ]
+    },
+    {
       "name": "mint-cnft-form",
       "type": "registry:block",
       "title": "Mint CNFT Form",

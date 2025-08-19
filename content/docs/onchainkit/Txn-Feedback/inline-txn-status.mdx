@@ -1,0 +1,178 @@
+---
+title: Inline Transaction Status
+description: Small status indicators for transaction states in lists and UIs
+icon: Activity
+---
+
+<PreviewComponent name={"Inline Transaction Status"} v0JsonFileName={"inline-txn-status"}>
+  <div className="w-full space-y-6 bg-white text-black dark:bg-black dark:text-white p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+    
+    <div className="space-y-3">
+      <h4 className="font-medium">Different Status States</h4>
+      <div className="flex flex-wrap gap-3">
+        <InlineTxnStatus status="success" />
+        <InlineTxnStatus status="error" />
+        <InlineTxnStatus status="confirming" />
+        <InlineTxnStatus status="idle" />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      <h4 className="font-medium">Different Sizes</h4>
+      <div className="flex flex-wrap items-center gap-3">
+        <InlineTxnStatus status="success" size="sm" />
+        <InlineTxnStatus status="success" size="md" />
+        <InlineTxnStatus status="success" size="lg" />
+      </div>
+    </div>
+
+    <div className="space-y-3">
+      <h4 className="font-medium">Icon Only</h4>
+      <div className="flex flex-wrap gap-3">
+        <InlineTxnStatus status="success" showText={false} />
+        <InlineTxnStatus status="error" showText={false} />
+        <InlineTxnStatus status="confirming" showText={false} />
+      </div>
+    </div>
+
+  </div>
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+<Step>
+  Install Inline Transaction Status
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/inline-txn-status.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client";
+import { InlineTxnStatus } from "@/components/ui/murphy/Txn-Feedback/inline-txn-status";
+
+export default function MyPage() {
+  return (
+    <div className="space-y-4 p-6">
+      <InlineTxnStatus status="success" size="sm" />
+      <InlineTxnStatus status="confirming" size="sm" />
+      <InlineTxnStatus status="error" size="sm" />
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    status: {
+      description: "Current transaction status",
+      type: "'idle' | 'preparing' | 'signing' | 'sending' | 'confirming' | 'success' | 'error'",
+      default: "required",
+    },
+    size: {
+      description: "Size of the status indicator",
+      type: "'sm' | 'md' | 'lg'",
+      default: "'md'",
+    },
+    showText: {
+      description: "Whether to show status text alongside icon",
+      type: "boolean",
+      default: "true",
+    },
+    className: {
+      description: "Additional CSS classes",
+      type: "string",
+      default: "undefined",
+    },
+  }}
+/>
+
+## Status States
+
+### Success State
+
+- **Icon**: CheckCircle (green)
+- **Text**: "Success"
+- **Use**: Completed transactions
+- **Color**: Green theme
+
+### Error State
+
+- **Icon**: XCircle (red)
+- **Text**: "Failed"
+- **Use**: Failed transactions
+- **Color**: Red theme
+
+### Processing States
+
+- **Icon**: Loader2 (blue, animated)
+- **Text**: "Processing"
+- **Use**: preparing, signing, sending, confirming
+- **Color**: Blue theme
+- **Animation**: Spinning loader
+
+### Idle State
+
+- **Icon**: Clock (gray)
+- **Text**: "Pending"
+- **Use**: Queued or idle transactions
+- **Color**: Gray theme
+
+## Size Variations
+
+### Small (sm)
+
+- Icon: 12px (w-3 h-3)
+- Text: text-xs
+- Use: Table cells, compact lists
+
+### Medium (md) - Default
+
+- Icon: 16px (w-4 h-4)
+- Text: text-sm
+- Use: General purpose, cards
+
+### Large (lg)
+
+- Icon: 20px (w-5 h-5)
+- Text: text-base
+- Use: Prominent displays, headers
+
+## Customization
+
+### Custom Colors
+
+```tsx
+// Custom status colors via CSS classes
+<InlineTxnStatus
+  status="success"
+  className="bg-emerald-100 text-emerald-800 border-emerald-200"
+/>
+```
+
+### Custom Icons
+
+```tsx
+// You can extend the component to use custom icons
+const CustomInlineStatus = ({ status, customIcon }) => {
+  return (
+    <Badge className="inline-flex items-center gap-1.5">
+      {customIcon || <DefaultIcon />}
+      <span>Custom Status</span>
+    </Badge>
+  );
+};
+```
+
+### Responsive Sizing
+
+```tsx
+<InlineTxnStatus status="success" className="text-xs md:text-sm" size="sm" />
+```
