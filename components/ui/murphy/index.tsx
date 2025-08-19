@@ -14,7 +14,7 @@ import CandyMachineForm from "./candy-machine-form";
 import CoreCandyMachineForm from "./core-candy-machine-form";
 import BubblegumLegacyForm from "./bubblegum-legacy-form";
 import ImprovedCNFTManager from "./improved-cnft-manager";
-import CompressedNFTViewer from "./compressed-nft-viewer"
+import CompressedNFTViewer from "./compressed-nft-viewer";
 import { CreateMerkleTree } from "./create-merkleTree-form";
 import { TokenList } from "./token-list";
 import { StakeForm } from "./stake-token-form";
@@ -37,6 +37,7 @@ import { CoreAssetLaunchpad } from "./core-asset-launchpad";
 import { HydraFanoutForm } from "./hydra-fanout-form";
 import { MPLHybridForm } from "./mpl-hybrid-form";
 import { TokenMetadataViewer } from "./token-metadata-viewer";
+import { TxnExplorerLink } from "./Txn-Feedback/txn-explorer-link";
 
 export {
   ConnectWalletButton,
@@ -78,5 +79,6 @@ export {
   TMLaunchpadForm,
   HydraFanoutForm,
   MPLHybridForm,
-  TokenMetadataViewer
+  TokenMetadataViewer,
+  TxnExplorerLink,
 };

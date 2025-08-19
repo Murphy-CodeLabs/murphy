@@ -1387,6 +1387,20 @@
       ]
     },
     {
+      "name": "txn-explorer-link",
+      "type": "registry:block",
+      "title": "A link to open a transaction on Solana Explorer.",
+      "registryDependencies": [],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/txn-explorer-link.tsx"
+        }
+      ]
+    },
+    {
       "name": "txn-list",
       "type": "registry:block",
       "title": "The TxnList component is a table of transactions with metadata.",

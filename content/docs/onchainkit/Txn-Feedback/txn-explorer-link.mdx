@@ -1,0 +1,287 @@
+---
+title: Transaction Explorer Link
+description: Direct links to Solana Explorer for transaction details
+icon: ExternalLink
+---
+
+<PreviewComponent
+  name={"Transaction Explorer Link"}
+  v0JsonFileName={"txn-explorer-link"}
+>
+  <TxnExplorerLink
+    signature="5VfYmGC9L8ty3D4HutfxndoKXGBwXJWKKvxgF7qQzqK8xMjU9v7Rw2sP3nT6hL4jK9mN8bC1dF2eG3hI5jK6lM7n"
+    size="lg"
+    variant="secondary"
+  />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+ 
+<Step>
+  Install Transaction Explorer Link
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/tx-explorer-link.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { TxnExplorerLink } from "@/components/ui/murphy/Txn-Feedback/txn-explorer-link";
+
+export default function MyPage() {
+  const transactionSignature =
+    "5VfYmGC9L8ty3D4HutfxndoKXGBwXJWKKvxgF7qQzqK8xMjU9v7Rw2sP3nT6hL4jK9mN8bC1dF2eG3hI5jK6lM7n";
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Transaction Details</h1>
+
+      <div className="space-y-4">
+        <p>Transaction completed successfully!</p>
+
+        <TxnExplorerLink
+          signature={transactionSignature}
+          cluster="mainnet-beta"
+        >
+          View on Solana Explorer
+        </TxnExplorerLink>
+      </div>
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    signature: {
+      description: "Transaction signature to link to",
+      type: "string",
+      default: "required",
+    },
+    cluster: {
+      description: "Solana cluster/network",
+      type: "'mainnet-beta' | 'testnet' | 'devnet'",
+      default: "'mainnet-beta'",
+    },
+    children: {
+      description: "Custom button content",
+      type: "React.ReactNode",
+      default: "'View on Explorer'",
+    },
+    className: {
+      description: "Additional CSS classes",
+      type: "string",
+      default: "undefined",
+    },
+    variant: {
+      description: "Button variant style",
+      type: "'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'",
+      default: "'outline'",
+    },
+    size: {
+      description: "Button size",
+      type: "'default' | 'sm' | 'lg' | 'icon'",
+      default: "'sm'",
+    },
+    showIcon: {
+      description: "Whether to show the external link icon",
+      type: "boolean",
+      default: "true",
+    },
+  }}
+/>
+
+## Examples
+
+### Different Clusters
+
+```tsx
+// Mainnet transaction
+
+<TxnExplorerLink
+  signature="5VfYmGC9L8ty3D4HutfxndoKXGBwXJWKKvxgF7qQzqK8xMjU9v7Rw2sP3nT6hL4jK9mN8bC1dF2eG3hI5jK6lM7n"
+  cluster="mainnet-beta"
+>
+  View on Mainnet
+</TxnExplorerLink>
+
+// Devnet transaction
+
+<TxnExplorerLink
+  signature="2B5VfYmGC9L8ty3D4HutfxndoKXGBwXJWKKvxgF7qQzqK8xMjU9v7Rw2sP3nT6hL4jK9mN8bC1dF2eG3hI5jK6lM"
+  cluster="devnet"
+>
+  View on Devnet
+</TxnExplorerLink>
+
+// Testnet transaction
+
+<TxnExplorerLink
+  signature="3C6VfYmGC9L8ty3D4HutfxndoKXGBwXJWKKvxgF7qQzqK8xMjU9v7Rw2sP3nT6hL4jK9mN8bC1dF2eG3hI5jK6lM"
+  cluster="testnet"
+>
+  View on Testnet
+</TxnExplorerLink>
+```
+
+### Different Button Variants
+
+```tsx
+// Default variant
+
+<TxnExplorerLink signature="abc123..." variant="default">
+  Default Style
+</TxnExplorerLink>
+
+// Outline variant (default)
+
+<TxnExplorerLink signature="abc123..." variant="outline">
+  Outline Style
+</TxnExplorerLink>
+
+// Ghost variant
+
+<TxnExplorerLink signature="abc123..." variant="ghost">
+  Ghost Style
+</TxnExplorerLink>
+
+// Link variant
+
+<TxnExplorerLink signature="abc123..." variant="link">
+  Link Style
+</TxnExplorerLink>
+```
+
+### Different Sizes
+
+```tsx
+// Small size
+
+<TxnExplorerLink signature="abc123..." size="sm">
+  Small Link
+</TxnExplorerLink>
+
+// Default size
+
+<TxnExplorerLink signature="abc123..." size="default">
+  Default Link
+</TxnExplorerLink>
+
+// Large size
+
+<TxnExplorerLink signature="abc123..." size="lg">
+  Large Link
+</TxnExplorerLink>
+
+// Icon only
+
+<TxnExplorerLink signature="abc123..." size="icon">
+  🔗
+</TxnExplorerLink>
+```
+
+### Custom Content
+
+```tsx
+// Custom text
+
+<TxnExplorerLink signature="abc123...">View Transaction Details</TxnExplorerLink>
+
+// Without icon
+
+<TxnExplorerLink signature="abc123..." showIcon={false}>
+  Check on Explorer
+</TxnExplorerLink>
+
+// With truncated signature
+
+<TxnExplorerLink signature="abc123...">
+  {signature.slice(0, 8)}...{signature.slice(-8)}
+</TxnExplorerLink>
+
+// Custom styling
+
+<TxnExplorerLink
+  signature="abc123..."
+  className="bg-blue-500 hover:bg-blue-600 text-white"
+>
+  Custom Styled Link
+</TxnExplorerLink>
+
+```
+
+## Explorer Features
+
+When users click the explorer link, they can see:
+
+### Transaction Details
+
+- Transaction signature and status
+- Block confirmation details
+- Fee information and compute units used
+- Timestamp and slot number
+
+### Account Changes
+
+- Balance changes for all involved accounts
+- Token transfers and amounts
+- Account modifications and updates
+- Program interactions and calls
+
+### Program Logs
+
+- Instruction execution logs
+- Error messages and debugging info
+- Program outputs and return values
+- Custom program log messages
+
+### Additional Information
+
+- Transaction size and priority fee
+- Recent blockhash used
+- Signer accounts and permissions
+- Cross-program invocations
+
+## Customization
+
+### Custom URL Generation
+
+```tsx
+const getCustomExplorerUrl = (signature: string, cluster: string) => {
+  // Use different explorer based on preference
+  const explorers = {
+    solana: `https://explorer.solana.com/tx/${signature}${
+      cluster !== "mainnet-beta" ? `?cluster=${cluster}` : ""
+    }`,
+    solscan: `https://solscan.io/tx/${signature}${
+      cluster !== "mainnet-beta" ? `?cluster=${cluster}` : ""
+    }`,
+    xray: `https://xray.helius.xyz/tx/${signature}${
+      cluster !== "mainnet-beta" ? `?network=${cluster}` : ""
+    }`,
+  };
+
+  return explorers.solana; // or based on user preference
+};
+```
+
+### Custom Styling
+
+```tsx
+<TxnExplorerLink
+  signature="abc123..."
+  className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white border-0"
+  size="lg"
+>
+  🔍 Explore Transaction
+</TxnExplorerLink>
+```
