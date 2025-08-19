@@ -1,0 +1,210 @@
+---
+title: Success Dialog
+description: Celebration modal for successful transaction completion
+icon: Check
+---
+
+import SuccessDialogPreview from "@/components/success-dialog-preview";
+
+<PreviewComponent name="Success Dialog" v0JsonFileName="success-dialog">
+  <SuccessDialogPreview />
+</PreviewComponent>
+
+## Installation
+
+<Steps>
+
+{" "}
+
+<Step>
+  Install Success Dialog
+  <InstallationCommands
+    packageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}/r/success-dialog.json`}
+  />
+</Step>
+
+</Steps>
+
+## Basic Usage
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { SuccessDialog } from "@/components/ui/murphy/success-dialog";
+
+export default function MyPage() {
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleTransaction = async () => {
+    try {
+      // Your transaction logic here
+      const signature = await executeTransaction();
+
+      // Show success dialog
+      setShowSuccess(true);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+    }
+  };
+
+  return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-6">Transaction Demo</h1>
+
+      <Button onClick={handleTransaction}>Execute Transaction</Button>
+
+      <SuccessDialog
+        open={showSuccess}
+        onOpenChange={setShowSuccess}
+        title="Transaction Successful! 🎉"
+        description="Your transaction has been confirmed on the blockchain"
+        signature="5VfYmGC9L8ty3D4HutfxndoKXGBwXJWKKvxgF7qQzqK8xMjU9v7Rw2sP3nT6hL4jK9mN8bC1dF2eG3hI5jK6lM7n"
+        amount="100"
+        token="USDC"
+        recipient="7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
+        onViewExplorer={() =>
+          window.open(`https://explorer.solana.com/tx/${signature}`, "_blank")
+        }
+        onClose={() => setShowSuccess(false)}
+      />
+    </div>
+  );
+}
+```
+
+## Props
+
+<TypeTable
+  type={{
+    open: {
+      description: "Whether the dialog is open",
+      type: "boolean",
+      default: "required",
+    },
+    onOpenChange: {
+      description: "Callback when dialog open state changes",
+      type: "(open: boolean) => void",
+      default: "required",
+    },
+    title: {
+      description: "Dialog title text",
+      type: "string",
+      default: "'Transaction Successful! 🎉'",
+    },
+    description: {
+      description: "Dialog description text",
+      type: "string",
+      default: "'Your transaction has been confirmed on the blockchain'",
+    },
+    signature: {
+      description: "Transaction signature to display",
+      type: "string",
+      default: "undefined",
+    },
+    amount: {
+      description: "Transaction amount",
+      type: "string",
+      default: "undefined",
+    },
+    token: {
+      description: "Token symbol or name",
+      type: "string",
+      default: "undefined",
+    },
+    recipient: {
+      description: "Recipient wallet address",
+      type: "string",
+      default: "undefined",
+    },
+    onViewExplorer: {
+      description: "Callback when explorer link is clicked",
+      type: "() => void",
+      default: "undefined",
+    },
+    onClose: {
+      description: "Callback when dialog is closed",
+      type: "() => void",
+      default: "undefined",
+    },
+  }}
+/>
+
+## Dialog Features
+
+### Celebratory Design
+
+- Large success icon with green color scheme
+- Celebratory emojis in titles
+- Positive messaging and visual feedback
+
+### Transaction Information
+
+- Transaction signature display with copy functionality
+- Amount and token information prominently displayed
+- Recipient address when applicable
+
+### Explorer Integration
+
+- Direct links to Solana Explorer
+- Support for different clusters (mainnet, devnet, testnet)
+- One-click transaction verification
+
+### Copy Functionality
+
+- Copy transaction signature to clipboard
+- Visual feedback when copied
+- Automatic clipboard API detection
+
+## Customization
+
+### Custom Titles and Messages
+
+```tsx
+const getCustomTitle = (transactionType: string, success: boolean) => {
+  if (!success) return "Transaction Failed";
+
+  const titles = {
+    transfer: "Money Sent! 💰",
+    mint: "NFT Created! 🎨",
+    stake: "Earning Rewards! 📈",
+    swap: "Tokens Swapped! 🔄",
+  };
+
+  return titles[transactionType] || "Success! ✅";
+};
+
+<SuccessDialog
+  title={getCustomTitle("mint", true)}
+  description="Your creative work is now immortalized on the blockchain!"
+  // ... other props
+/>;
+```
+
+### Custom Styling
+
+```tsx
+<SuccessDialog
+  open={showSuccess}
+  onOpenChange={setShowSuccess}
+  className="border-2 border-green-300"
+  // ... other props
+/>
+```
+
+### Conditional Content
+
+```tsx
+<SuccessDialog
+  open={showSuccess}
+  onOpenChange={setShowSuccess}
+  title={amount ? `${amount} ${token} Sent!` : "Transaction Complete!"}
+  description={
+    recipient
+      ? `Successfully sent to ${recipient.slice(0, 8)}...${recipient.slice(-8)}`
+      : "Your transaction has been confirmed"
+  }
+  // ... other props
+/>
+```

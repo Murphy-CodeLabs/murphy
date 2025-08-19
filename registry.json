@@ -1037,6 +1037,23 @@
       ]
     },
     {
+      "name": "success-dialog",
+      "type": "registry:block",
+      "title": "Modal shown when a transaction completes successfully.",
+      "registryDependencies": [
+        "dialog",
+        "button"
+      ],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "components/ui/murphy/Txn-Feedback/success-dialog.tsx",
+          "type": "registry:file",
+          "target": "components/ui/murphy/Txn-Feedback/success-dialog.tsx"
+        }
+      ]
+    },
+    {
       "name": "swap-token-form",
       "type": "registry:block",
       "title": "Swap Token Form",
